@@ -53,9 +53,7 @@ gcloud compute instances stop lab-vm --zone [YOUR_ZONE]
 # Example:
 # gcloud compute instances stop lab-vm --zone us-east4-c
 
-gcloud compute instances set-machine-type $VM_NAME \
-  --machine-type e2-medium \
-  --zone $ZONE
+gcloud compute instances set-machine-type $VM_NAME --machine-type e2-medium --zone $ZONE
 
 gcloud compute instances start lab-vm --zone us-east4-c
 
