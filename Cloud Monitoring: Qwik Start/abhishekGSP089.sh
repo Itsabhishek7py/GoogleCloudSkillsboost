@@ -51,6 +51,12 @@ gcloud compute firewall-rules create allow-http \
     --target-tags=http-server
 
 cat > prepare_disk.sh <<'EOF_END'
+# fixing issues caused due to end of life of Debian Buster
+sudo sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
+sudo sed -i 's/security.debian.org/archive.debian.org\/debian-security/g' /etc/apt/sources.list
+sudo sed -i 's/deb http:\/\/archive.debian.org/deb [trusted=yes] http:\/\/archive.debian.org/g' /etc/apt/sources.list
+sudo sed -i '/buster-updates/d' /etc/apt/sources.list
+
 sudo apt-get update
 sudo apt-get install -y apache2 php7.0
 sudo service apache2 restart
