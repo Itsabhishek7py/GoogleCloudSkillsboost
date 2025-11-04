@@ -1,26 +1,36 @@
 #!/bin/bash
+
 # Define color variables
-RED=`tput setaf 1`
-GREEN=`tput setaf 2`
-YELLOW=`tput setaf 3`
-BLUE=`tput setaf 4`
-MAGENTA=`tput setaf 5`
-CYAN=`tput setaf 6`
+BLACK_TEXT=$'\033[0;90m'
+RED_TEXT=$'\033[0;91m'
+GREEN_TEXT=$'\033[0;92m'
+YELLOW_TEXT=$'\033[0;93m'
+BLUE_TEXT=$'\033[0;94m'
+MAGENTA_TEXT=$'\033[0;95m'
+CYAN_TEXT=$'\033[0;96m'
+WHITE_TEXT=$'\033[0;97m'
 
-BOLD=`tput bold`
-RESET=`tput sgr0`
+NO_COLOR=$'\033[0m'
+RESET_FORMAT=$'\033[0m'
 
+# Define text formatting variables
+BOLD_TEXT=$'\033[1m'
+UNDERLINE_TEXT=$'\033[4m'
 
-echo "${GREEN}${BOLD}Starting Execution${RESET}"
+clear
 
-export ZONE=$(gcloud compute project-info describe \
---format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+# Welcome message
+echo "${BLUE_TEXT}${BOLD_TEXT}=======================================${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}        STARTING THE LAB GET READY ..  ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}=======================================${RESET_FORMAT}"
+echo
 
-export REGION=$(gcloud compute project-info describe \
---format="value(commonInstanceMetadata.items[google-compute-default-region])")
+# Prompt user for Zone
+echo "${YELLOW_TEXT}${BOLD_TEXT}Please enter your GCP Zone:${RESET_FORMAT}"
+read -r ZONE
+export ZONE
 
-gcloud config set compute/zone $ZONE
-gcloud config set compute/region $REGION
+echo "${CYAN_TEXT}${BOLD_TEXT}Creating a new VM instance... Please wait.${RESET_FORMAT}"
 
 # Create the instance with the necessary metadata and tags
 gcloud compute instances create lamp-1-vm \
@@ -28,16 +38,18 @@ gcloud compute instances create lamp-1-vm \
     --zone=$ZONE \
     --machine-type=e2-small \
     --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default \
-    --metadata=enable-oslogin=false \
+    --metadata=enable-oslogin=true \
     --maintenance-policy=MIGRATE \
     --provisioning-model=STANDARD \
     --tags=http-server \
-    --create-disk=auto-delete=yes,boot=yes,device-name=lamp-1-vm,image=projects/debian-cloud/global/images/debian-10-buster-v20230629,mode=rw,size=10,type=projects/$DEVSHELL_PROJECT_ID/zones/$ZONE/diskTypes/pd-balanced \
+    --create-disk=auto-delete=yes,boot=yes,device-name=lamp-1-vm,image=projects/debian-cloud/global/images/debian-12-bookworm-v20240709,mode=rw,size=10,type=projects/$DEVSHELL_PROJECT_ID/zones/$ZONE/diskTypes/pd-balanced \
     --no-shielded-secure-boot \
     --shielded-vtpm \
     --shielded-integrity-monitoring \
     --labels=goog-ec-src=vm_add-gcloud \
     --reservation-affinity=any
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}Creating a firewall rule to allow HTTP traffic...${RESET_FORMAT}"
 
 # Create firewall rule to allow incoming HTTP traffic on port 80
 gcloud compute firewall-rules create allow-http \
@@ -50,57 +62,58 @@ gcloud compute firewall-rules create allow-http \
     --source-ranges=0.0.0.0/0 \
     --target-tags=http-server
 
-cat > prepare_disk.sh <<'EOF_END'
-sudo apt-get update
-sudo apt-get install -y apache2 php7.0
-sudo service apache2 restart
-EOF_END
+sleep 10
 
-gcloud compute scp prepare_disk.sh lamp-1-vm:/tmp --project=$DEVSHELL_PROJECT_ID --zone=$ZONE --quiet
-gcloud compute ssh lamp-1-vm --project=$DEVSHELL_PROJECT_ID --zone=$ZONE --quiet --command="bash /tmp/prepare_disk.sh"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}Generating SSH keys...${RESET_FORMAT}"
 
-export INSTANCE_ID=$(gcloud compute instances list --filter=lamp-1-vm --zones $ZONE --format="value(id)")
+# Generate SSH keys
+gcloud compute config-ssh --project "$DEVSHELL_PROJECT_ID" --quiet
+echo "${CYAN_TEXT}${BOLD_TEXT}Installing Apache and PHP on the VM...${RESET_FORMAT}"
 
-curl -X POST -H "Authorization: Bearer $(gcloud auth print-access-token)" -H "Content-Type: application/json" \
-  "https://monitoring.googleapis.com/v3/projects/$DEVSHELL_PROJECT_ID/uptimeCheckConfigs" \
-  -d "$(cat <<EOF
-{
-  "displayName": "Lamp Uptime Check",
-  "httpCheck": {
-    "path": "/",
-    "port": 80,
-    "requestMethod": "GET"
-  },
-  "monitoredResource": {
-    "labels": {
-      "instance_id": "$INSTANCE_ID",
-      "project_id": "$DEVSHELL_PROJECT_ID",
-      "zone": "$ZONE"
-    },
-    "type": "gce_instance"
-  }
-}
-EOF
-)"
+gcloud compute ssh lamp-1-vm --project "$DEVSHELL_PROJECT_ID" --zone $ZONE --command "sudo sed -i '/buster-backports/d' /etc/apt/sources.list && sudo apt-get update && sudo apt-get install apache2 php7.3 -y && sudo service apache2 restart"
+
+sleep 10
+
+echo "${GREEN_TEXT}${BOLD_TEXT}Fetching Instance ID...${RESET_FORMAT}"
+
+INSTANCE_ID="$(gcloud compute instances describe  lamp-1-vm --project=$DEVSHELL_PROJECT_ID --zone=$ZONE --format='value(id)')"
+
+echo "${BLUE_TEXT}${BOLD_TEXT}Setting up Uptime Monitoring...${RESET_FORMAT}"
+
+gcloud monitoring uptime create lamp-uptime-check \
+  --resource-type="gce-instance" \
+  --resource-labels=project_id=$DEVSHELL_PROJECT_ID,instance_id=$INSTANCE_ID,zone=$ZONE
+
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}Creating an email notification channel...${RESET_FORMAT}"
 
 cat > email-channel.json <<EOF_END
 {
   "type": "email",
-  "displayName": "drabhishek",
-  "description": "Subscribe",
+  "displayName": "arcadecrew",
+  "description": "arcadecrew",
   "labels": {
     "email_address": "$USER_EMAIL"
   }
 }
 EOF_END
 
+
 gcloud beta monitoring channels create --channel-content-from-file="email-channel.json"
 
-# Get the channel ID
-email_channel_info=$(gcloud beta monitoring channels list)
-email_channel_id=$(echo "$email_channel_info" | grep -oP 'name: \K[^ ]+' | head -n 1)
 
-cat > awesome.json <<EOF_END
+
+echo "${CYAN_TEXT}${BOLD_TEXT}Fetching channel ID...${RESET_FORMAT}"
+
+# Run the gcloud command and store the output in a variable
+channel_info=$(gcloud beta monitoring channels list)
+
+# Extract the channel ID using grep and awk
+channel_id=$(echo "$channel_info" | grep -oP 'name: \K[^ ]+' | head -n 1)
+
+echo "${MAGENTA_TEXT}${BOLD_TEXT}Creating an alert policy for network traffic...${RESET_FORMAT}"
+
+cat > app-engine-error-percent-policy.json <<EOF_END
 {
   "displayName": "Inbound Traffic Alert",
   "userLabels": {},
@@ -125,25 +138,32 @@ cat > awesome.json <<EOF_END
       }
     }
   ],
-  "alertStrategy": {
-    "notificationPrompts": [
-      "OPENED"
-    ]
-  },
+  "alertStrategy": {},
   "combiner": "OR",
   "enabled": true,
   "notificationChannels": [
-    "$email_channel_id"
+    "$channel_id"
   ],
   "severity": "SEVERITY_UNSPECIFIED"
 }
 EOF_END
 
-gcloud alpha monitoring policies create --policy-from-file="awesome.json"
+
+gcloud alpha monitoring policies create --policy-from-file="app-engine-error-percent-policy.json"
 
 
+INSTANCE_ID=$(gcloud compute instances describe lamp-1-vm --zone=$ZONE --format='value(id)')
 
-# Final message
-echo -e "\n${GREEN}${BOLD}You have successfully set up and monitored a VM with Cloud Monitoring. You've also created an uptime check, an alerting policy, and a dashboard and chart. You've seen how Cloud Logging reflects changes to your VM instance${RESET}"
-echo -e "${CYAN}Please like and subscribe to: https://www.youtube.com/@drabhishek.5460${RESET}"
-#-----------------------------------------------------end----------------------------------------------------------#
+gcloud monitoring uptime create lamp-uptime-check \
+  --resource-type="gce-instance" \
+  --resource-labels=project_id=$DEVSHELL_PROJECT_ID,instance_id=$INSTANCE_ID,zone=$ZONE
+
+echo
+echo "${GREEN_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}              LAB COMPLETED SUCCESSFULLY!              ${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
+
+echo
+echo "${CYAN_TEXT}${BOLD_TEXT}Don't forget to subscribe to Dr. Abhishek Cloud Tutorial:${RESET_FORMAT}"
+echo "${BLUE_TEXT}${UNDERLINE_TEXT}https://www.youtube.com/@drabhishek.5460/videos${RESET_FORMAT}"
+echo
