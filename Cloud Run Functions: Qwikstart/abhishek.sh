@@ -27,7 +27,7 @@ echo "${BLUE_TEXT}${BOLD_TEXT}===============================================${R
 echo "${CYAN_TEXT}Subscribe to Dr. Abhishek: ${RESET_FORMAT}"
 echo "${RED_TEXT}${BOLD_TEXT}${UNDERLINE_TEXT}https://www.youtube.com/@drabhishek.5460/videos${RESET_FORMAT}"
 echo
-echo "${GREEN_TEXT}${BOLD_TEXT}         Starting the lab...  ${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}         INITIATING EXECUTION...  ${RESET_FORMAT}"
 echo
 
 # Enable GCP Services
@@ -298,9 +298,19 @@ echo
 echo "${BLUE_TEXT}${BOLD_TEXT}Cleaning Up Previous Deployment...${RESET_FORMAT}"
 gcloud run services delete slow-function --region $REGION --quiet
 
-# Deploy Concurrent Function
+# FIXED: Deploy Concurrent Function with corrected parameters
 echo
 echo "${BLUE_TEXT}${BOLD_TEXT}Deploying Concurrent Function...${RESET_FORMAT}"
+cd ~/min-instances
+
+# First, let's check if the function already exists and delete it
+echo "${YELLOW_TEXT}${BOLD_TEXT}Checking for existing function...${RESET_FORMAT}"
+if gcloud functions describe slow-concurrent-function --region $REGION --gen2 &>/dev/null; then
+    echo "${YELLOW_TEXT}${BOLD_TEXT}Deleting existing function...${RESET_FORMAT}"
+    gcloud functions delete slow-concurrent-function --region $REGION --gen2 --quiet
+fi
+
+# Deploy with correct concurrency settings
 deploy_with_retry slow-concurrent-function \
   --gen2 \
   --runtime go123 \
@@ -312,7 +322,18 @@ deploy_with_retry slow-concurrent-function \
   --min-instances 1 \
   --max-instances 4 \
   --cpu 1 \
-  --concurrency 100
+  --memory 256Mi \
+  --concurrency 80
+
+# Test the concurrent function
+echo
+echo "${BLUE_TEXT}${BOLD_TEXT}Testing Concurrent Function...${RESET_FORMAT}"
+if gcloud functions call slow-concurrent-function --gen2 --region $REGION; then
+    echo "${GREEN_TEXT}${BOLD_TEXT}Concurrent function deployed and tested successfully!${RESET_FORMAT}"
+else
+    echo "${RED_TEXT}${BOLD_TEXT}Concurrent function test failed. Checking logs...${RESET_FORMAT}"
+    gcloud functions logs read slow-concurrent-function --region $REGION --gen2 --limit=50
+fi
 
 echo "${CYAN_TEXT}${BOLD_TEXT} ------ PLEASE COMPLETE MANUAL STEP AND VERIFY YOUR PROGRESS OF TASK 7 ${RESET_FORMAT}"
 
