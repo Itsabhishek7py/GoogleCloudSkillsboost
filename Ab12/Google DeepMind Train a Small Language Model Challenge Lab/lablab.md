@@ -10,13 +10,9 @@
 
 
 
-```bash
+[![Watch Video Tutorial](https://img.shields.io/badge/Watch_Video_Tutorial-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=HVq3_geLMD8)
 
-
-```
-
-
-
+[![Download Notebook](https://img.shields.io/badge/Download-Notebook-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)](https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/main/Ab12/Google%20DeepMind%20Train%20a%20Small%20Language%20Model%20Challenge%20Lab/gdm_challenge_lab.ipynb)
 
 <div align="center">
 
