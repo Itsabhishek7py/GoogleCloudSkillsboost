@@ -87,22 +87,32 @@ echo "${GREEN_TEXT}${BOLD_TEXT}✅ External table created successfully!${RESET_F
 echo
 
 # Section 7: Data Catalog Configuration
-echo "${GREEN_TEXT}${BOLD_TEXT}▬▬▬▬▬▬▬▬▬ DATA CATALOG SETUP ▬▬▬▬▬▬▬▬▬${RESET_FORMAT}"
-echo "${YELLOW_TEXT}${BOLD_TEXT}🏷️  Creating 'sensitive_data_template' tag template...${RESET_FORMAT}"
-gcloud data-catalog tag-templates create sensitive_data_template \
-    --location=$REGION \
-    --display-name="Sensitive Data Template" \
-    --field=id=has_sensitive_data,display-name="Has Sensitive Data",type=bool \
-    --field=id=sensitive_data_type,display-name="Sensitive Data Type",type='enum(Location Info|Contact Info|None)'
-echo "${GREEN_TEXT}${BOLD_TEXT}✅ Tag template created successfully!${RESET_FORMAT}"
+# echo "${GREEN_TEXT}${BOLD_TEXT}▬▬▬▬▬▬▬▬▬ DATA CATALOG SETUP ▬▬▬▬▬▬▬▬▬${RESET_FORMAT}"
+# echo "${YELLOW_TEXT}${BOLD_TEXT}🏷️  Creating 'sensitive_data_template' tag template...${RESET_FORMAT}"
+# gcloud data-catalog tag-templates create sensitive_data_template \
+#     --location=$REGION \
+#     --display-name="Sensitive Data Template" \
+#     --field=id=has_sensitive_data,display-name="Has Sensitive Data",type=bool \
+#     --field=id=sensitive_data_type,display-name="Sensitive Data Type",type='enum(Location Info|Contact Info|None)'
+# echo "${GREEN_TEXT}${BOLD_TEXT}✅ Tag template created successfully!${RESET_FORMAT}"
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}📝 Creating tag configuration...${RESET_FORMAT}"
-cat > tag_file.json << EOF
-  {
-    "has_sensitive_data": TRUE,
-    "sensitive_data_type": "Location Info"
-  }
-EOF
+# echo "${YELLOW_TEXT}${BOLD_TEXT}📝 Creating tag configuration...${RESET_FORMAT}"
+# cat > tag_file.json << EOF
+#   {
+#     "has_sensitive_data": TRUE,
+#     "sensitive_data_type": "Location Info"
+#   }
+# EOF
+
+# echo "${YELLOW_TEXT}${BOLD_TEXT}🔍 Looking up table entry...${RESET_FORMAT}"
+# ENTRY_NAME=$(gcloud data-catalog entries lookup '//bigquery.googleapis.com/projects/'$DEVSHELL_PROJECT_ID'/datasets/ecommerce/tables/customer_online_sessions' --format="value(name)")
+# echo "${CYAN_TEXT}${BOLD_TEXT}Entry Name: ${WHITE_TEXT}$ENTRY_NAME${RESET_FORMAT}"
+
+# echo "${YELLOW_TEXT}${BOLD_TEXT}🏷️  Applying tag to table...${RESET_FORMAT}"
+# gcloud data-catalog tags create --entry=${ENTRY_NAME} \
+#     --tag-template=sensitive_data_template --tag-template-location=$REGION --tag-file=tag_file.json
+# echo "${GREEN_TEXT}${BOLD_TEXT}✅ Tag applied successfully!${RESET_FORMAT}"
+
 
 echo "${YELLOW_TEXT}${BOLD_TEXT}🔍 Looking up table entry...${RESET_FORMAT}"
 ENTRY_NAME=$(gcloud data-catalog entries lookup '//bigquery.googleapis.com/projects/'$DEVSHELL_PROJECT_ID'/datasets/ecommerce/tables/customer_online_sessions' --format="value(name)")
