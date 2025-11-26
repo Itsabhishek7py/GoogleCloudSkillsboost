@@ -71,7 +71,7 @@ gcloud data-catalog tag-templates create sensitive_data_template \
 
 cat > tag_file.json << EOF
   {
-    "has_sensitive_data": TRUE,
+    "has_sensitive_data": true,
     "sensitive_data_type": "Location Info"
   }
 EOF
