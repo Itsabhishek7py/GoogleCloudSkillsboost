@@ -46,10 +46,10 @@ fi
 echo ""
 
 # Create web instances
-echo "Creating web instances (web1, web2, web3)..."
+echo "Creating web instances (www1, www2, www3)..."
 for i in {1..3}; do
     echo -n "Creating web$i... "
-    gcloud compute instances create web$i \
+    gcloud compute instances create www$i \
         --zone=$ZONE \
         --machine-type=e2-small \
         --tags=network-lb-tag \
@@ -59,7 +59,7 @@ for i in {1..3}; do
         apt-get update
         apt-get install apache2 -y
         service apache2 restart
-        echo "<h3>Web Server: web'$i'</h3>" | tee /var/www/html/index.html' > /dev/null 2>&1 &
+        echo "<h3>Web Server: www'$i'</h3>" | tee /var/www/html/index.html' > /dev/null 2>&1 &
     spinner
     echo "Done"
 done
