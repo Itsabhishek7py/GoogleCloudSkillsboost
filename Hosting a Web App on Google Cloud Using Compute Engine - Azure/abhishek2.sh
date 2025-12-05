@@ -90,7 +90,7 @@ echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}💪 Upgrading frontend machine type...${RESET_FORMAT}"
 gcloud compute instances set-machine-type frontend \
   --zone=$ZONE \
-  --machine-type custom-4-3840
+  --machine-type e2-small
 
 echo "${YELLOW_TEXT}${BOLD_TEXT}📋 Creating new instance template...${RESET_FORMAT}"
 gcloud compute instance-templates create fancy-fe-new \
