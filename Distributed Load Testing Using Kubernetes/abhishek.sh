@@ -64,7 +64,7 @@ echo
 # Configure Web Application
 echo "${YELLOW}${BOLD}Step 4: Configuring Sample Web Application${RESET}"
 cd distributed-load-testing-using-kubernetes/sample-webapp/
-sed -i "s/python37/python39/g" app.yaml
+sed -i "s/python37/python312/g" app.yaml
 cd ..
 echo "${GREEN}✓ Web application configured${RESET}"
 echo
