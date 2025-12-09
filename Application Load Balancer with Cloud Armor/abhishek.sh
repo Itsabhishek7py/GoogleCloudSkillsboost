@@ -14,7 +14,7 @@ clear
 
 echo
 echo "${CYAN_TEXT}${BOLD_TEXT}=========================================${RESET_FORMAT}"
-echo "${CYAN_TEXT}${BOLD_TEXT}   DR ABHISHEK - SUBSCRIBE THE CHANNEL    ${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}            DR ABHISHEK TUTORIALS        ${RESET_FORMAT}"
 echo "${CYAN_TEXT}${BOLD_TEXT}=========================================${RESET_FORMAT}"
 echo
 
@@ -50,12 +50,12 @@ echo
 
 echo "${MAGENTA_TEXT}${BOLD_TEXT}Generating instance template for the first region: ${CYAN_TEXT}${BOLD_TEXT}$REGION1${RESET_FORMAT}${MAGENTA_TEXT}${BOLD_TEXT}...${RESET_FORMAT}"
 echo
-gcloud compute instance-templates create $REGION1-template --project=$DEVSHELL_PROJECT_ID --machine-type=e2-medium --network-interface=network-tier=PREMIUM,subnet=default --metadata=startup-script-url=gs://cloud-training/gcpnet/httplb/startup.sh,enable-oslogin=false --maintenance-policy=MIGRATE --provisioning-model=STANDARD --region=$REGION1 --tags=http-server,https-server --create-disk=auto-delete=yes,boot=yes,device-name=$REGION1-template,image=projects/debian-cloud/global/images/debian-11-bullseye-v20230711,mode=rw,size=10,type=pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
+gcloud compute instance-templates create $REGION1-template --project=$DEVSHELL_PROJECT_ID --machine-type=e2-micro --network-interface=network-tier=PREMIUM,subnet=default --metadata=startup-script-url=gs://cloud-training/gcpnet/httplb/startup.sh,enable-oslogin=true --maintenance-policy=MIGRATE --provisioning-model=STANDARD --region=$REGION1 --tags=http-server,https-server --create-disk=auto-delete=yes,boot=yes,device-name=$REGION1-template,image=projects/debian-cloud/global/images/debian-11-bullseye-v20230711,mode=rw,size=10,type=pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
 echo
 
 echo "${MAGENTA_TEXT}${BOLD_TEXT}Generating instance template for the second region: ${CYAN_TEXT}${BOLD_TEXT}$REGION2${RESET_FORMAT}${MAGENTA_TEXT}${BOLD_TEXT}...${RESET_FORMAT}"
 echo
-gcloud compute instance-templates create $REGION2-template --project=$DEVSHELL_PROJECT_ID --machine-type=e2-medium --network-interface=network-tier=PREMIUM,subnet=default --metadata=startup-script-url=gs://cloud-training/gcpnet/httplb/startup.sh,enable-oslogin=false --maintenance-policy=MIGRATE --provisioning-model=STANDARD --region=$REGION2 --tags=http-server,https-server --create-disk=auto-delete=yes,boot=yes,device-name=$REGION2-template,image=projects/debian-cloud/global/images/debian-11-bullseye-v20230711,mode=rw,size=10,type=pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
+gcloud compute instance-templates create $REGION2-template --project=$DEVSHELL_PROJECT_ID --machine-type=e2-micro --network-interface=network-tier=PREMIUM,subnet=default --metadata=startup-script-url=gs://cloud-training/gcpnet/httplb/startup.sh,enable-oslogin=true --maintenance-policy=MIGRATE --provisioning-model=STANDARD --region=$REGION2 --tags=http-server,https-server --create-disk=auto-delete=yes,boot=yes,device-name=$REGION2-template,image=projects/debian-cloud/global/images/debian-11-bullseye-v20230711,mode=rw,size=10,type=pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
 echo
 
 echo "${BLUE_TEXT}${BOLD_TEXT}Establishing managed instance group and enabling autoscaling for region: ${CYAN_TEXT}${BOLD_TEXT}$REGION1${RESET_FORMAT}${BLUE_TEXT}${BOLD_TEXT}...${RESET_FORMAT}"
@@ -279,7 +279,7 @@ echo
 
 echo "${MAGENTA_TEXT}${BOLD_TEXT}Provisioning the 'siege-vm' instance for load testing in zone: ${CYAN_TEXT}${BOLD_TEXT}$VM_ZONE${RESET_FORMAT}${MAGENTA_TEXT}${BOLD_TEXT}...${RESET_FORMAT}"
 echo
-gcloud compute instances create siege-vm --project=$DEVSHELL_PROJECT_ID --zone=$VM_ZONE --machine-type=e2-medium --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default --metadata=enable-oslogin=false --maintenance-policy=MIGRATE --provisioning-model=STANDARD --create-disk=auto-delete=yes,boot=yes,device-name=siege-vm,image=projects/debian-cloud/global/images/debian-11-bullseye-v20230711,mode=rw,size=10,type=projects/$DEVSHELL_PROJECT_ID/zones/$VM_ZONE/diskTypes/pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --labels=goog-ec-src=vm_add-gcloud --reservation-affinity=any
+gcloud compute instances create siege-vm --project=$DEVSHELL_PROJECT_ID --zone=$VM_ZONE --machine-type=e2-micro --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default --metadata=enable-oslogin=false --maintenance-policy=MIGRATE --provisioning-model=STANDARD --create-disk=auto-delete=yes,boot=yes,device-name=siege-vm,image=projects/debian-cloud/global/images/debian-11-bullseye-v20230711,mode=rw,size=10,type=projects/$DEVSHELL_PROJECT_ID/zones/$VM_ZONE/diskTypes/pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --labels=goog-ec-src=vm_add-gcloud --reservation-affinity=any
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}Waiting for siege VM creation and startup...${RESET_FORMAT}"
 sleep 60
@@ -294,77 +294,50 @@ echo "${YELLOW_TEXT}${BOLD_TEXT}Allowing time for IP propagation...${RESET_FORMA
 sleep 20
 echo
 
-echo "${RED_TEXT}${BOLD_TEXT}Creating a Cloud Armor security policy named 'denylist-siege' to block the siege VM's IP...${RESET_FORMAT}"
-echo
-curl -X POST -H "Authorization: Bearer $(gcloud auth print-access-token)" -H "Content-Type: application/json" \
-    -d '{
-        "adaptiveProtectionConfig": {
-            "layer7DdosDefenseConfig": {
-                "enable": false
-            }
-        },
-        "description": "",
-        "name": "denylist-siege",
-        "rules": [
+echo "${RED_TEXT}${BOLD_TEXT}Creating corrected Cloud Armor deny policy...${RESET_FORMAT}"
+curl -X POST \
+  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+  -H "Content-Type: application/json" \
+  -d "{
+        \"name\": \"denylist-siege\",
+        \"type\": \"CLOUD_ARMOR\",
+        \"rules\": [
             {
-                "action": "deny(403)",
-                "description": "",
-                "match": {
-                    "config": {
-                        "srcIpRanges": [
-                             "'"${EXTERNAL_IP}"'"
-                        ]
-                    },
-                    "versionedExpr": "SRC_IPS_V1"
-                },
-                "preview": false,
-                "priority": 1000
-            },
-            {
-                "action": "allow",
-                "description": "Default rule, higher priority overrides it",
-                "match": {
-                    "config": {
-                        "srcIpRanges": [
-                            "*"
-                        ]
-                    },
-                    "versionedExpr": "SRC_IPS_V1"
-                },
-                "preview": false,
-                "priority": 2147483647
+                \"priority\": 1000,
+                \"action\": \"deny(403)\",
+                \"match\": {
+                    \"versionedExpr\": \"SRC_IPS_V1\",
+                    \"config\": {\"srcIpRanges\": [\"$EXTERNAL_IP/32\"]}
+                }
             }
-        ],
-        "type": "CLOUD_ARMOR"
-    }' \
-    "https://compute.googleapis.com/compute/v1/projects/$DEVSHELL_PROJECT_ID/global/securityPolicies"
-echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}Waiting for security policy creation...${RESET_FORMAT}"
-sleep 60
-echo
+        ]
+     }" \
+  "https://compute.googleapis.com/compute/v1/projects/$DEVSHELL_PROJECT_ID/global/securityPolicies"
 
-echo "${RED_TEXT}${BOLD_TEXT}Attaching the 'denylist-siege' security policy to the 'http-backend' service...${RESET_FORMAT}"
-echo
-curl -X POST -H "Authorization: Bearer $(gcloud auth print-access-token)" -H "Content-Type: application/json" \
-    -d "{
+echo "${YELLOW_TEXT}${BOLD_TEXT}Waiting 45 seconds for policy creation...${RESET_FORMAT}"
+sleep 45
+
+
+echo "${RED_TEXT}${BOLD_TEXT}Attaching policy with PATCH (correct method)...${RESET_FORMAT}"
+curl -X PATCH \
+  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+  -H "Content-Type: application/json" \
+  -d "{
         \"securityPolicy\": \"projects/$DEVSHELL_PROJECT_ID/global/securityPolicies/denylist-siege\"
-    }" \
-    "https://compute.googleapis.com/compute/v1/projects/$DEVSHELL_PROJECT_ID/global/backendServices/http-backend/setSecurityPolicy"
-echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}Waiting for security policy attachment...${RESET_FORMAT}"
-sleep 60
-echo
+      }" \
+  "https://compute.googleapis.com/compute/v1/projects/$DEVSHELL_PROJECT_ID/global/backendServices/http-backend"
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}Waiting 180 seconds for Cloud Armor enforcement...${RESET_FORMAT}"
+sleep 180
+
 
 echo "${BLUE_TEXT}${BOLD_TEXT}Retrieving the IP address of the load balancer...${RESET_FORMAT}"
-echo
 LB_IP_ADDRESS=$(gcloud compute forwarding-rules describe http-lb-forwarding-rule --global --format="value(IPAddress)")
 echo "${GREEN_TEXT}${BOLD_TEXT}Load Balancer IP Address:${RESET_FORMAT} ${CYAN_TEXT}${BOLD_TEXT}$LB_IP_ADDRESS${RESET_FORMAT}"
 echo
 
-echo "${BLUE_TEXT}${BOLD_TEXT}Connecting to the siege VM via SSH, installing siege, and initiating the load test against the LB IP...${RESET_FORMAT}"
-echo "${YELLOW_TEXT}${BOLD_TEXT}Siege command: siege -c 150 -t 120s http://$LB_IP_ADDRESS${RESET_FORMAT}"
-echo
-gcloud compute ssh --zone "$VM_ZONE" "siege-vm" --project "$DEVSHELL_PROJECT_ID" --quiet --command "sudo apt-get -y update && sudo apt-get -y install siege && export LB_IP=$LB_IP_ADDRESS && echo 'Starting siege test...' && siege -c 150 -t 120s http://\$LB_IP && echo 'Siege test finished.'"
+echo "${BLUE_TEXT}${BOLD_TEXT}Connecting to siege VM and initiating load test...${RESET_FORMAT}"
+gcloud compute ssh --zone "$VM_ZONE" "siege-vm" --project "$DEVSHELL_PROJECT_ID" --quiet --command "sudo apt-get -y update && sudo apt-get -y install siege && export LB_IP=$LB_IP_ADDRESS && siege -c 150 -t 120s http://\$LB_IP"
 
 echo
 echo "${GREEN_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
