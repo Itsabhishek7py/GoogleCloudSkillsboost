@@ -80,7 +80,7 @@ deploy_function() {
   --gen2 \
   --region=${CLOUD_FUNCTION_LOCATION} \
   --entry-point=process_invoice \
-  --runtime=python39 \
+  --runtime=python313 \
   --service-account=${PROJECT_ID}@appspot.gserviceaccount.com \
   --source=cloud-functions/process-invoices \
   --timeout=400 \
