@@ -21,7 +21,7 @@ start_spinner() {
     # Usage: start_spinner "Short message..."
     local msg="$1"
     local delay=0.08
-    local spinstr='|/-\\'
+    local spinstr='|/-\'
     printf "%s" "  ${YELLOW_TEXT}${BOLD_TEXT}${msg}${RESET_FORMAT} "
     # spinner loop runs in background
     (
@@ -329,10 +329,24 @@ sleep 60
 printf "%s\n" "${GREEN_TEXT}${BOLD_TEXT}✔ Done! Subscribe to Dr Abhishek ❤️${RESET_FORMAT}"
 echo
 
-# --- REMOVED: automatic siege-vm creation and IP retrieval ---
-# Instead prompt the user to supply the external IP of the manually created siege VM
-read -p "${YELLOW_TEXT}${BOLD_TEXT}Enter the external IP of the siege VM (you will create the VM manually): ${RESET_FORMAT}" EXTERNAL_IP
-echo "${GREEN_TEXT}${BOLD_TEXT}Siege VM External IP set to:${RESET_FORMAT} ${CYAN_TEXT}${BOLD_TEXT}$EXTERNAL_IP${RESET_FORMAT}"
+# ================= UPDATED VM CREATION WITH YOUR SPECIFICATIONS =================
+echo "${MAGENTA_TEXT}${BOLD_TEXT}Provisioning the 'siege-vm' instance for load testing in zone: ${CYAN_TEXT}${BOLD_TEXT}$VM_ZONE${RESET_FORMAT}${MAGENTA_TEXT}${BOLD_TEXT}...${RESET_FORMAT}"
+start_spinner "Creating siege-vm in zone $VM_ZONE..."
+# NOTE: per your instruction, siege-vm is NOT upgraded to PREMIUM; use STANDARD for this VM's network tier
+gcloud compute instances create siege-vm --project=$DEVSHELL_PROJECT_ID --zone=$VM_ZONE --machine-type=e2-micro --network-interface=network-tier=STANDARD,stack-type=IPV4_ONLY,subnet=default --metadata=enable-osconfig=TRUE,enable-oslogin=true --maintenance-policy=MIGRATE --provisioning-model=STANDARD --service-account=$(gcloud config get-value account) --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/trace.append --create-disk=auto-delete=yes,boot=yes,device-name=siege-vm,image=projects/debian-cloud/global/images/debian-12-bookworm-v20251111,mode=rw,size=10,type=pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --labels=goog-ops-agent-policy=v2-x86-template-1-4-0,goog-ec-src=vm_add-gcloud --reservation-affinity=any
+stop_spinner
+echo "${YELLOW_TEXT}${BOLD_TEXT}Waiting for siege VM creation and startup...${RESET_FORMAT}"
+sleep 60
+printf "%s\n" "${GREEN_TEXT}${BOLD_TEXT}✔ Done! Subscribe to Dr Abhishek ❤️${RESET_FORMAT}"
+echo
+
+echo "${BLUE_TEXT}${BOLD_TEXT}Retrieving the external IP address of the siege VM...${RESET_FORMAT}"
+start_spinner "Getting siege-vm external IP..."
+export EXTERNAL_IP=$(gcloud compute instances describe siege-vm --zone=$VM_ZONE --format="get(networkInterfaces[0].accessConfigs[0].natIP)")
+stop_spinner
+echo "${GREEN_TEXT}${BOLD_TEXT}Siege VM External IP:${RESET_FORMAT} ${CYAN_TEXT}${BOLD_TEXT}$EXTERNAL_IP${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}Allowing time for IP propagation...${RESET_FORMAT}"
+sleep 20
 printf "%s\n" "${GREEN_TEXT}${BOLD_TEXT}✔ Done! Subscribe to Dr Abhishek ❤️${RESET_FORMAT}"
 echo
 
@@ -406,8 +420,15 @@ stop_spinner
 echo "${GREEN_TEXT}${BOLD_TEXT}Load Balancer IP Address:${RESET_FORMAT} ${CYAN_TEXT}${BOLD_TEXT}$LB_IP_ADDRESS${RESET_FORMAT}"
 echo
 
+echo "${BLUE_TEXT}${BOLD_TEXT}Connecting to the siege VM via SSH, installing siege, and initiating the load test against the LB IP...${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}Siege command: siege -c 150 -t 120s http://$LB_IP_ADDRESS${RESET_FORMAT}"
+start_spinner "Running siege test from siege-vm..."
+gcloud compute ssh --zone "$VM_ZONE" "siege-vm" --project "$DEVSHELL_PROJECT_ID" --quiet --command "sudo apt-get -y update && sudo apt-get -y install siege && export LB_IP=$LB_IP_ADDRESS && echo 'Starting siege test...' && siege -c 150 -t 120s http://\$LB_IP && echo 'Siege test finished.'"
+stop_spinner
+echo
+
 echo "${GREEN_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
-echo "${GREEN_TEXT}${BOLD_TEXT}              LAB TASKS COMPLETED!                    ${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}              LAB COMPLETED SUCCESSFULLY!              ${RESET_FORMAT}"
 echo "${GREEN_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
 
 echo
