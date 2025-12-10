@@ -63,13 +63,8 @@ echo "${GREEN_TEXT}${BOLD_TEXT}Second REGION set to:${RESET_FORMAT} ${CYAN_TEXT}
 printf "%s\n" "${GREEN_TEXT}${BOLD_TEXT}✔ Done! Subscribe to Dr Abhishek ❤️${RESET_FORMAT}"
 echo
 
-read -p "${YELLOW_TEXT}${BOLD_TEXT}Enter the VM_ZONE: ${RESET_FORMAT}" VM_ZONE
-echo "${GREEN_TEXT}${BOLD_TEXT}VM_ZONE set to:${RESET_FORMAT} ${CYAN_TEXT}${BOLD_TEXT}$VM_ZONE${RESET_FORMAT}"
-printf "%s\n" "${GREEN_TEXT}${BOLD_TEXT}✔ Done! Subscribe to Dr Abhishek ❤️${RESET_FORMAT}"
-echo
-
 # Export variables after collecting input
-export REGION1 REGION2 VM_ZONE
+export REGION1 REGION2
 
 export INSTANCE_NAME=$REGION1-mig
 export INSTANCE_NAME_2=$REGION2-mig
@@ -329,24 +324,27 @@ sleep 60
 printf "%s\n" "${GREEN_TEXT}${BOLD_TEXT}✔ Done! Subscribe to Dr Abhishek ❤️${RESET_FORMAT}"
 echo
 
-# ================= UPDATED VM CREATION WITH YOUR SPECIFICATIONS =================
-echo "${MAGENTA_TEXT}${BOLD_TEXT}Provisioning the 'siege-vm' instance for load testing in zone: ${CYAN_TEXT}${BOLD_TEXT}$VM_ZONE${RESET_FORMAT}${MAGENTA_TEXT}${BOLD_TEXT}...${RESET_FORMAT}"
-start_spinner "Creating siege-vm in zone $VM_ZONE..."
-# NOTE: per your instruction, siege-vm is NOT upgraded to PREMIUM; use STANDARD for this VM's network tier
-gcloud compute instances create siege-vm --project=$DEVSHELL_PROJECT_ID --zone=$VM_ZONE --machine-type=e2-micro --network-interface=network-tier=STANDARD,stack-type=IPV4_ONLY,subnet=default --metadata=enable-osconfig=TRUE,enable-oslogin=true --maintenance-policy=MIGRATE --provisioning-model=STANDARD --service-account=$(gcloud config get-value account) --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/trace.append --create-disk=auto-delete=yes,boot=yes,device-name=siege-vm,image=projects/debian-cloud/global/images/debian-12-bookworm-v20251111,mode=rw,size=10,type=pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --labels=goog-ops-agent-policy=v2-x86-template-1-4-0,goog-ec-src=vm_add-gcloud --reservation-affinity=any
+echo "${BLUE_TEXT}${BOLD_TEXT}Retrieving the IP address of the load balancer...${RESET_FORMAT}"
+start_spinner "Retrieving LB IP..."
+LB_IP_ADDRESS=$(gcloud compute forwarding-rules describe http-lb-forwarding-rule --global --format="value(IPAddress)")
 stop_spinner
-echo "${YELLOW_TEXT}${BOLD_TEXT}Waiting for siege VM creation and startup...${RESET_FORMAT}"
-sleep 60
-printf "%s\n" "${GREEN_TEXT}${BOLD_TEXT}✔ Done! Subscribe to Dr Abhishek ❤️${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}Load Balancer IP Address:${RESET_FORMAT} ${CYAN_TEXT}${BOLD_TEXT}$LB_IP_ADDRESS${RESET_FORMAT}"
 echo
 
-echo "${BLUE_TEXT}${BOLD_TEXT}Retrieving the external IP address of the siege VM...${RESET_FORMAT}"
-start_spinner "Getting siege-vm external IP..."
-export EXTERNAL_IP=$(gcloud compute instances describe siege-vm --zone=$VM_ZONE --format="get(networkInterfaces[0].accessConfigs[0].natIP)")
-stop_spinner
-echo "${GREEN_TEXT}${BOLD_TEXT}Siege VM External IP:${RESET_FORMAT} ${CYAN_TEXT}${BOLD_TEXT}$EXTERNAL_IP${RESET_FORMAT}"
-echo "${YELLOW_TEXT}${BOLD_TEXT}Allowing time for IP propagation...${RESET_FORMAT}"
-sleep 20
+# ================= MANUAL VM CREATION - USER PROVIDES EXTERNAL IP =================
+echo "${MAGENTA_TEXT}${BOLD_TEXT}=================================================================${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}    MANUAL VM CREATION INSTRUCTIONS                          ${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}=================================================================${RESET_FORMAT}"
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}Please manually create a VM for load testing with the following specifications:${RESET_FORMAT}"
+echo "${CYAN_TEXT}• Name: siege-vm${RESET_FORMAT}"
+echo "${CYAN_TEXT}• Machine type: e2-micro${RESET_FORMAT}"
+echo "${CYAN_TEXT}• Network tier: STANDARD (not premium)${RESET_FORMAT}"
+echo "${CYAN_TEXT}• OS: Debian 12${RESET_FORMAT}"
+echo
+echo "${GREEN_TEXT}${BOLD_TEXT}After creating the VM, please enter its external IP address below:${RESET_FORMAT}"
+read -p "${YELLOW_TEXT}${BOLD_TEXT}Enter the EXTERNAL IP address of your siege VM: ${RESET_FORMAT}" EXTERNAL_IP
+echo "${GREEN_TEXT}${BOLD_TEXT}External IP set to:${RESET_FORMAT} ${CYAN_TEXT}${BOLD_TEXT}$EXTERNAL_IP${RESET_FORMAT}"
 printf "%s\n" "${GREEN_TEXT}${BOLD_TEXT}✔ Done! Subscribe to Dr Abhishek ❤️${RESET_FORMAT}"
 echo
 
@@ -413,18 +411,16 @@ sleep 60
 printf "%s\n" "${GREEN_TEXT}${BOLD_TEXT}✔ Done! Subscribe to Dr Abhishek ❤️${RESET_FORMAT}"
 echo
 
-echo "${BLUE_TEXT}${BOLD_TEXT}Retrieving the IP address of the load balancer...${RESET_FORMAT}"
-start_spinner "Retrieving LB IP..."
-LB_IP_ADDRESS=$(gcloud compute forwarding-rules describe http-lb-forwarding-rule --global --format="value(IPAddress)")
-stop_spinner
-echo "${GREEN_TEXT}${BOLD_TEXT}Load Balancer IP Address:${RESET_FORMAT} ${CYAN_TEXT}${BOLD_TEXT}$LB_IP_ADDRESS${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}=================================================================${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}    LOAD TESTING INSTRUCTIONS                                    ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}=================================================================${RESET_FORMAT}"
 echo
-
-echo "${BLUE_TEXT}${BOLD_TEXT}Connecting to the siege VM via SSH, installing siege, and initiating the load test against the LB IP...${RESET_FORMAT}"
-echo "${YELLOW_TEXT}${BOLD_TEXT}Siege command: siege -c 150 -t 120s http://$LB_IP_ADDRESS${RESET_FORMAT}"
-start_spinner "Running siege test from siege-vm..."
-gcloud compute ssh --zone "$VM_ZONE" "siege-vm" --project "$DEVSHELL_PROJECT_ID" --quiet --command "sudo apt-get -y update && sudo apt-get -y install siege && export LB_IP=$LB_IP_ADDRESS && echo 'Starting siege test...' && siege -c 150 -t 120s http://\$LB_IP && echo 'Siege test finished.'"
-stop_spinner
+echo "${GREEN_TEXT}${BOLD_TEXT}To perform load testing, manually connect to your siege VM and run:${RESET_FORMAT}"
+echo "${CYAN_TEXT}sudo apt-get update && sudo apt-get install -y siege${RESET_FORMAT}"
+echo "${CYAN_TEXT}siege -c 150 -t 120s http://$LB_IP_ADDRESS${RESET_FORMAT}"
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}Note: The Cloud Armor policy 'denylist-siege' is now active and will${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}block traffic from IP: $EXTERNAL_IP with 403 Forbidden response.${RESET_FORMAT}"
 echo
 
 echo "${GREEN_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
