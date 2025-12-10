@@ -47,19 +47,10 @@ stop_spinner() {
     printf " %s\n" "${GREEN_TEXT}${BOLD_TEXT}✔ Done! Subscribe to Dr Abhishek ❤️${RESET_FORMAT}"
 }
 
-# small helper to run a command with spinner where you want to keep original command syntax
-# Usage:
-# start_spinner "Doing something..."
-# <your command here>
-# stop_spinner
-# This preserves exit codes in $? for conditional logic if needed.
-
 echo
 echo "${CYAN_TEXT}${BOLD_TEXT}=========================================${RESET_FORMAT}"
 echo "${CYAN_TEXT}${BOLD_TEXT}   DR ABHISHEK SUBSCRIBE FOR MORE     ${RESET_FORMAT}"
 echo "${CYAN_TEXT}${BOLD_TEXT}=========================================${RESET_FORMAT}"
-echo
-
 echo
 
 read -p "${YELLOW_TEXT}${BOLD_TEXT}Enter the first REGION: ${RESET_FORMAT}" REGION1
@@ -242,7 +233,7 @@ echo
 
 echo "${CYAN_TEXT}${BOLD_TEXT}Establishing the primary global forwarding rule (IPv4)...${RESET_FORMAT}"
 start_spinner "Creating forwarding rule: http-lb-forwarding-rule..."
-# Create Forwarding Rule
+# Create Forwarding Rule (FIXED: use PREMIUM networkTier for global forwarding rule)
 curl -X POST -H "Content-Type: application/json" \
     -H "Authorization: Bearer $TOKEN" \
     -d '{
@@ -250,7 +241,7 @@ curl -X POST -H "Content-Type: application/json" \
         "ipVersion": "IPV4",
         "loadBalancingScheme": "EXTERNAL",
         "name": "http-lb-forwarding-rule",
-        "networkTier": "STANDARD",
+        "networkTier": "PREMIUM",
         "portRange": "80",
         "target": "projects/'"$DEVSHELL_PROJECT_ID"'/global/targetHttpProxies/http-lb-target-proxy"
     }' \
@@ -279,7 +270,7 @@ echo
 
 echo "${CYAN_TEXT}${BOLD_TEXT}Establishing the secondary global forwarding rule (IPv6)...${RESET_FORMAT}"
 start_spinner "Creating forwarding rule: http-lb-forwarding-rule-2..."
-# Create another Forwarding Rule
+# Create another Forwarding Rule (FIXED: use PREMIUM networkTier for global forwarding rule)
 curl -X POST -H "Content-Type: application/json" \
     -H "Authorization: Bearer $TOKEN" \
     -d '{
@@ -287,7 +278,7 @@ curl -X POST -H "Content-Type: application/json" \
         "ipVersion": "IPV6",
         "loadBalancingScheme": "EXTERNAL",
         "name": "http-lb-forwarding-rule-2",
-        "networkTier": "STANDARD",
+        "networkTier": "PREMIUM",
         "portRange": "80",
         "target": "projects/'"$DEVSHELL_PROJECT_ID"'/global/targetHttpProxies/http-lb-target-proxy-2"
     }' \
@@ -338,7 +329,7 @@ sleep 60
 printf "%s\n" "${GREEN_TEXT}${BOLD_TEXT}✔ Done! Subscribe to Dr Abhishek ❤️${RESET_FORMAT}"
 echo
 
-# ================= VM CREATION  =================
+# ================= UPDATED VM CREATION WITH YOUR SPECIFICATIONS =================
 echo "${MAGENTA_TEXT}${BOLD_TEXT}Provisioning the 'siege-vm' instance for load testing in zone: ${CYAN_TEXT}${BOLD_TEXT}$VM_ZONE${RESET_FORMAT}${MAGENTA_TEXT}${BOLD_TEXT}...${RESET_FORMAT}"
 start_spinner "Creating siege-vm in zone $VM_ZONE..."
 # NOTE: per your instruction, siege-vm is NOT upgraded to PREMIUM; use STANDARD for this VM's network tier
