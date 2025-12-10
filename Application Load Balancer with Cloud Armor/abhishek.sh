@@ -348,6 +348,46 @@ echo "${GREEN_TEXT}${BOLD_TEXT}External IP set to:${RESET_FORMAT} ${CYAN_TEXT}${
 printf "%s\n" "${GREEN_TEXT}${BOLD_TEXT}✔ Done! Subscribe to Dr Abhishek ❤️${RESET_FORMAT}"
 echo
 
+# ================= ADDITIONAL: ASK FOR VM ZONE =================
+echo "${YELLOW_TEXT}${BOLD_TEXT}For SSH connection purposes, please also provide the zone where you created the siege VM:${RESET_FORMAT}"
+read -p "${YELLOW_TEXT}${BOLD_TEXT}Enter the ZONE of your siege VM (e.g., us-central1-a): ${RESET_FORMAT}" VM_ZONE
+echo "${GREEN_TEXT}${BOLD_TEXT}VM Zone set to:${RESET_FORMAT} ${CYAN_TEXT}${BOLD_TEXT}$VM_ZONE${RESET_FORMAT}"
+printf "%s\n" "${GREEN_TEXT}${BOLD_TEXT}✔ Done! Subscribe to Dr Abhishek ❤️${RESET_FORMAT}"
+echo
+
+# ================= STEP 1: LOAD TESTING INSTRUCTIONS (BEFORE ARMOR) =================
+echo "${BLUE_TEXT}${BOLD_TEXT}=================================================================${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}    STEP 1: PERFORM LOAD TESTING (BEFORE CLOUD ARMOR)          ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}=================================================================${RESET_FORMAT}"
+echo
+echo "${GREEN_TEXT}${BOLD_TEXT}Now, BEFORE creating the Cloud Armor policy, perform load testing:${RESET_FORMAT}"
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}1. Connect to your siege VM:${RESET_FORMAT}"
+echo "${CYAN_TEXT}   - Go to Google Cloud Console → Compute Engine → VM instances${RESET_FORMAT}"
+echo "${CYAN_TEXT}   - Find 'siege-vm' and click the 'SSH' button${RESET_FORMAT}"
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}2. In the SSH terminal, run the following commands:${RESET_FORMAT}"
+echo "${CYAN_TEXT}   sudo apt-get -y install siege${RESET_FORMAT}"
+echo "${CYAN_TEXT}   export LB_IP=$LB_IP_ADDRESS${RESET_FORMAT}"
+echo "${CYAN_TEXT}   siege -c 150 -t120s http://\$LB_IP${RESET_FORMAT}"
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}3. Alternative: Connect via gcloud command:${RESET_FORMAT}"
+echo "${CYAN_TEXT}   gcloud compute ssh siege-vm --zone=$VM_ZONE${RESET_FORMAT}"
+echo "${CYAN_TEXT}   Then run the commands above inside the SSH session${RESET_FORMAT}"
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}Note: This load test should show SUCCESSFUL responses (200 OK).${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}Press Enter AFTER you have completed the load testing...${RESET_FORMAT}"
+read -p ""
+echo "${GREEN_TEXT}${BOLD_TEXT}Load testing completed!${RESET_FORMAT}"
+printf "%s\n" "${GREEN_TEXT}${BOLD_TEXT}✔ Done! Subscribe to Dr Abhishek ❤️${RESET_FORMAT}"
+echo
+
+# ================= STEP 2: CLOUD ARMOR POLICY CREATION =================
+echo "${RED_TEXT}${BOLD_TEXT}=================================================================${RESET_FORMAT}"
+echo "${RED_TEXT}${BOLD_TEXT}    STEP 2: CREATE CLOUD ARMOR SECURITY POLICY                ${RESET_FORMAT}"
+echo "${RED_TEXT}${BOLD_TEXT}=================================================================${RESET_FORMAT}"
+echo
+
 echo "${RED_TEXT}${BOLD_TEXT}Creating a Cloud Armor security policy named 'denylist-siege' to block the siege VM's IP...${RESET_FORMAT}"
 start_spinner "Creating Cloud Armor security policy: denylist-siege..."
 curl -X POST -H "Authorization: Bearer $(gcloud auth print-access-token)" -H "Content-Type: application/json" \
@@ -411,16 +451,21 @@ sleep 60
 printf "%s\n" "${GREEN_TEXT}${BOLD_TEXT}✔ Done! Subscribe to Dr Abhishek ❤️${RESET_FORMAT}"
 echo
 
+# ================= STEP 3: VERIFICATION LOAD TESTING (AFTER ARMOR) =================
 echo "${BLUE_TEXT}${BOLD_TEXT}=================================================================${RESET_FORMAT}"
-echo "${BLUE_TEXT}${BOLD_TEXT}    LOAD TESTING INSTRUCTIONS                                    ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}    STEP 3: VERIFY CLOUD ARMOR POLICY IS WORKING              ${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}=================================================================${RESET_FORMAT}"
 echo
-echo "${GREEN_TEXT}${BOLD_TEXT}To perform load testing, manually connect to your siege VM and run:${RESET_FORMAT}"
-echo "${CYAN_TEXT}sudo apt-get update && sudo apt-get install -y siege${RESET_FORMAT}"
-echo "${CYAN_TEXT}siege -c 150 -t 120s http://$LB_IP_ADDRESS${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}Now, AFTER creating the Cloud Armor policy, verify it's working:${RESET_FORMAT}"
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}Note: The Cloud Armor policy 'denylist-siege' is now active and will${RESET_FORMAT}"
-echo "${YELLOW_TEXT}${BOLD_TEXT}block traffic from IP: $EXTERNAL_IP with 403 Forbidden response.${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}1. Connect to your siege VM again (same as before)${RESET_FORMAT}"
+echo "${CYAN_TEXT}   gcloud compute ssh siege-vm --zone=$VM_ZONE${RESET_FORMAT}"
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}2. Run the load test again:${RESET_FORMAT}"
+echo "${CYAN_TEXT}   siege -c 150 -t120s http://\$LB_IP${RESET_FORMAT}"
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}This time, the load test should show 403 FORBIDDEN errors${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}because the Cloud Armor policy is now blocking traffic from IP: $EXTERNAL_IP${RESET_FORMAT}"
 echo
 
 echo "${GREEN_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
