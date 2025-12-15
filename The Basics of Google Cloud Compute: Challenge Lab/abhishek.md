@@ -32,6 +32,20 @@ sudo chmod +x abhishekARC120.sh
 ./abhishekARC120.sh
 
 ```
+
+```
+sudo apt update
+sudo apt install nginx -y
+sudo systemctl start nginx
+sudo systemctl enable nginx
+EOF_END
+
+# Copy the script to the instance
+gcloud compute scp prepare_disk.sh my-instance:/tmp --zone=$ZONE --quiet
+
+# Execute the script on the instance
+gcloud compute ssh my-instance --zone=$ZONE --quiet --command="sudo bash /tmp/prepare_disk.sh"
+```
 ### Congratulations !!!!
 
 Connect with fellow cloud enthusiasts, ask questions, and share your learning journey.  
