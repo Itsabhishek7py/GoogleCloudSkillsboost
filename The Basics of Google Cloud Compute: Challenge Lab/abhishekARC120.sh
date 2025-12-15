@@ -36,37 +36,43 @@ echo "* Thank you for your support!                                        *"
 echo "**********************************************************************"
 echo "${RESET}"
 
+# Create instance with Debian 12 (bookworm)
 gcloud compute instances create my-instance \
     --machine-type=e2-medium \
     --zone=$ZONE \
     --image-project=debian-cloud \
-    --image-family=debian-11 \
+    --image-family=debian-12 \
     --boot-disk-size=10GB \
     --boot-disk-type=pd-balanced \
     --create-disk=size=100GB,type=pd-standard,mode=rw,device-name=additional-disk \
     --tags=http-server
 
+# Create additional disk
 gcloud compute disks create mydisk \
     --size=200GB \
     --zone=$ZONE
 
+# Attach additional disk to instance
 gcloud compute instances attach-disk my-instance \
     --disk=mydisk \
     --zone=$ZONE
 
 sleep 30
 
+# Create script to prepare the disk and install nginx
 cat > prepare_disk.sh <<'EOF_END'
-
+#!/bin/bash
 sudo apt update
 sudo apt install nginx -y
 sudo systemctl start nginx
-
+sudo systemctl enable nginx
 EOF_END
 
-gcloud compute scp prepare_disk.sh my-instance:/tmp --project=$DEVSHELL_PROJECT_ID --zone=$ZONE --quiet
+# Copy the script to the instance
+gcloud compute scp prepare_disk.sh my-instance:/tmp --zone=$ZONE --quiet
 
-gcloud compute ssh my-instance --project=$DEVSHELL_PROJECT_ID --zone=$ZONE --quiet --command="bash /tmp/prepare_disk.sh"
+# Execute the script on the instance
+gcloud compute ssh my-instance --zone=$ZONE --quiet --command="sudo bash /tmp/prepare_disk.sh"
 
 echo "${BG_RED}${BOLD}Congratulations For Completing The Lab !!!${RESET}"
 
