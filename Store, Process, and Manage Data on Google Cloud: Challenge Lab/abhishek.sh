@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Color Definitions
 BLACK_TEXT=$'\033[0;90m'
 RED_TEXT=$'\033[0;91m'
 GREEN_TEXT=$'\033[0;92m'
@@ -9,34 +8,27 @@ BLUE_TEXT=$'\033[0;94m'
 MAGENTA_TEXT=$'\033[0;95m'
 CYAN_TEXT=$'\033[0;96m'
 WHITE_TEXT=$'\033[0;97m'
+TEAL_TEXT=$'\033[38;5;50m'
+PURPLE_TEXT=$'\033[0;35m'
+GOLD_TEXT=$'\033[0;33m'
+LIME_TEXT=$'\033[0;92m'
+MAROON_TEXT=$'\033[0;91m'
+NAVY_TEXT=$'\033[0;94m'
 
-NO_COLOR=$'\033[0m'
-RESET_FORMAT=$'\033[0m'
 BOLD_TEXT=$'\033[1m'
 UNDERLINE_TEXT=$'\033[4m'
+BLINK_TEXT=$'\033[5m'
+NO_COLOR=$'\033[0m'
+RESET_FORMAT=$'\033[0m'
+REVERSE_TEXT=$'\033[7m'
 
-# Display Header
-print_header() {
-    echo
-    echo "${CYAN_TEXT}${BOLD_TEXT}╔════════════════════════════════════════════════════════╗${RESET_FORMAT}"
-    echo "${CYAN_TEXT}${BOLD_TEXT}              WELCOME TO DR ABHISHEK CLOUD TUTORIAL       ${RESET_FORMAT}"
-    echo "${CYAN_TEXT}${BOLD_TEXT}╚════════════════════════════════════════════════════════╝${RESET_FORMAT}"
-    echo
-}
+clear
 
-# Display Footer
-print_footer() {
-    echo
-    echo "${GREEN_TEXT}${BOLD_TEXT}╔════════════════════════════════════════════════════════╗${RESET_FORMAT}"
-    echo "${GREEN_TEXT}${BOLD_TEXT}           LAB Completed Successfully!                ${RESET_FORMAT}"
-    echo "${GREEN_TEXT}${BOLD_TEXT}╚════════════════════════════════════════════════════════╝${RESET_FORMAT}"
-    echo
-    echo "${BLUE_TEXT}${BOLD_TEXT}For more cloud tutorials, visit:${RESET_FORMAT}"
-    echo "${BLUE_TEXT}https://www.youtube.com/@drabhishek.5460/videos${RESET_FORMAT}"
-    echo
-}
-
-print_header
+# Welcome message
+echo "${CYAN_TEXT}${BOLD_TEXT}==================================================================${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}      WELCOME TO DR. ABHISHEK'S CLOUD TUTORIAL -LIKE THE VIDEO    ${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}==================================================================${RESET_FORMAT}"
+echo
 
 # Get User Input
 read -p "${YELLOW_TEXT}${BOLD_TEXT}Enter Bucket Name: ${RESET_FORMAT}" BUCKET
@@ -219,4 +211,16 @@ echo "${GREEN_TEXT}${BOLD_TEXT}Uploading Test Image...${RESET_FORMAT}"
 wget -q https://storage.googleapis.com/cloud-training/gsp315/map.jpg 
 gsutil cp map.jpg gs://$BUCKET
 
-print_footer
+echo
+echo "${CYAN_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}         LAB COMPLETED SUCCESSFULLY!                  ${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
+echo
+echo "${MAGENTA_TEXT}${BOLD_TEXT}*******************************************************${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}*  Thank you for using Dr. Abhishek's Cloud Tutorial! *${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}*******************************************************${RESET_FORMAT}"
+echo
+echo "${BLUE_TEXT}${BOLD_TEXT}Don't forget to subscribe to Dr. Abhishek's YouTube channel:${RESET_FORMAT}"
+echo "${RED_TEXT}${BOLD_TEXT}${UNDERLINE_TEXT}https://www.youtube.com/@drabhishek.5460/videos${RESET_FORMAT}"
+echo
+echo "${GREEN_TEXT}${BOLD_TEXT}Please like, share and subscribe for more cloud tutorials!${RESET_FORMAT}"
