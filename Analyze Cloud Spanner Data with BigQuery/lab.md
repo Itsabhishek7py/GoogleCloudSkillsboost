@@ -20,9 +20,11 @@ If you found this helpful, please **Subscribe** to [Dr Abhishek](https://www.you
 
 
 ```bash
-curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Analyze%20Cloud%20Spanner%20Data%20with%20BigQuery/drabhishek.sh
-sudo chmod +x drabhishek.sh
-./drabhishek.sh
+export PROJECT_ID=
+
+bq mk --connection --connection_type='CLOUD_SPANNER' --properties="{\"database\":\"projects/${PROJECT_ID}/instances/ecommerce-instance/databases/ecommerce\"}" --location=us-east4 spanner_connection
+
+bq query --use_legacy_sql=false "CREATE OR REPLACE VIEW \`${PROJECT_ID}.ecommerce.order_history\` AS SELECT * FROM EXTERNAL_QUERY(\"${PROJECT_ID}.us-east4.spanner_connection\", \"SELECT * FROM orders;\");"
 ```
 
 
