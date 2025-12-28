@@ -82,7 +82,6 @@ print(result)
 ```
 ```
 import os
-import yaml
 import logging
 import google.cloud.logging
 from flask import Flask, render_template, request
@@ -92,47 +91,104 @@ from google.cloud.firestore_v1.vector import Vector
 from google.cloud.firestore_v1.base_vector_query import DistanceMeasure
 
 import vertexai
-from vertexai.generative_models import GenerativeModel
 from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
-from langchain_google_vertexai import VertexAIEmbeddings
+from vertexai.generative_models import (
+    GenerativeModel,
+    SafetySetting,
+    HarmCategory,
+    HarmBlockThreshold,
+)
 
-# Configure Cloud Logging
+# -------------------------------------------------------------------
+# Logging
+# -------------------------------------------------------------------
 logging_client = google.cloud.logging.Client()
 logging_client.setup_logging()
 logging.basicConfig(level=logging.INFO)
 
-# Read application variables from the config fle
+# -------------------------------------------------------------------
+# App config
+# -------------------------------------------------------------------
 BOTNAME = "FreshBot"
 SUBTITLE = "Your Friendly Restaurant Safety Expert"
 
 app = Flask(__name__)
 
-# Initializing the Firebase client
+# -------------------------------------------------------------------
+# Firestore client
+# -------------------------------------------------------------------
 db = firestore.Client()
 
-# TODO: Instantiate a collection reference
+# ✅ Food safety vector collection
 collection = db.collection("food-safety")
 
-from vertexai.generative_models import GenerativeModel, SafetySetting, HarmCategory, HarmBlockThreshold
+# -------------------------------------------------------------------
+# Vertex AI init
+# -------------------------------------------------------------------
+vertexai.init()
 
+
+# ✅ Embedding model (REQUIRED by lab)
+embedding_model = TextEmbeddingModel.from_pretrained("text-embedding-005")
+
+# ✅ Gemini model with correct safety config
 gen_model = GenerativeModel(
     "gemini-2.0-flash",
     generation_config={"temperature": 0},
     safety_settings=[
         SafetySetting(
             category=HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-            threshold=HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
+            threshold=HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
         )
-    ]
+    ],
 )
 
+# -------------------------------------------------------------------
+# Vector search
+# -------------------------------------------------------------------
+def search_vector_database(question: str) -> str:
+    # 1️⃣ Generate embedding for the query
+    embedding = embedding_model.get_embeddings(
+        [TextEmbeddingInput(question, "RETRIEVAL_QUERY")]
+    )[0].values
+
+    query_vector = Vector(embedding)
+
+    # 2️⃣ Vector similarity search (CORRECT METHOD)
+    docs = (
+        collection.find_nearest(
+            vector_field="embedding",  # 🔴 change if your field name differs
+            query_vector=query_vector,
+            distance_measure=DistanceMeasure.COSINE,
+            limit=5,
+        )
+        .get()
+    )
+
+    # 3️⃣ Build context
+    context = ""
+    for doc in docs:
+        data = doc.to_dict()
+        context += data.get("content", "") + "\n"
+
+    # REQUIRED logging
+    logging.info(
+        context,
+        extra={"labels": {"service": "cymbal-service", "component": "context"}},
+    )
+
+    return context
 
 
-# TODO: Implement this function to return relevant context
-# from your vector database
-def ask_gemini(question):
+# -------------------------------------------------------------------
+# Ask Gemini using vector context
+# -------------------------------------------------------------------
+def ask_gemini(question: str) -> str:
     context = search_vector_database(question)
-    prompt = f"""Use the following food safety manual context to answer the question.
+
+    prompt = f"""
+You are a food safety expert.
+Answer the question ONLY using the context provided.
 
 CONTEXT:
 {context}
@@ -140,75 +196,36 @@ CONTEXT:
 QUESTION:
 {question}
 """
-    response = gen_model.predict(prompt)
+
+    response = gen_model.generate_content(prompt)
     return response.text
 
-    # 1. Generate the embedding of the query
 
-    # 2. Get the 5 nearest neighbors from your collection.
-    # Call the get() method on the result of your call to
-    # find_neighbors to retrieve document snapshots.
-
-    # 3. Call to_dict() on each snapshot to load its data.
-    # Combine the snapshots into a single string named context
-
-
-    # Don't delete this logging statement.
-    logging.info(
-        context, extra={"labels": {"service": "cymbal-service", "component": "context"}}
-    )
-    return context
-
-# TODO: Implement this function to pass Gemini the context data,
-# generate a response, and return the response text.
-def ask_gemini(question):
-
-    # 1. Create a prompt_template with instructions to the model
-    # to use provided context info to answer the question.
-    prompt_template = ""
-
-    # 2. Use your search_vector_database function to retrieve context
-    # relevant to the question.
-    
-    # 3. Format the prompt template with the question & context
-
-    # 4. Pass the complete prompt template to gemini and get the text
-    # of its response to return below.
-    response = "Not implemented."
-
-    return response
-
-# The Home page route
-@app.route("/", methods=["POST", "GET"])
+# -------------------------------------------------------------------
+# Flask routes
+# -------------------------------------------------------------------
+@app.route("/", methods=["GET", "POST"])
 def main():
-
-    # The user clicked on a link to the Home page
-    # They haven't yet submitted the form
     if request.method == "GET":
         question = ""
         answer = "Hi, I'm FreshBot, what can I do for you?"
-
-    # The user asked a question and submitted the form
-    # The request.method would equal 'POST'
     else:
         question = request.form["input"]
-        # Do not delete this logging statement.
+
+
+
         logging.info(
             question,
             extra={"labels": {"service": "cymbal-service", "component": "question"}},
         )
-        
-        # Ask Gemini to answer the question using the data
-        # from the database
+
         answer = ask_gemini(question)
 
-    # Do not delete this logging statement.
     logging.info(
-        answer, extra={"labels": {"service": "cymbal-service", "component": "answer"}}
+        answer,
+        extra={"labels": {"service": "cymbal-service", "component": "answer"}},
     )
-    print("Answer: " + answer)
 
-    # Display the home page with the required variables set
     config = {
         "title": BOTNAME,
         "subtitle": SUBTITLE,
@@ -219,8 +236,12 @@ def main():
 
     return render_template("index.html", config=config)
 
+
+# -------------------------------------------------------------------
+# App entrypoint
+# -------------------------------------------------------------------
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
 ```
 ```
 gcloud storage cp -r gs://partner-genai-bucket/genai069/gen-ai-assessment .
