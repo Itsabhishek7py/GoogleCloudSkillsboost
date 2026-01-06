@@ -32,7 +32,7 @@ vertexai.init(project=PROJECT_ID, location=LOCATION)
 
 def load_image_from_url(prompt):
     print(f"Processing prompt: {prompt}")
-    image_url = "https:/ /storage.googleapis.com/cloud-samples-data/generative-ai/image/scones.jpg"
+    image_url = "https://storage.googleapis.com/cloud-samples-data/generative-ai/image/scones.jpg"
     
     try:
         with urllib.request.urlopen(image_url) as response:
