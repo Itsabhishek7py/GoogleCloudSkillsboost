@@ -2,7 +2,7 @@
 # Multimodal Content Generation with Gemini on Vertex AI
 
 
-[![Watch on YouTube](https://img.shields.io/badge/Watch_on_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/C3WIvvFjivs)
+[![Watch on YouTube](https://img.shields.io/badge/Watch_on_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/i86rdVw_ri4)
 
 > **Note:** Establish Hybrid Network Connectivity with NCC
 
