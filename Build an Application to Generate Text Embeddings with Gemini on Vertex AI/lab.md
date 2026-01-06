@@ -18,7 +18,7 @@ If you found this helpful, please **Subscribe** to [Dr Abhishek](https://www.you
 - **DM for credit or removal request (no copyright intended) ©All rights and credits for the original content belong to Google Cloud [Google Cloud Skill Boost website](https://www.cloudskillsboost.google/)** 🙏
 
 
-
+### Update region too
 ```bash
 import vertexai
 from vertexai.language_models import TextEmbeddingModel
