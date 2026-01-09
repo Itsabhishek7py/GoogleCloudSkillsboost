@@ -20,7 +20,9 @@ If you found this helpful, please **Subscribe** to [Dr Abhishek](https://www.you
 
 ```bash
 
-
+curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Cloud%20Spanner%20%20Loading%20Data%20and%20Performing%20Backups/drabhishek.sh
+sudo chmod +x drabhishek.sh
+./drabhishek.sh
 ```
 
 
