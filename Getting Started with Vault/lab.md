@@ -2,7 +2,7 @@
 # Getting Started with Vault
 
 
-[![Watch on YouTube](https://img.shields.io/badge/Watch_on_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/C3WIvvFjivs)
+[![Watch on YouTube](https://img.shields.io/badge/Watch_on_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)]
 
 > **Note:** Establish Hybrid Network Connectivity with NCC
 
@@ -20,8 +20,9 @@ If you found this helpful, please **Subscribe** to [Dr Abhishek](https://www.you
 
 
 ```bash
-
-
+curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Getting%20Started%20with%20Vault/drabhishek.sh
+sudo chmod +x drabhishek.sh
+./drabhishek.sh
 ```
 
 
