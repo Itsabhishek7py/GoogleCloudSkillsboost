@@ -24,12 +24,6 @@ If you found this helpful, please **Subscribe** to [Dr Abhishek](https://www.you
 PROJECT=$(gcloud config get-value project) && BUCKET="qwiklabs-gcp-03-479c3001b85e-bucket" && gsutil setmeta -h "Content-Type:text/html" gs://${BUCKET}/index.html && gsutil setmeta -h "Content-Type:text/css" gs://${BUCKET}/style.css && gsutil setmeta -h "Content-Type:image/jpeg" gs://${BUCKET}/logo.jpg && gsutil web set -m index.html -e 404.html gs://${BUCKET} && gsutil iam ch allUsers:objectViewer gs://${BUCKET}
 ```
 
-## if getting error try below else restart the lab
-
-```
-
-PROJECT=$(gcloud config get-value project) && BUCKET="$BUCKET" && gsutil setmeta -h "Content-Type:text/html" gs://${BUCKET}/index.html && gsutil setmeta -h "Content-Type:text/css" gs://${BUCKET}/style.css && gsutil setmeta -h "Content-Type:image/jpeg" gs://${BUCKET}/logo.jpg && gsutil web set -m index.html -e 404.html gs://${BUCKET} && gsutil iam ch allUsers:objectViewer gs://${BUCKET}
-````
 
 
 
