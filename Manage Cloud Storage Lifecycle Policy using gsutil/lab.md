@@ -13,7 +13,6 @@
 ### Run the following Commands in CloudShell
 
 ```
-
 curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Manage%20Cloud%20Storage%20Lifecycle%20Policy%20using%20gsutil/abhishek.sh
 sudo chmod +x abhishek.sh
 ./abhishek.sh
