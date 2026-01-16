@@ -19,7 +19,7 @@ If you found this helpful, please **Subscribe** to [Dr Abhishek](https://www.you
 
 
 
-```bash
+
 
 ```bash
 export BUCKET=
@@ -36,7 +36,7 @@ gsutil acl set -a public-read gs://$BUCKET/logo.jpg
 
 ```
 
-
+```
 
 
 <div align="center">
