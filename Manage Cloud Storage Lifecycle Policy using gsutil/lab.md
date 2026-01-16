@@ -13,9 +13,57 @@
 ### Run the following Commands in CloudShell
 
 ```
-curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Manage%20Cloud%20Storage%20Lifecycle%20Policy%20using%20gsutil/abhishek.sh
-sudo chmod +x abhishek.sh
-./abhishek.sh
+# I Know you will Steal it
+PROJECT_ID=$(gcloud config get-value project)
+
+cat <<EOF > lifecycle.json
+{
+  "rule": [
+    {
+      "action": {
+        "type": "SetStorageClass",
+        "storageClass": "NEARLINE"
+      },
+      "condition": {
+        "daysSinceNoncurrentTime": 30,
+        "matchesPrefix": ["projects/active/"]
+      }
+    },
+    {
+      "action": {
+        "type": "SetStorageClass",
+        "storageClass": "NEARLINE"
+      },
+      "condition": {
+        "daysSinceNoncurrentTime": 90,
+        "matchesPrefix": ["archive/"]
+      }
+    },
+    {
+      "action": {
+        "type": "SetStorageClass",
+        "storageClass": "COLDLINE"
+      },
+      "condition": {
+        "daysSinceNoncurrentTime": 180,
+        "matchesPrefix": ["archive/"]
+      }
+    },
+    {
+      "action": {
+        "type": "Delete"
+      },
+      "condition": {
+        "age": 7,
+        "matchesPrefix": ["processing/temp_logs/"]
+      }
+    }
+  ]
+}
+EOF
+
+
+gsutil lifecycle set lifecycle.json gs://$PROJECT_ID-bucket
 ```
 ### Congratulations !!!!
 
