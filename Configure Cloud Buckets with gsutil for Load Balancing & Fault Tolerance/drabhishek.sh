@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "🚀 Starting deployment..."
-echo "😼 Copy cat is back : D"
+echo "😼 Agaye code lekar notepad me paste karne wale sirgk : D"
 echo "-----------------------------------"
 
 PROJECT_ID=$(gcloud config get-value project)
@@ -41,3 +41,9 @@ gcloud compute target-http-proxies create website-proxy \
 echo "🌍 Creating global forwarding rule on port 80..."
 gcloud compute forwarding-rules create website-rule \
   --global \
+  --target-http-proxy=website-proxy \
+  --ports=80
+
+echo "-----------------------------------"
+echo "✅ Deployment completed successfully!"
+echo "😎 Copy cat strikes again : D"
