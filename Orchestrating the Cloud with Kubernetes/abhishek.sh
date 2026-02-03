@@ -29,7 +29,7 @@ echo ""
 sleep 3
 
 echo "Starting Google Kubernetes Engine lab setup..."
-echo "This comprehensive script will complete ALL lab tasks automatically"
+echo "This lab is amazing hai na guys"
 echo ""
 
 # Display progress function
@@ -144,7 +144,8 @@ kubectl create -f deployments/hello.yaml
 
 progress "Creating fortune service..."
 kubectl create -f services/hello.yaml
-
+kubectl create -f deployments/fortune-service.yaml
+kubectl create -f services/fortune-service.yaml
 progress "Creating frontend configuration..."
 kubectl create configmap nginx-frontend-conf --from-file=nginx/frontend.conf
 
