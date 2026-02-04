@@ -76,8 +76,8 @@ if __name__ == "__main__":
     image_path = generate_bouquet_image(prompt)
     analyze_bouquet_image(image_path)
 EOF
-
-
+```
+```
 /usr/bin/python3 bouquet_ai.py
 ```
 
