@@ -19,7 +19,9 @@ If you found this helpful, please **Subscribe** to [Dr Abhishek](https://www.you
 
 
 ```bash
-
+curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Use%20an%20internal%20application%20load%20balancer/drabhishek.sh
+sudo chmod +x drabhishek.sh
+./drabhishek.sh
 
 ```
 
