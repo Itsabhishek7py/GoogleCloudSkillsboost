@@ -104,32 +104,51 @@ echo "${GREEN_TEXT}${BOLD_TEXT}✅ Notification channel created${RESET_FORMAT}"
 echo
 
 # ================= ALERT POLICY =================
-echo "${GREEN_TEXT}${BOLD_TEXT}▬▬▬▬ ALERT POLICY ▬▬▬▬${RESET_FORMAT}"
+# Section 5: Alert Policy
+echo "${GREEN_TEXT}${BOLD_TEXT}▬▬▬▬▬▬▬▬ ALERT POLICY ▬▬▬▬▬▬▬▬${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}🚨 Creating alert policy...${RESET_FORMAT}"
+channel_info=$(gcloud beta monitoring channels list)
+channel_id=$(echo "$channel_info" | grep -oP 'name: \K[^ ]+' | head -n 1)
 
-cat > apache-alert-policy.json <<EOF
+cat > app-engine-error-percent-policy.json <<EOF_CP
 {
-  "displayName": "Apache Traffic Alert",
+  "displayName": "alert",
+  "userLabels": {},
   "conditions": [
     {
-      "displayName": "Apache Traffic",
+      "displayName": "VM Instance - Traffic",
       "conditionThreshold": {
-        "filter": "resource.type=\"gce_instance\" AND metric.type=\"agent.googleapis.com/apache/traffic\"",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"agent.googleapis.com/apache/traffic\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "60s",
+            "crossSeriesReducer": "REDUCE_NONE",
+            "perSeriesAligner": "ALIGN_RATE"
+          }
+        ],
         "comparison": "COMPARISON_GT",
-        "thresholdValue": 3072,
         "duration": "300s",
-        "trigger": { "count": 1 }
+        "trigger": {
+          "count": 1
+        },
+        "thresholdValue": 3072
       }
     }
   ],
-  "notificationChannels": ["$CHANNEL_ID"],
-  "enabled": true
+  "alertStrategy": {
+    "autoClose": "1800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": [
+    "$channel_id"
+  ],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
-EOF
+EOF_CP
 
-gcloud alpha monitoring policies create \
-  --policy-from-file=apache-alert-policy.json
-
-echo "${GREEN_TEXT}${BOLD_TEXT}✅ Alert policy created${RESET_FORMAT}"
+gcloud alpha monitoring policies create --policy-from-file="app-engine-error-percent-policy.json"
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Alert policy created successfully!${RESET_FORMAT}"
 echo
 
 # ================= COMPLETE =================
