@@ -1,7 +1,7 @@
 
 # Build a Smart Cloud Application with Vibe Coding: Challenge Lab
 
-[![Watch on YouTube](https://img.shields.io/badge/Watch_on_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/C3WIvvFjivs)
+[![Watch on YouTube](https://img.shields.io/badge/Watch_on_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/QLpiCXoLMlE)
 
 > **Note:** Establish Hybrid Network Connectivity with NCC
 
@@ -46,6 +46,8 @@ gcloud projects add-iam-policy-binding "$PROJECT_ID" \
 
 echo -e "\n\e[1;32mIAM roles applied successfully for\e[0m \e[1;33m$STUDENT_EMAIL\e[0m \e[1;32mon project\e[0m \e[1;33m$PROJECT_ID\e[0m\n"
 ```
+[![Watch on YouTube For 100% SCORE](https://img.shields.io/badge/Watch_on_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/QLpiCXoLMlE)
+
 ```bash
 tools = [google_search]
 ```
