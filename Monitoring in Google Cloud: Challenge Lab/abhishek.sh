@@ -150,7 +150,24 @@ EOF_CP
 gcloud alpha monitoring policies create --policy-from-file="app-engine-error-percent-policy.json"
 echo "${GREEN_TEXT}${BOLD_TEXT}✅ Alert policy created successfully!${RESET_FORMAT}"
 echo
+# ================= LOG-BASED METRIC =================
+echo "${GREEN_TEXT}${BOLD_TEXT}▬▬▬▬ LOG-BASED METRIC ▬▬▬▬${RESET_FORMAT}"
 
+PROJECT_ID=$(gcloud config get-value project)
+
+gcloud logging metrics create drabhi \
+  --description="Count Apache 200 OK responses" \
+  --log-filter='resource.type="gce_instance"
+logName="projects/'"$PROJECT_ID"'/logs/apache-access"
+textPayload:"200"'
+
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Log-based metric 'drabhi' created${RESET_FORMAT}"
+echo
+# Section 6: Quick Links
+echo "${GREEN_TEXT}${BOLD_TEXT}▬▬▬▬▬▬▬▬ QUICK LINKS ▬▬▬▬▬▬▬▬${RESET_FORMAT}"
+echo "${WHITE_TEXT}${BOLD_TEXT}📊 Dashboard: ${YELLOW_TEXT}${UNDERLINE_TEXT}https://console.cloud.google.com/monitoring/dashboards?&project=$DEVSHELL_PROJECT_ID${RESET_FORMAT}"
+echo "${WHITE_TEXT}${BOLD_TEXT}📈 Metrics: ${YELLOW_TEXT}${UNDERLINE_TEXT}https://console.cloud.google.com/logs/metrics/edit?project=$DEVSHELL_PROJECT_ID${RESET_FORMAT}"
+echo
 # ================= COMPLETE =================
 echo "${GREEN_TEXT}${BOLD_TEXT}╔════════════════════════════════════════════════════════╗${RESET_FORMAT}"
 echo "${GREEN_TEXT}${BOLD_TEXT}            🎉 LAB COMPLETE SUCCESSFULLY 🎉             ${RESET_FORMAT}"
