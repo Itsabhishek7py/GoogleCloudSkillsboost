@@ -74,7 +74,7 @@ echo
 # ================= UPTIME CHECK =================
 echo "${GREEN_TEXT}${BOLD_TEXT}▬▬▬▬ UPTIME CHECK ▬▬▬▬${RESET_FORMAT}"
 
-gcloud monitoring uptime create drabhishek-uptime-check \
+gcloud monitoring uptime create drabhishek \
   --resource-type=uptime-url \
   --resource-labels=host=$VM_EXTERNAL_IP,path=/,port=80
 
