@@ -22,7 +22,7 @@ If you found this helpful, please **Subscribe** to [Dr Abhishek](https://www.you
 
 
 ```bash
-gcloud compute firewall-rules update allow-http-rule --allow=tcp:80 --source-ranges=0.0.0.0/0 --target-tags=allow-http # drabhishek papaji ka code
+gcloud compute firewall-rules update allow-http-rule --allow=tcp:80 --source-ranges=0.0.0.0/0 --target-tags=allow-http # draabhishek ji ka code hai :D Namstey sabko
 
 ```
 
