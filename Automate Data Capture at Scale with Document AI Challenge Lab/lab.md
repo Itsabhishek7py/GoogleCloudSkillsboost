@@ -56,7 +56,6 @@ sudo chmod +x abhishek.sh
 ### 🚨If you're not getting score on task 5 then run the below commands few times
 
 ```
-
 export PROJECT_ID=$(gcloud config get-value core/project)
 gsutil -m cp -r gs://cloud-training/gsp367/* \
 ~/document-ai-challenge/invoices gs://${PROJECT_ID}-input-invoices/
