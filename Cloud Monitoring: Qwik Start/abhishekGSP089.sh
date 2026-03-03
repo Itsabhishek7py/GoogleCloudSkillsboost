@@ -20,12 +20,9 @@ UNDERLINE_TEXT=$'\033[4m'
 clear
 
 # Welcome message
-echo "${BLUE_TEXT}${BOLD_TEXT}===============================================${RESET_FORMAT}"
-echo "${BLUE_TEXT}${BOLD_TEXT}        WELCOME TO DR ABHISHEK TUTORIALS      ${RESET_FORMAT}"
-echo "${BLUE_TEXT}${BOLD_TEXT}===============================================${RESET_FORMAT}"
-echo
-
-echo "${BLUE_TEXT}${BOLD_TEXT}        LIKE THE VIDEO & SUBSCRIBE NOW...              ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}=======================================${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}         WELCOME TO DR ABHISHEK CLOUD...  ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}=======================================${RESET_FORMAT}"
 echo
 
 # Prompt user for Zone
@@ -35,7 +32,7 @@ export ZONE
 
 echo "${CYAN_TEXT}${BOLD_TEXT}Creating a new VM instance... Please wait.${RESET_FORMAT}"
 
-# Create VM instance
+# Create the instance with the necessary metadata and tags
 gcloud compute instances create lamp-1-vm \
     --project=$DEVSHELL_PROJECT_ID \
     --zone=$ZONE \
@@ -52,7 +49,7 @@ gcloud compute instances create lamp-1-vm \
     --labels=goog-ec-src=vm_add-gcloud \
     --reservation-affinity=any
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}Creating firewall rule to allow HTTP traffic...${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}Creating a firewall rule to allow HTTP traffic...${RESET_FORMAT}"
 
 gcloud compute firewall-rules create allow-http \
     --project=$DEVSHELL_PROJECT_ID \
@@ -72,7 +69,7 @@ gcloud compute config-ssh --project "$DEVSHELL_PROJECT_ID" --quiet
 
 echo "${CYAN_TEXT}${BOLD_TEXT}Installing Apache and PHP on the VM...${RESET_FORMAT}"
 
-gcloud compute ssh lamp-1-vm --project "$DEVSHELL_PROJECT_ID" --zone $ZONE --command "sudo apt-get update && sudo apt-get install apache2 php -y && sudo systemctl restart apache2"
+gcloud compute ssh lamp-1-vm --project "$DEVSHELL_PROJECT_ID" --zone $ZONE --command "sudo sed -i '/buster-backports/d' /etc/apt/sources.list && sudo apt-get update && sudo apt-get install apache2 php7.3 -y && sudo service apache2 restart"
 
 sleep 10
 
@@ -86,51 +83,70 @@ gcloud monitoring uptime create lamp-uptime-check \
   --resource-type="gce-instance" \
   --resource-labels=project_id=$DEVSHELL_PROJECT_ID,instance_id=$INSTANCE_ID,zone=$ZONE
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}Creating Email Notification Channel...${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}Creating an email notification channel...${RESET_FORMAT}"
 
-read -p "Enter your Email Address: " USER_EMAIL
-
-cat > email-channel.json <<EOF
+cat > email-channel.json <<EOF_END
 {
   "type": "email",
-  "displayName": "DrAbhishekAlerts",
-  "description": "Dr Abhishek Lab Alerts",
+  "displayName": "drabhishek",
+  "description": "drabhishek",
   "labels": {
     "email_address": "$USER_EMAIL"
   }
 }
-EOF
+EOF_END
 
-gcloud beta monitoring channels create --channel-content-from-file=email-channel.json
+gcloud beta monitoring channels create --channel-content-from-file="email-channel.json"
 
-echo "${CYAN_TEXT}${BOLD_TEXT}Fetching Notification Channel ID...${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}Fetching channel ID...${RESET_FORMAT}"
 
-channel_id=$(gcloud beta monitoring channels list --format="value(name)" | head -n 1)
+channel_info=$(gcloud beta monitoring channels list)
+channel_id=$(echo "$channel_info" | grep -oP 'name: \K[^ ]+' | head -n 1)
 
-echo "${MAGENTA_TEXT}${BOLD_TEXT}Creating Alert Policy...${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}Creating an alert policy for network traffic...${RESET_FORMAT}"
 
-cat > alert-policy.json <<EOF
+cat > app-engine-error-percent-policy.json <<EOF_END
 {
   "displayName": "Inbound Traffic Alert",
+  "userLabels": {},
   "conditions": [
     {
-      "displayName": "VM Network Traffic",
+      "displayName": "VM Instance - Network traffic",
       "conditionThreshold": {
-        "filter": "resource.type=\"gce_instance\" AND metric.type=\"agent.googleapis.com/interface/traffic\"",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"agent.googleapis.com/interface/traffic\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "crossSeriesReducer": "REDUCE_NONE",
+            "perSeriesAligner": "ALIGN_RATE"
+          }
+        ],
         "comparison": "COMPARISON_GT",
-        "thresholdValue": 500,
         "duration": "60s",
-        "trigger": { "count": 1 }
+        "trigger": {
+          "count": 1
+        },
+        "thresholdValue": 500
       }
     }
   ],
+  "alertStrategy": {},
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": ["$channel_id"]
+  "notificationChannels": [
+    "$channel_id"
+  ],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
-EOF
+EOF_END
 
-gcloud alpha monitoring policies create --policy-from-file=alert-policy.json
+gcloud alpha monitoring policies create --policy-from-file="app-engine-error-percent-policy.json"
+
+INSTANCE_ID=$(gcloud compute instances describe lamp-1-vm --zone=$ZONE --format='value(id)')
+
+gcloud monitoring uptime create lamp-uptime-check \
+  --resource-type="gce-instance" \
+  --resource-labels=project_id=$DEVSHELL_PROJECT_ID,instance_id=$INSTANCE_ID,zone=$ZONE
 
 echo
 echo "${GREEN_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
@@ -138,10 +154,5 @@ echo "${GREEN_TEXT}${BOLD_TEXT}              LAB COMPLETED SUCCESSFULLY!        
 echo "${GREEN_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
 
 echo
-echo "${BLUE_TEXT}${BOLD_TEXT}🎉 Welcome to Dr Abhishek Tutorials! 🎉${RESET_FORMAT}"
-echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}If this helped you, please 👍 LIKE the video and 🔔 SUBSCRIBE to the channel!${RESET_FORMAT}"
-echo
-echo "${CYAN_TEXT}${UNDERLINE_TEXT}Watch more labs & tutorials here:${RESET_FORMAT}"
-echo "${CYAN_TEXT}${UNDERLINE_TEXT}https://www.youtube.com/@drabhishek.5460/videos${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}${UNDERLINE_TEXT}https://www.youtube.com/@drabhishek.5460/videos${RESET_FORMAT}"
 echo
