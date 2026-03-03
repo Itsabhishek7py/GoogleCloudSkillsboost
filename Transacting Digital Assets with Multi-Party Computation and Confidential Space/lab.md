@@ -19,9 +19,10 @@ If you found this helpful, please **Subscribe** to [Dr Abhishek](https://www.you
 
 
 ```bash
-curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Transacting%20Digital%20Assets%20with%20Multi-Party%20Computation%20and%20Confidential%20Space/drahishek.sh
+curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Transacting%20Digital%20Assets%20with%20Multi-Party%20Computation%20and%20Confidential%20Space/drabhishek.sh
 sudo chmod +x drabhishek.sh
 ./drabhishek.sh
+
 
 ```
 
