@@ -93,7 +93,7 @@ read -p "Enter your Email Address: " USER_EMAIL
 cat > email-channel.json <<EOF
 {
   "type": "email",
-  "displayName": "DrAbhishek-Alerts",
+  "displayName": "DrAbhishekAlerts",
   "description": "Dr Abhishek Lab Alerts",
   "labels": {
     "email_address": "$USER_EMAIL"
