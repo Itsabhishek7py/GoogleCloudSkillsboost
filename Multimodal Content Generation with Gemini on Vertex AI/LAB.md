@@ -42,7 +42,7 @@ def load_image_from_url(prompt):
             data=image_bytes,
             mime_type="image/jpeg"
         )
-        model = GenerativeModel("gemini-2.0-flash")
+        model = GenerativeModel("gemini-2.5-pro")
 
         response = model.generate_content(
             [image_part, prompt],
