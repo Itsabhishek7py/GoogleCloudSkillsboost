@@ -1,0 +1,30 @@
+From 580ce477ca44f92e499e108988e1f41f3fc7615e Mon Sep 17 00:00:00 2001
+From: GujjetiMokshithcode <randombug9@gmail.com>
+Date: Thu, 19 Mar 2026 15:08:27 +0000
+Subject: [PATCH] fix: remove unnecessary export steps in High Throughput VPN
+ lab (closes #16)
+
+---
+ Building a High throughput VPN/lab.md | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/Building a High throughput VPN/lab.md b/Building a High throughput VPN/lab.md
+index b999443..62528b7 100644
+--- a/Building a High throughput VPN/lab.md	
++++ b/Building a High throughput VPN/lab.md	
+@@ -8,12 +8,6 @@
+ ### ©Credit
+ - **DM for credit or removal request (no copyright intended) ©All rights and credits for the original content belong to Google Cloud [Google Cloud Skill Boost website](https://www.cloudskillsboost.google/)** 🙏
+ 
+-```
+-export ZONE_1=
+-```
+-```
+-export ZONE_2=
+-```
+ 
+ ```bash
+ curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Building%20a%20High%20throughput%20VPN/abhishek.sh
+-- 
+2.53.0
+
