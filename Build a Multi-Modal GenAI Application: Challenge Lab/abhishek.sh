@@ -51,7 +51,7 @@ def generate_image(
       prompt: The text prompt describing what you want to see."""
 
     vertexai.init(project=project_id, location=location)
-    model = ImageGenerationModel.from_pretrained("gemini-2.5-flash-image")
+    model = ImageGenerationModel.from_pretrained("imagen-3.0-generate-002")
     images = model.generate_images(
         prompt=prompt,
         number_of_images=1,
