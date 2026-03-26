@@ -51,7 +51,7 @@ def generate_image(
       prompt: The text prompt describing what you want to see."""
 
     vertexai.init(project=project_id, location=location)
-    model = ImageGenerationModel.from_pretrained("imagen-3.0-generate-002")
+    model = ImageGenerationModel.from_pretrained("gemini-2.5-flash")
     images = model.generate_images(
         prompt=prompt,
         number_of_images=1,
@@ -84,7 +84,7 @@ def analyze_bouquet_image(project_id: str, location: str):
     vertexai.init(project=project_id, location=location)
     
     # Load the Gemini multimodal model
-    model = GenerativeModel("gemini-2.5-flash-image")
+    model = GenerativeModel("")
     
     # Load image part
     image_path = "/home/student/image.jpeg"
