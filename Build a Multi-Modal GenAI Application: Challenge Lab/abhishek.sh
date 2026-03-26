@@ -84,7 +84,7 @@ def analyze_bouquet_image(project_id: str, location: str):
     vertexai.init(project=project_id, location=location)
     
     # Load the Gemini multimodal model
-    model = GenerativeModel("gemini-2.0-flash-001")
+    model = GenerativeModel("gemini-2.5-flash-image")
     
     # Load image part
     image_path = "/home/student/image.jpeg"
