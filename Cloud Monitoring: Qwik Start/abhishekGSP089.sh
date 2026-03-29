@@ -36,7 +36,7 @@ echo "${CYAN_TEXT}${BOLD_TEXT}Creating a new VM instance... Please wait.${RESET_
 gcloud compute instances create lamp-1-vm \
     --project=$DEVSHELL_PROJECT_ID \
     --zone=$ZONE \
-    --machine-type=e2-small \
+    --machine-type=e2-medium \
     --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default \
     --metadata=enable-oslogin=true \
     --maintenance-policy=MIGRATE \
@@ -69,7 +69,7 @@ gcloud compute config-ssh --project "$DEVSHELL_PROJECT_ID" --quiet
 
 echo "${CYAN_TEXT}${BOLD_TEXT}Installing Apache and PHP on the VM...${RESET_FORMAT}"
 
-gcloud compute ssh lamp-1-vm --project "$DEVSHELL_PROJECT_ID" --zone $ZONE --command "sudo sed -i '/buster-backports/d' /etc/apt/sources.list && sudo apt-get update && sudo apt-get install apache2 php7.3 -y && sudo service apache2 restart"
+gcloud compute ssh lamp-1-vm --project "$DEVSHELL_PROJECT_ID" --zone $ZONE --command "sudo sed -i '/buster-backports/d' /etc/apt/sources.list && sudo apt-get update && sudo apt-get install apache2 php7.0 -y && sudo service apache2 restart"
 
 sleep 10
 
