@@ -19,7 +19,6 @@ If you found this helpful, please **Subscribe** to [Dr Abhishek](https://www.you
 
 
 ```bash
-
 curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Configure%20an%20Application%20Load%20Balancer%20with%20Google%20Cloud%20Armor/drabhishek.sh
 sudo chmod +x drabhishek.sh
 ./drabhishek.sh
