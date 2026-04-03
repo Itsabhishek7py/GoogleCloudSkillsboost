@@ -10,7 +10,7 @@ gcloud builds triggers create github --name="commit-to-master-branch1" \
    --build-config='cloudbuild.yaml' \
    --service-account=projects/$PROJECT_ID/serviceAccounts/$PROJECT_NUMBER-compute@developer.gserviceaccount.com \
    --region=$REGION \
-   --branch-pattern='^master$'
+   --branch-pattern='^main$'
 
 
 cd ~/my_hugo_site
