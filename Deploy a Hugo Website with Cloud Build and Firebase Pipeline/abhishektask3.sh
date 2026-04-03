@@ -4,8 +4,7 @@ gcloud builds repositories create hugo-website-build-repository \
   --connection="cloud-build-connection" --region=$REGION
 
 
-
-gcloud builds triggers create github --name="commit-to-master-branch1" \
+gcloud builds triggers create github --name="commit-to-main-branch1" \
    --repository=projects/$PROJECT_ID/locations/$REGION/connections/cloud-build-connection/repositories/hugo-website-build-repository \
    --build-config='cloudbuild.yaml' \
    --service-account=projects/$PROJECT_ID/serviceAccounts/$PROJECT_NUMBER-compute@developer.gserviceaccount.com \
