@@ -102,6 +102,7 @@ export PROJECT_ID=$(gcloud info --format='value(config.project)')
 echo "${BLUE}${BOLD}Using Project ID: ${WHITE}${BOLD}$PROJECT_ID${RESET}"
 
 # Download and extract application files
+gcloud auth configure-docker
 echo
 echo "${BLUE}${BOLD}Downloading application files...${RESET}"
 gsutil cp gs://${PROJECT_ID}/echo-web.tar.gz .
