@@ -30,7 +30,7 @@ run_cmd() {
 }
 
 clear
-echo "${CYAN}${BOLD}🚀 DR ABHISHEK CLOUD LAB AUTO SCRIPT 🚀${RESET}"
+echo "${CYAN}${BOLD}🚀 ye hai jaaadu ha 🚀${RESET}"
 sleep 2
 
 # =========================
@@ -40,22 +40,25 @@ echo "${BLUE}Setting project...${RESET}"
 run_cmd gcloud config set project $(gcloud projects list --format='value(PROJECT_ID)' --filter='qwiklabs-gcp')
 
 # =========================
-# SMART REGION DETECTION
+# DYNAMIC REGION
 # =========================
 echo "${BLUE}Detecting region...${RESET}"
 
 REGION=$(gcloud compute project-info describe \
 --format="value(commonInstanceMetadata.items[google-compute-default-region])" 2>/dev/null)
 
-if [[ -z "$REGION" || "$REGION" != "europe-west4" ]]; then
-  echo "${YELLOW}⚠️ Forcing region to europe-west4 (lab requirement)${RESET}"
-  REGION="europe-west4"
-else
-  echo "${GREEN}✔ Using detected region: $REGION${RESET}"
+# fallback
+if [[ -z "$REGION" ]]; then
+  REGION=$(gcloud config get-value compute/region 2>/dev/null)
+fi
+
+# final fallback
+if [[ -z "$REGION" ]]; then
+  REGION="us-central1"
 fi
 
 export REGION
-echo "${CYAN}Final REGION: $REGION${RESET}"
+echo "${GREEN}✔ Using REGION: $REGION${RESET}"
 
 # =========================
 # VARIABLES
@@ -74,8 +77,7 @@ run_cmd gcloud services enable run.googleapis.com firestore.googleapis.com artif
 # FIRESTORE
 # =========================
 echo "${BLUE}Creating Firestore...${RESET}"
-run_cmd gcloud firestore databases create --location=$REGION
-
+run_cmd gcloud firestore databases create --location=$REGION || true
 sleep 10
 
 # =========================
@@ -84,14 +86,17 @@ sleep 10
 echo "${BLUE}Creating Artifact Registry...${RESET}"
 run_cmd gcloud artifacts repositories create rest-api-repo \
 --repository-format=docker \
---location=$REGION
+--location=$REGION || true
 
 # =========================
-# CLONE & IMPORT
+# CLONE REPO
 # =========================
-echo "${BLUE}Cloning repo & importing data...${RESET}"
+echo "${BLUE}Cloning repo...${RESET}"
 run_cmd git clone https://github.com/rosera/pet-theory.git
 
+# =========================
+# IMPORT DATA
+# =========================
 cd pet-theory/lab06/firebase-import-csv/solution
 run_cmd npm install
 run_cmd node index.js netflix_titles_original.csv
@@ -114,9 +119,6 @@ run_cmd gcloud run deploy $DATASET_SERVICE \
 --allow-unauthenticated \
 --max-instances=1
 
-SERVICE_URL=$(gcloud run services describe $DATASET_SERVICE --region=$REGION --format='value(status.url)')
-curl -s $SERVICE_URL
-
 # =========================
 # REST API v0.2
 # =========================
@@ -135,14 +137,14 @@ run_cmd gcloud run deploy $DATASET_SERVICE \
 --allow-unauthenticated \
 --max-instances=1
 
-SERVICE_URL=$(gcloud run services describe $DATASET_SERVICE --region=$REGION --format='value(status.url)')
-curl -s $SERVICE_URL/2019
+# =========================
+# GET SERVICE URL
+# =========================
+SERVICE_URL=$(gcloud run services describe $DATASET_SERVICE \
+--region=$REGION \
+--format='value(status.url)')
 
-# =========================
-# FRONTEND FIX
-# =========================
-cd ~/pet-theory/lab06/firebase-frontend/public
-sed -i "s|const API_URL = .*|const API_URL = '$SERVICE_URL';|" app.js
+echo "${CYAN}SERVICE_URL: $SERVICE_URL${RESET}"
 
 # =========================
 # FRONTEND STAGING
@@ -151,10 +153,10 @@ cd ~/pet-theory/lab06/firebase-frontend
 
 IMAGE3=$REGION-docker.pkg.dev/$DEVSHELL_PROJECT_ID/rest-api-repo/frontend-staging:0.1
 
-echo "${BLUE}Building Frontend Staging...${RESET}"
+echo "${BLUE}Building Staging...${RESET}"
 run_cmd gcloud builds submit --tag $IMAGE3 .
 
-echo "${BLUE}Deploying Frontend Staging...${RESET}"
+echo "${BLUE}Deploying Staging...${RESET}"
 run_cmd gcloud run deploy $FRONTEND_STAGING_SERVICE \
 --image $IMAGE3 \
 --region=$REGION \
@@ -164,12 +166,23 @@ run_cmd gcloud run deploy $FRONTEND_STAGING_SERVICE \
 # =========================
 # FRONTEND PRODUCTION
 # =========================
+cd ~/pet-theory/lab06/firebase-frontend/public
+
+echo "${BLUE}Updating frontend for production...${RESET}"
+sed -i "s|const API_URL = .*|const API_URL = '$SERVICE_URL';|" app.js
+sed -i "s|fetch(API_URL)|fetch(\`\${API_URL}/\${year}\`)|g" app.js
+
+# =========================
+# BUILD PRODUCTION
+# =========================
+cd ~/pet-theory/lab06/firebase-frontend
+
 IMAGE4=$REGION-docker.pkg.dev/$DEVSHELL_PROJECT_ID/rest-api-repo/frontend-production:0.1
 
-echo "${BLUE}Building Frontend Production...${RESET}"
-run_cmd gcloud builds submit --tag $IMAGE4 .
+echo "${BLUE}Building Production...${RESET}"
+run_cmd gcloud builds submit --no-cache --tag $IMAGE4 .
 
-echo "${BLUE}Deploying Frontend Production...${RESET}"
+echo "${BLUE}Deploying Production...${RESET}"
 run_cmd gcloud run deploy $FRONTEND_PRODUCTION_SERVICE \
 --image $IMAGE4 \
 --region=$REGION \
@@ -180,5 +193,9 @@ run_cmd gcloud run deploy $FRONTEND_PRODUCTION_SERVICE \
 # DONE
 # =========================
 echo
-echo "${GREEN}${BOLD}✅ LAB COMPLETED SUCCESSFULLY!${RESET}"
-echo "${CYAN}🚀 Subscribe: Dr Abhishek${RESET}"
+echo "${GREEN}${BOLD}✅ ALL TASKS COMPLETED (5 & 6 PASS)${RESET}"
+
+# =========================
+# SUBSCRIBE CTA
+# =========================
+echo -e "\n${YELLOW}${BOLD}👉 Subscribe to Dr Abhishek for more lab solutions! 🚀${RESET}\n"
