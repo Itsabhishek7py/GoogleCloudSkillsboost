@@ -1,139 +1,184 @@
 #!/bin/bash
 
-# Define color variables
-BLACK_TEXT=$'\033[0;90m'
-RED_TEXT=$'\033[0;91m'
-GREEN_TEXT=$'\033[0;92m'
-YELLOW_TEXT=$'\033[0;93m'
-BLUE_TEXT=$'\033[0;94m'
-MAGENTA_TEXT=$'\033[0;95m'
-CYAN_TEXT=$'\033[0;96m'
-WHITE_TEXT=$'\033[0;97m'
+# =========================
+# COLORS
+# =========================
+GREEN=$'\033[0;92m'
+YELLOW=$'\033[0;93m'
+BLUE=$'\033[0;94m'
+CYAN=$'\033[0;96m'
+RESET=$'\033[0m'
+BOLD=$'\033[1m'
 
-NO_COLOR=$'\033[0m'
-RESET_FORMAT=$'\033[0m'
+# =========================
+# SPINNER
+# =========================
+spinner() {
+  local pid=$!
+  local spin='-\|/'
+  local i=0
+  while kill -0 $pid 2>/dev/null; do
+    i=$(( (i+1) %4 ))
+    printf "\r${YELLOW}${spin:$i:1} Processing...${RESET}"
+    sleep .2
+  done
+  printf "\r${GREEN}✔ Done!${RESET}\n"
+}
 
-# Define text formatting variables
-BOLD_TEXT=$'\033[1m'
-UNDERLINE_TEXT=$'\033[4m'
+run_cmd() {
+  "$@" & spinner
+}
 
 clear
-
-# =========================
-# UPDATED WELCOME BANNER
-# =========================
-echo "${CYAN_TEXT}${BOLD_TEXT}============================================================${RESET_FORMAT}"
-echo "${GREEN_TEXT}${BOLD_TEXT}   🚀 WELCOME TO DR ABHISHEK CLOUD TUTORIALS 🚀   ${RESET_FORMAT}"
-echo "${CYAN_TEXT}${BOLD_TEXT}============================================================${RESET_FORMAT}"
-echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}   ✅ Subscribe to the Channel: ${MAGENTA_TEXT}Dr Abhishek ✅${RESET_FORMAT}"
-echo
-echo "${BLUE_TEXT}${BOLD_TEXT}        Follow us on Instagram & Join Telegram too..        ${RESET_FORMAT}"
-echo
+echo "${CYAN}${BOLD}🚀 DR ABHISHEK CLOUD LAB AUTO SCRIPT 🚀${RESET}"
 sleep 2
 
 # =========================
-# AUTH & PROJECT SETUP
+# PROJECT SET
 # =========================
-gcloud auth list
+echo "${BLUE}Setting project...${RESET}"
+run_cmd gcloud config set project $(gcloud projects list --format='value(PROJECT_ID)' --filter='qwiklabs-gcp')
 
-export REGION=$(gcloud compute project-info describe --format="value(commonInstanceMetadata.items[google-compute-default-region])")
+# =========================
+# SMART REGION DETECTION
+# =========================
+echo "${BLUE}Detecting region...${RESET}"
 
+REGION=$(gcloud compute project-info describe \
+--format="value(commonInstanceMetadata.items[google-compute-default-region])" 2>/dev/null)
+
+if [[ -z "$REGION" || "$REGION" != "europe-west4" ]]; then
+  echo "${YELLOW}⚠️ Forcing region to europe-west4 (lab requirement)${RESET}"
+  REGION="europe-west4"
+else
+  echo "${GREEN}✔ Using detected region: $REGION${RESET}"
+fi
+
+export REGION
+echo "${CYAN}Final REGION: $REGION${RESET}"
+
+# =========================
+# VARIABLES
+# =========================
 export DATASET_SERVICE=netflix-dataset-service
 export FRONTEND_STAGING_SERVICE=frontend-staging-service
 export FRONTEND_PRODUCTION_SERVICE=frontend-production-service
 
-gcloud config set project $(gcloud projects list --format='value(PROJECT_ID)' --filter='qwiklabs-gcp')
+# =========================
+# ENABLE SERVICES
+# =========================
+echo "${BLUE}Enabling services...${RESET}"
+run_cmd gcloud services enable run.googleapis.com firestore.googleapis.com artifactregistry.googleapis.com cloudbuild.googleapis.com
 
 # =========================
-# FIRESTORE SETUP
+# FIRESTORE
 # =========================
-gcloud firestore databases create --location=$REGION --project=$DEVSHELL_PROJECT_ID
+echo "${BLUE}Creating Firestore...${RESET}"
+run_cmd gcloud firestore databases create --location=$REGION
 
 sleep 10
 
-gcloud services enable run.googleapis.com
+# =========================
+# ARTIFACT REGISTRY
+# =========================
+echo "${BLUE}Creating Artifact Registry...${RESET}"
+run_cmd gcloud artifacts repositories create rest-api-repo \
+--repository-format=docker \
+--location=$REGION
 
 # =========================
-# CLONE REPO & IMPORT CSV
+# CLONE & IMPORT
 # =========================
-git clone https://github.com/rosera/pet-theory.git
+echo "${BLUE}Cloning repo & importing data...${RESET}"
+run_cmd git clone https://github.com/rosera/pet-theory.git
 
 cd pet-theory/lab06/firebase-import-csv/solution
-npm install
-node index.js netflix_titles_original.csv
+run_cmd npm install
+run_cmd node index.js netflix_titles_original.csv
 
 # =========================
-# REST API VERSION 0.1
+# REST API v0.1
 # =========================
 cd ~/pet-theory/lab06/firebase-rest-api/solution-01
-npm install
+run_cmd npm install
 
-gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/rest-api:0.1 .
+IMAGE1=$REGION-docker.pkg.dev/$DEVSHELL_PROJECT_ID/rest-api-repo/rest-api:0.1
 
-gcloud run deploy $DATASET_SERVICE \
---image gcr.io/$DEVSHELL_PROJECT_ID/rest-api:0.1 \
---allow-unauthenticated \
---max-instances=1 \
---region=$REGION 
+echo "${BLUE}Building REST API v0.1...${RESET}"
+run_cmd gcloud builds submit --tag $IMAGE1 .
 
-SERVICE_URL=$(gcloud run services describe $DATASET_SERVICE --region=$REGION --format 'value(status.url)')
-curl -X GET $SERVICE_URL
-
-# =========================
-# REST API VERSION 0.2
-# =========================
-cd ~/pet-theory/lab06/firebase-rest-api/solution-02
-npm install
-
-gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/rest-api:0.2 .
-
-gcloud run deploy $DATASET_SERVICE \
---image gcr.io/$DEVSHELL_PROJECT_ID/rest-api:0.2 \
+echo "${BLUE}Deploying REST API v0.1...${RESET}"
+run_cmd gcloud run deploy $DATASET_SERVICE \
+--image $IMAGE1 \
 --region=$REGION \
 --allow-unauthenticated \
 --max-instances=1
 
-SERVICE_URL=$(gcloud run services describe $DATASET_SERVICE --region=$REGION --format 'value(status.url)')
-curl -X GET $SERVICE_URL/2019
+SERVICE_URL=$(gcloud run services describe $DATASET_SERVICE --region=$REGION --format='value(status.url)')
+curl -s $SERVICE_URL
 
 # =========================
-# FRONTEND BUILD & DEPLOY
+# REST API v0.2
 # =========================
-npm install && npm run build
+cd ~/pet-theory/lab06/firebase-rest-api/solution-02
+run_cmd npm install
 
+IMAGE2=$REGION-docker.pkg.dev/$DEVSHELL_PROJECT_ID/rest-api-repo/rest-api:0.2
+
+echo "${BLUE}Building REST API v0.2...${RESET}"
+run_cmd gcloud builds submit --tag $IMAGE2 .
+
+echo "${BLUE}Deploying REST API v0.2...${RESET}"
+run_cmd gcloud run deploy $DATASET_SERVICE \
+--image $IMAGE2 \
+--region=$REGION \
+--allow-unauthenticated \
+--max-instances=1
+
+SERVICE_URL=$(gcloud run services describe $DATASET_SERVICE --region=$REGION --format='value(status.url)')
+curl -s $SERVICE_URL/2019
+
+# =========================
+# FRONTEND FIX
+# =========================
+cd ~/pet-theory/lab06/firebase-frontend/public
+sed -i "s|const API_URL = .*|const API_URL = '$SERVICE_URL';|" app.js
+
+# =========================
+# FRONTEND STAGING
+# =========================
 cd ~/pet-theory/lab06/firebase-frontend
 
-gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/frontend-staging:0.1 .
+IMAGE3=$REGION-docker.pkg.dev/$DEVSHELL_PROJECT_ID/rest-api-repo/frontend-staging:0.1
 
-gcloud run deploy $FRONTEND_STAGING_SERVICE \
---image gcr.io/$DEVSHELL_PROJECT_ID/frontend-staging:0.1 \
---platform managed \
+echo "${BLUE}Building Frontend Staging...${RESET}"
+run_cmd gcloud builds submit --tag $IMAGE3 .
+
+echo "${BLUE}Deploying Frontend Staging...${RESET}"
+run_cmd gcloud run deploy $FRONTEND_STAGING_SERVICE \
+--image $IMAGE3 \
 --region=$REGION \
---max-instances 1 \
 --allow-unauthenticated \
---quiet
+--max-instances=1
 
-gcloud run services describe $FRONTEND_STAGING_SERVICE --region=$REGION --format="value(status.url)"
+# =========================
+# FRONTEND PRODUCTION
+# =========================
+IMAGE4=$REGION-docker.pkg.dev/$DEVSHELL_PROJECT_ID/rest-api-repo/frontend-production:0.1
 
-gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/frontend-production:0.1 .
+echo "${BLUE}Building Frontend Production...${RESET}"
+run_cmd gcloud builds submit --tag $IMAGE4 .
 
-gcloud run deploy $FRONTEND_PRODUCTION_SERVICE \
---image gcr.io/$DEVSHELL_PROJECT_ID/frontend-production:0.1 \
---platform managed \
+echo "${BLUE}Deploying Frontend Production...${RESET}"
+run_cmd gcloud run deploy $FRONTEND_PRODUCTION_SERVICE \
+--image $IMAGE4 \
 --region=$REGION \
---max-instances=1 \
---quiet
+--allow-unauthenticated \
+--max-instances=1
 
 # =========================
-# FINAL MESSAGE
+# DONE
 # =========================
 echo
-echo "${CYAN_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
-echo "${GREEN_TEXT}${BOLD_TEXT}           ✅ LAB COMPLETED SUCCESSFULLY! ✅           ${RESET_FORMAT}"
-echo "${CYAN_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
-echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}📢 SUBSCRIBE NOW 👉 ${MAGENTA_TEXT}Dr Abhishek${RESET_FORMAT}"
-echo
-echo "${RED_TEXT}${BOLD_TEXT}${UNDERLINE_TEXT}https://www.youtube.com/@drabhishek.5460/videos${RESET_FORMAT}"
-echo
+echo "${GREEN}${BOLD}✅ LAB COMPLETED SUCCESSFULLY!${RESET}"
+echo "${CYAN}🚀 Subscribe: Dr Abhishek${RESET}"
