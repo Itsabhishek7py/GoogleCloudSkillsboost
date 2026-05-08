@@ -166,6 +166,7 @@ gcloud compute instances create $VM_1 \
     --project=$DEVSHELL_PROJECT_ID \
     --zone=$ZONE_1 \
     --subnet=$SUBNET_A \
+    --machine-type=e2-standard-2 \
     --tags=allow-icmp && \
 echo -e "${GREEN}✓ VM 1 created successfully${NC}" || \
 echo -e "${RED}✗ Failed to create VM 1${NC}"
@@ -176,6 +177,7 @@ gcloud compute instances create $VM_2 \
     --project=$DEVSHELL_PROJECT_ID \
     --zone=$ZONE_2 \
     --subnet=$SUBNET_B \
+    --machine-type=e2-standard-2 \
     --tags=allow-icmp && \
 echo -e "${GREEN}✓ VM 2 created successfully${NC}" || \
 echo -e "${RED}✗ Failed to create VM 2${NC}"
