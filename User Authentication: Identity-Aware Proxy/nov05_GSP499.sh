@@ -39,10 +39,6 @@ gsutil cp gs://spls/gsp499/user-authentication-with-iap.zip .
 unzip user-authentication-with-iap.zip
 cd user-authentication-with-iap
 
-###########################################################
-# Task 1. Deploy the application and protect it with IAP
-###########################################################
-
 echo
 echo "${BLUE_TEXT}${BOLD_TEXT}=======================================================================${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}         Task 1. Deploy the application and protect it with IAP        ${RESET_FORMAT}"
