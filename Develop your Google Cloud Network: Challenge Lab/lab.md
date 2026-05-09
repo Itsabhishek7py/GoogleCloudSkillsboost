@@ -1,4 +1,4 @@
-### Develop your Google Cloud Network: Challenge Lab
+# 🟢 Develop your Google Cloud Network: Challenge Lab (GSP321)
 
 
 
@@ -8,11 +8,10 @@
 ### ©Credit
 - **DM for credit or removal request (no copyright intended) ©All rights and credits for the original content belong to Google Cloud [Google Cloud Skill Boost website](https://www.cloudskillsboost.google/)** 🙏
 
-### Run the following Commands in CloudShell
+👉 **Run the following Commands in CloudShell**
 
 ```bash
-
-curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Develop%20your%20Google%20Cloud%20Network%3A%20Challenge%20Lab/abhishek.sh
+curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/main/Develop%20your%20Google%20Cloud%20Network%3A%20Challenge%20Lab/abhishek.sh
 sudo chmod +x abhishek.sh
 ./abhishek.sh
 ```
