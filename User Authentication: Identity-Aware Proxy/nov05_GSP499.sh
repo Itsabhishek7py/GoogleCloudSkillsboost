@@ -1,4 +1,5 @@
 #!/bin/bash
+## Created by nov05, 2026-05-09  
 
 # Define color variables
 BLACK_TEXT=$'\033[0;90m'
@@ -14,8 +15,6 @@ NO_COLOR=$'\033[0m'
 RESET_FORMAT=$'\033[0m'
 BOLD_TEXT=$'\033[1m'
 UNDERLINE_TEXT=$'\033[4m'
-
-# clear
 
 echo
 echo "${BLUE_TEXT}${BOLD_TEXT}=======================================${RESET_FORMAT}"
@@ -78,13 +77,13 @@ gcloud iap web enable \
   --resource-type=app-engine \
   --project=$PROJECT_ID
   
-## Grant IAP access to a user (Cloud console “Add Principal”)
+## Grant IAP access to a user (equivalent to Cloud console “Add Principal”)
 ## https://docs.cloud.google.com/sdk/gcloud/reference/iap/web/add-iam-policy-binding
 gcloud iap web add-iam-policy-binding \
   --resource-type=app-engine \
   --member="user:$USER_EMAIL" \
   --role="roles/iap.httpsResourceAccessor"
-## The following command won't pass the check.
+## The following command won't pass the Google Skills lab check.
 # gcloud projects add-iam-policy-binding $PROJECT_ID \
 #   --member="user:$USER_EMAIL" \
 #   --role="roles/iap.httpsResourceAccessor"
