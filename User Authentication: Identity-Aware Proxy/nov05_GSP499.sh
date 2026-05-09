@@ -17,6 +17,7 @@ UNDERLINE_TEXT=$'\033[4m'
 
 clear
 
+echo
 echo "${BLUE_TEXT}${BOLD_TEXT}=======================================${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}         INITIATING EXECUTION...        ${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}=======================================${RESET_FORMAT}"
@@ -41,6 +42,12 @@ cd user-authentication-with-iap
 ###########################################################
 # Task 1. Deploy the application and protect it with IAP
 ###########################################################
+
+echo
+echo "${BLUE_TEXT}${BOLD_TEXT}=======================================================================${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}         Task 1. Deploy the application and protect it with IAP        ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}=======================================================================${RESET_FORMAT}"
+echo
 
 cd 1-HelloWorld
 sed -i 's/python37/python313/g' app.yaml
