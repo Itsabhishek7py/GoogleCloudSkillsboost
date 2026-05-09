@@ -16,4 +16,4 @@ sudo chmod +x nov05_GSP499.sh
 ./nov05_GSP499.sh
 ```
 
-* [Test result](https://gist.github.com/nov05/90208b1cc32d4d60f666eb0b5cc2ddf7)  
+✅ [Test result](https://gist.github.com/nov05/90208b1cc32d4d60f666eb0b5cc2ddf7)  
