@@ -64,9 +64,10 @@ includedPermissions:
 - storage.objects.create
 EOF_END
 
-echo "👤 Creating service account..."
-gcloud iam service-accounts create orca-private-cluster-sa \
-    --display-name "Orca Private Cluster Service Account"
+## Removed by nov05, 2026-05-09
+# echo "👤 Creating service account..."
+# gcloud iam service-accounts create orca-private-cluster-sa \
+#     --display-name "Orca Private Cluster Service Account"
 
 echo "🎭 Creating custom role..."
 gcloud iam roles create $CUSTOM_SECURIY_ROLE \
