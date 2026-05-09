@@ -15,3 +15,5 @@ curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/dev
 sudo chmod +x nov05_GSP499.sh
 ./nov05_GSP499.sh
 ```
+
+* [Test result](https://gist.github.com/nov05/90208b1cc32d4d60f666eb0b5cc2ddf7)  
