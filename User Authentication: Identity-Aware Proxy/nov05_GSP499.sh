@@ -15,7 +15,7 @@ RESET_FORMAT=$'\033[0m'
 BOLD_TEXT=$'\033[1m'
 UNDERLINE_TEXT=$'\033[4m'
 
-clear
+# clear
 
 echo
 echo "${BLUE_TEXT}${BOLD_TEXT}=======================================${RESET_FORMAT}"
