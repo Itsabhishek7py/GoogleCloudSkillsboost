@@ -94,8 +94,9 @@ COMMIT_ID="$(git rev-parse --short=7 HEAD)"
 gcloud builds submit --tag="${REGION}-docker.pkg.dev/${PROJECT_ID}/my-repository/hello-cloudbuild:${COMMIT_ID}" .
 
 #######################################################
-## Task 4
+## Task 4 Create the Continuous Integration (CI) pipeline
 #######################################################
+
 # -----------------------------
 # CI Trigger (app repo)
 # -----------------------------
@@ -108,6 +109,7 @@ gcloud builds triggers create github \
   --build-config="cloudbuild.yaml" \
   --included-files="**" \
   --region="$REGION"
+gcloud builds triggers list --region=$REGION 
 
 cd ~/hello-cloudbuild-app
 git add .
@@ -143,6 +145,11 @@ gcloud projects add-iam-policy-binding ${PROJECT_NUMBER} \
 --member=serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com \
 --role=roles/secretmanager.secretAccessor
 
+#######################################################
+## Task 6. Create the test environment and CD pipeline
+#######################################################
+
+## Grant Cloud Build access to GKE
 cd ~
 gcloud projects add-iam-policy-binding ${PROJECT_NUMBER} \
 --member=serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com \
@@ -194,7 +201,8 @@ gcloud builds triggers create github \
   --build-config="cloudbuild.yaml" \
   --included-files="**" \
   --region="$REGION"
-  
+gcloud builds triggers list --region=$REGION 
+
 cd ~/hello-cloudbuild-app
 ssh-keyscan -t rsa github.com > known_hosts.github
 chmod +x known_hosts.github
@@ -216,6 +224,6 @@ git push google master
 # --- End Original Script ---
 
 # Final Message
-echo -e "${GREEN}✅ Lab is now Completed!"
-echo -e "${CYAN}🙏 Thanks for using Dr Abhishek's Cloud Tutorials!"
-echo -e "${YELLOW}👉 Subscribe here: ${NC}https://www.youtube.com/@drabhishek.5460/videos"
+echo -e "${GREEN}✅  Lab is now Completed!"
+echo -e "${CYAN}🙏  Thanks for using Dr Abhishek's Cloud Tutorials!"
+echo -e "${YELLOW}👉  Subscribe here: ${NC}https://www.youtube.com/@drabhishek.5460/videos"
