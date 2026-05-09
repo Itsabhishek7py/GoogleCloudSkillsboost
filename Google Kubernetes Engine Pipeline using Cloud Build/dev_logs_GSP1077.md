@@ -3,6 +3,7 @@ https://www.skills.google/games/7173/labs/44433
 
 👉 **Run the following Commands in CloudShell**  
 ```
+rm -f abhishek.sh    
 curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/dev/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/abhishek.sh
 sudo chmod +x abhishek.sh
 ./abhishek.sh
