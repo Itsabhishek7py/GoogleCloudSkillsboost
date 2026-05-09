@@ -7,7 +7,6 @@ CYAN='\033[1;36m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Spinner Function
 spinner() {
     local pid=$!
     local delay=0.1
@@ -21,14 +20,15 @@ spinner() {
         printf "\b\b\b\b\b\b"
     done
     echo -ne "\b\b\b\b\b\b"
-    echo -e "${GREEN}          Done!${NC}"
+    echo -e "${GREEN}   Done!   ${NC}"
 }
 
-# Welcome Message
+echo
 echo -e "${YELLOW}--------------------------------------------------------"
 echo -e "${GREEN}🎓  Welcome to Dr Abhishek's Cloud Tutorials! ☁️"
 echo -e "${CYAN}Subscribe to the channel: https://www.youtube.com/@drabhishek.5460/videos"
 echo -e "${YELLOW}--------------------------------------------------------${NC}"
+echo
 
 (sleep 3) & spinner
 
