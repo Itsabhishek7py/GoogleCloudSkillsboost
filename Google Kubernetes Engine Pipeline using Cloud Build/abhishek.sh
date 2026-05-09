@@ -33,7 +33,7 @@ spinner() {
         printf "\rLoading... [%c]   " "${spin:$i:1}"
         sleep 0.1
     done
-    printf "\r${GREEN}Done!${NC}\n"
+    printf "\r${GREEN}Done!${NC}\n\n"
 }
 
 echo
