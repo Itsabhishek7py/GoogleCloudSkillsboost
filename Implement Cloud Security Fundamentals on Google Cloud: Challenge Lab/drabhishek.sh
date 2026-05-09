@@ -38,7 +38,7 @@ echo "🚀 Script starting... Please wait!"
 echo ""
 
 # Prompt user to input three regions
-read -p "Enter CUSTOM_SECURIY_ROLE: " CUSTOM_SECURIY_ROLE
+read -p "Enter CUSTOM_SECURITY_ROLE: " CUSTOM_SECURITY_ROLE
 read -p "Enter SERVICE_ACCOUNT: " SERVICE_ACCOUNT
 read -p "Enter CLUSTER_NAME: " CLUSTER_NAME
 read -p "Enter ZONE: " ZONE
@@ -53,7 +53,7 @@ gcloud config set compute/zone $ZONE
 
 echo "🔧 Creating role definition..."
 cat > role-definition.yaml <<EOF_END
-title: "$CUSTOM_SECURIY_ROLE"
+title: "$CUSTOM_SECURITY_ROLE"
 description: "Permissions"
 stage: "ALPHA"
 includedPermissions:
@@ -70,7 +70,7 @@ EOF_END
 #     --display-name "Orca Private Cluster Service Account"
 
 echo "🎭 Creating custom role..."
-gcloud iam roles create $CUSTOM_SECURIY_ROLE \
+gcloud iam roles create $CUSTOM_SECURITY_ROLE \
     --project $DEVSHELL_PROJECT_ID \
     --file role-definition.yaml
 
@@ -102,7 +102,8 @@ gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
 echo "   🛡️ Adding custom security role..."
 gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
     --member serviceAccount:$SERVICE_ACCOUNT@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com \
-    --role projects/$DEVSHELL_PROJECT_ID/roles/$CUSTOM_SECURITY_ROLE  ## nov05: fix typo "SECURIY"
+    --role projects/$DEVSHELL_PROJECT_ID/roles/$CUSTOM_SECURITY_ROLE  
+## nov05: fix typo "SECURIY"
 
 # Task 4:-
 
