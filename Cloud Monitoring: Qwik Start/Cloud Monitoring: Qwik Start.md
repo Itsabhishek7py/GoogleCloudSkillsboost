@@ -6,8 +6,8 @@ https://www.skills.google/games/7176/labs/44468
 
 In this hands-on lab, you will learn how to use the **Google Cloud Console** to:  
 
-- ✅ *Monitor a Compute Engine virtual machine (VM) instance with Cloud Monitoring.**  
-- ✅ *Install monitoring and logging agents for your VM
+- ✅ *Monitor a Compute Engine virtual machine (VM) instance with Cloud Monitoring.*    
+- ✅ *Install monitoring and logging agents for your VM*
 ---
 
 
