@@ -25,3 +25,8 @@ echo
 # Instruction for entering the region
 read -p "${YELLOW_TEXT}${BOLD_TEXT}Enter the region:${RESET_FORMAT} " REGION
 export REGION=$REGION
+
+# Instruction for setting project ID
+echo "${CYAN_TEXT}${BOLD_TEXT}Fetching the current project ID and setting the compute region...${RESET_FORMAT}"
+export PROJECT_ID=$(gcloud config get-value project)
+gcloud config set compute/region $REGION
