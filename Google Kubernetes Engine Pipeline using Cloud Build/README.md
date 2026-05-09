@@ -1,4 +1,4 @@
-# 🟢 Google Kubernetes Engine Pipeline using Cloud Build (GSP1077)
+# 🟢 **Google Kubernetes Engine Pipeline using Cloud Build (GSP1077)**  
 
 https://www.skills.google/games/7173/labs/44433
 https://www.skills.google/games/7173
@@ -11,7 +11,7 @@ https://www.skills.google/games/7173
 
 <br>  
 
-# 👉 **Run the following Commands in CloudShell**
+### 👉 **Run the following Commands in CloudShell**
 
 ```
 curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/abhishek.sh
