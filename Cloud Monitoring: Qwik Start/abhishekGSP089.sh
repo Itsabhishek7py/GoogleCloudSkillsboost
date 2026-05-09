@@ -73,16 +73,13 @@ gcloud compute ssh lamp-1-vm --project "$DEVSHELL_PROJECT_ID" --zone $ZONE --com
 
 sleep 10
 
-echo "${GREEN_TEXT}${BOLD_TEXT}Fetching Instance ID...${RESET_FORMAT}"
-
-INSTANCE_ID="$(gcloud compute instances describe lamp-1-vm --project=$DEVSHELL_PROJECT_ID --zone=$ZONE --format='value(id)')"
+# echo "${GREEN_TEXT}${BOLD_TEXT}Fetching Instance ID...${RESET_FORMAT}"
+# INSTANCE_ID="$(gcloud compute instances describe lamp-1-vm --project=$DEVSHELL_PROJECT_ID --zone=$ZONE --format='value(id)')"
 
 echo "${GREEN_TEXT}${BOLD_TEXT}Fetching External IP...${RESET_FORMAT}"
-
 EXTERNAL_IP="$(gcloud compute instances describe lamp-1-vm --zone=$ZONE --format="get(networkInterfaces[0].accessConfigs[0].natIP)")"
   
-echo "${BLUE_TEXT}${BOLD_TEXT}Setting up Uptime Monitoring...${RESET_FORMAT}"
-
+echo "${BLUE_TEXT}${BOLD_TEXT}Setting Up Uptime Monitoring...${RESET_FORMAT}"
 # gcloud monitoring uptime create lamp-uptime-check \
 #   --resource-type="gce-instance" \
 #   --resource-labels=project_id=$DEVSHELL_PROJECT_ID,instance_id=$INSTANCE_ID,zone=$ZONE
@@ -153,12 +150,6 @@ cat > app-engine-error-percent-policy.json <<EOF_END
 EOF_END
 
 gcloud alpha monitoring policies create --policy-from-file="app-engine-error-percent-policy.json"
-
-INSTANCE_ID=$(gcloud compute instances describe lamp-1-vm --zone=$ZONE --format='value(id)')
-
-gcloud monitoring uptime create lamp-uptime-check \
-  --resource-type="gce-instance" \
-  --resource-labels=project_id=$DEVSHELL_PROJECT_ID,instance_id=$INSTANCE_ID,zone=$ZONE
 
 echo
 echo "${GREEN_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"

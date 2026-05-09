@@ -1,15 +1,13 @@
+# 🟢 Cloud Monitoring: Qwik Start (GSP089)
 
-
-### Cloud Monitoring: Qwik Start
-
-
+https://www.skills.google/games/7176/labs/44468
 
 ## What You'll Do  
 
 In this hands-on lab, you will learn how to use the **Google Cloud Console** to:  
 
-- ✅ *Monitor a Compute Engine virtual machine (VM) instance with Cloud Monitoring.**  
-- ✅ *Install monitoring and logging agents for your VM
+- ✅ *Monitor a Compute Engine virtual machine (VM) instance with Cloud Monitoring.*    
+- ✅ *Install monitoring and logging agents for your VM*
 ---
 
 
@@ -20,15 +18,14 @@ In this hands-on lab, you will learn how to use the **Google Cloud Console** to:
 - **DM for credit or removal request (no copyright intended) ©All rights and credits for the original content belong to Google Cloud [Google Cloud Skill Boost website](https://www.cloudskillsboost.google/)** 🙏
 
 ---
-# Download the script
 
-```
-curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Cloud%20Monitoring%3A%20Qwik%20Start/abhishekGSP089.sh
+👉 Download and run the script
 
+```bash
+curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/main/Cloud%20Monitoring%3A%20Qwik%20Start/abhishekGSP089.sh
 sudo chmod +x abhishekGSP089.sh
 ./abhishekGSP089.sh
 ```
-
 
 *You have successfully set up and monitored a VM with Cloud Monitoring. You've also created an uptime check, an alerting policy, and a dashboard and chart. You've seen how Cloud Logging reflects changes to your VM instance.
 .*
