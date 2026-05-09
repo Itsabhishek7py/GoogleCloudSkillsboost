@@ -75,7 +75,8 @@ gcloud iam roles create $CUSTOM_SECURIY_ROLE \
 
 # Task 2:-
 echo "👤 Creating main service account..."
-gcloud iam service-accounts create $SERVICE_ACCOUNT --display-name "Orca Private Cluster Service Account"
+gcloud iam service-accounts create $SERVICE_ACCOUNT \
+    --display-name "Orca Private Cluster Service Account"
 
 ########################################################
 # Task 3:-
