@@ -52,10 +52,6 @@ REPO_NAME="example-docker-repo"
 IMAGE_NAME="sample-image"
 TAG="tag1"
 
-# ====== GET PROJECT ID ======
-export PROJECT_ID=$(gcloud config get-value project)
-echo "Project: $PROJECT_ID"
-
 # ====== CREATE REPOSITORY ======
 echo "👉  Creating Artifact Registry repo..."
 gcloud artifacts repositories create $REPO_NAME \
