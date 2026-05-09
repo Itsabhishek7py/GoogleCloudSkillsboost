@@ -21,12 +21,12 @@ spinner() {
         printf "\b\b\b\b\b\b"
     done
     echo -ne "\b\b\b\b\b\b"
-    echo -e "${GREEN} Done!${NC}"
+    echo -e "${GREEN}          Done!${NC}"
 }
 
 # Welcome Message
 echo -e "${YELLOW}--------------------------------------------------------"
-echo -e "${GREEN}🎓 Welcome to Dr Abhishek's Cloud Tutorials! ☁️"
+echo -e "${GREEN}🎓  Welcome to Dr Abhishek's Cloud Tutorials! ☁️"
 echo -e "${CYAN}Subscribe to the channel: https://www.youtube.com/@drabhishek.5460/videos"
 echo -e "${YELLOW}--------------------------------------------------------${NC}"
 
@@ -39,10 +39,10 @@ echo -e "${YELLOW}--------------------------------------------------------${NC}"
 ## Get project id, project number, region
 export PROJECT_ID=$(gcloud config get-value project)
 export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
-gcloud config set compute/region $REGION
 export REGION=$(gcloud compute project-info describe \
     --format="value(commonInstanceMetadata.items[google-compute-default-region])")
-    
+gcloud config set compute/region $REGION
+
 gcloud services enable container.googleapis.com \
     cloudbuild.googleapis.com \
     secretmanager.googleapis.com \
