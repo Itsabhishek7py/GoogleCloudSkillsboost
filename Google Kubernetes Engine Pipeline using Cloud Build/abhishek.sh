@@ -33,7 +33,6 @@ spinner() {
         printf "\rLoading... [%c]   " "${spin:$i:1}"
         sleep 0.1
     done
-    ## \033[K clears from the cursor position to the end of the line
     printf "\r${GREEN}Done!         ${NC}\n\n"  
 }
 
