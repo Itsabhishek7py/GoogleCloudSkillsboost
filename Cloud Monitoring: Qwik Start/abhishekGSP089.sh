@@ -76,6 +76,9 @@ sleep 10
 echo "${GREEN_TEXT}${BOLD_TEXT}Fetching Instance ID...${RESET_FORMAT}"
 
 INSTANCE_ID="$(gcloud compute instances describe lamp-1-vm --project=$DEVSHELL_PROJECT_ID --zone=$ZONE --format='value(id)')"
+
+echo "${GREEN_TEXT}${BOLD_TEXT}Fetching External IP...${RESET_FORMAT}"
+
 EXTERNAL_IP="$(gcloud compute instances describe lamp-1-vm --zone=$ZONE --format="get(networkInterfaces[0].accessConfigs[0].natIP)")"
   
 echo "${BLUE_TEXT}${BOLD_TEXT}Setting up Uptime Monitoring...${RESET_FORMAT}"
