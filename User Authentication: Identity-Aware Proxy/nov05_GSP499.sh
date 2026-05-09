@@ -48,6 +48,7 @@ echo
 cd 1-HelloWorld
 sed -i 's/python37/python313/g' app.yaml
 cat main.py
+echo
 gcloud app create --region=$REGION
 gcloud app deploy --quiet
 gcloud app browse
