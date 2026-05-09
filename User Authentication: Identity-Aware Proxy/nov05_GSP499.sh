@@ -63,21 +63,22 @@ gcloud services enable \
   cloudresourcemanager.googleapis.com \
   --quiet
 
-# export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")
-export USER_EMAIL=$(gcloud config get-value account)
-# echo -e "${YELLOW_TEXT}Google Cloud project number: ${CYAN_TEXT}$PROJECT_NUMBER${NO_COLOR}"
-echo -e "${YELLOW_TEXT}User email: ${CYAN_TEXT}$USER_EMAIL${NO_COLOR}"
-
-# Grant IAP access to a user (UI “Add Principal”)
-gcloud projects add-iam-policy-binding $PROJECT_ID \
-  --member="user:$USER_EMAIL" \
-  --role="roles/iap.httpsResourceAccessor"
-
 # Enable IAP programmatically (App Engine backend)
 gcloud iap web enable \
   --resource-type=app-engine \
   --project=$PROJECT_ID
 
+# export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")
+# echo -e "${YELLOW_TEXT}Google Cloud project number: ${CYAN_TEXT}$PROJECT_NUMBER${NO_COLOR}"
+export USER_EMAIL=$(gcloud config get-value account)
+echo -e "${YELLOW_TEXT}User email: ${CYAN_TEXT}$USER_EMAIL${NO_COLOR}"
+
+# Grant IAP access to a user (UI “Add Principal”)
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --resource-type=app-engine \
+  --member="user:$USER_EMAIL" \
+  --role="roles/iap.httpsResourceAccessor"
+  
 gcloud alpha iap oauth-brands create \
   --application_title="IAP Example" \
   --support_email="$USER_EMAIL" \
