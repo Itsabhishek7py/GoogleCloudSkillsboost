@@ -78,7 +78,8 @@ gcloud iap web enable \
   --resource-type=app-engine \
   --project=$PROJECT_ID
   
-# Grant IAP access to a user (Cloud console “Add Principal”)
+## Grant IAP access to a user (Cloud console “Add Principal”)
+## https://docs.cloud.google.com/sdk/gcloud/reference/iap/web/add-iam-policy-binding
 gcloud iap web add-iam-policy-binding \
   --resource-type=app-engine \
   --member="user:$USER_EMAIL" \
