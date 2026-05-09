@@ -33,6 +33,7 @@ BLUE=`tput setaf 4`
 MAGENTA=`tput setaf 5`
 CYAN=`tput setaf 6`
 WHITE=`tput setaf 7`
+NC='\033[0m' # No Color
 
 BG_BLACK=`tput setab 0`
 BG_RED=`tput setab 1`
@@ -46,6 +47,9 @@ BG_WHITE=`tput setab 7`
 BOLD=`tput bold`
 RESET=`tput sgr0`
 #----------------------------------------------------start--------------------------------------------------#
+
+read -p "$(echo -e "${BLUE}ENTER ZONE (e.g., us-central1-a): ${NC}")" ZONE
+echo ""
 
 echo "${YELLOW}${BOLD}Starting${RESET}" "${GREEN}${BOLD}Execution${RESET}"
 
@@ -72,8 +76,14 @@ cd ..
 
 echo "${RED}${BOLD}Task 2. ${RESET}""${WHITE}${BOLD}Create production VPC manually${RESET}" "${GREEN}${BOLD}Completed${RESET}"
 
-gcloud compute instances create bastion --network-interface=network=griffin-dev-vpc,subnet=griffin-dev-mgmt  --network-interface=network=griffin-prod-vpc,subnet=griffin-prod-mgmt --tags=ssh --zone=$ZONE
-
+# gcloud compute instances create bastion --network-interface=network=griffin-dev-vpc,subnet=griffin-dev-mgmt  --network-interface=network=griffin-prod-vpc,subnet=griffin-prod-mgmt --tags=ssh --zone=$ZONE
+gcloud compute instances create bastion \
+  --zone=$ZONE \
+  --machine-type=e2-medium \
+  --network-interface=subnet=griffin-dev-mgmt,network=griffin-dev-vpc \
+  --network-interface=subnet=griffin-prod-mgmt,network=griffin-prod-vpc \
+  --tags=ssh
+  
 gcloud compute firewall-rules create fw-ssh-dev --source-ranges=0.0.0.0/0 --target-tags ssh --allow=tcp:22 --network=griffin-dev-vpc
 
 gcloud compute firewall-rules create fw-ssh-prod --source-ranges=0.0.0.0/0 --target-tags ssh --allow=tcp:22 --network=griffin-prod-vpc
@@ -211,6 +221,25 @@ kubectl create -f wp-deployment.yaml
 kubectl create -f wp-service.yaml
 
 echo "${RED}${BOLD}Task 7. ${RESET}""${WHITE}${BOLD}Create a WordPress deployment${RESET}" "${GREEN}${BOLD}Completed${RESET}"
+
+EXTERNAL_IP=""
+while [ -z "$EXTERNAL_IP" ]; do
+  EXTERNAL_IP=$(kubectl get svc wordpress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  echo "Waiting for external IP..."
+  sleep 5
+done
+echo "External IP is: $EXTERNAL_IP"
+
+gcloud monitoring uptime create "Wordpress Uptime Check" \
+  --resource-type="uptime-url" \
+  --resource-labels=host="$EXTERNAL_IP" \
+  --path="/" \
+  --protocol="http" \
+  --port=80 \
+  --period=1 \
+  --timeout=10
+  
+echo "${RED}${BOLD}Task 8. ${RESET}""${WHITE}${BOLD}Enable monitoring${RESET}" "${GREEN}${BOLD}Completed${RESET}"
 
 # Get the IAM policy JSON
 IAM_POLICY_JSON=$(gcloud projects get-iam-policy $DEVSHELL_PROJECT_ID --format=json)
