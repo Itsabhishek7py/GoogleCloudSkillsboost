@@ -52,7 +52,7 @@ echo
 gcloud app create --region=$REGION
 gcloud app deploy --quiet
 gcloud app browse
-
+  
 # Disable App Engine Flex API (required by the lab)
 gcloud services disable appengineflex.googleapis.com --quiet
 
@@ -76,4 +76,9 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 # Enable IAP programmatically (App Engine backend)
 gcloud iap web enable \
   --resource-type=app-engine \
+  --project=$PROJECT_ID
+
+gcloud alpha iap oauth-brands create \
+  --application_title="IAP Example" \
+  --support_email="$USER_EMAIL" \
   --project=$PROJECT_ID
