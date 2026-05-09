@@ -17,10 +17,11 @@ spinner() {
         printf " [%c]  " "$spinstr"
         local spinstr=$temp${spinstr%"$temp"}
         sleep $delay
-        printf "\b\b\b\b\b\b\b"
+        printf "\b\b\b\b\b\b"
     done
-    echo -ne "\b\b\b\b\b\b\b"
+    echo -ne "\b\b\b\b\b\b"
     echo -e "${GREEN}Done!${NC}"
+    echo
 }
 
 echo
@@ -28,7 +29,6 @@ echo -e "${YELLOW}--------------------------------------------------------"
 echo -e "${GREEN}🎓  Welcome to Dr Abhishek's Cloud Tutorials! ☁️"
 echo -e "${CYAN}Subscribe to the channel: https://www.youtube.com/@drabhishek.5460/videos"
 echo -e "${YELLOW}--------------------------------------------------------${NC}"
-echo
 
 (sleep 3) & spinner
 
