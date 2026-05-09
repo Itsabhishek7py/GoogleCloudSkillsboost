@@ -65,10 +65,13 @@ includedPermissions:
 EOF_END
 
 echo "👤 Creating service account..."
-gcloud iam service-accounts create orca-private-cluster-sa --display-name "Orca Private Cluster Service Account"
+gcloud iam service-accounts create orca-private-cluster-sa \
+    --display-name "Orca Private Cluster Service Account"
 
 echo "🎭 Creating custom role..."
-gcloud iam roles create $CUSTOM_SECURIY_ROLE --project $DEVSHELL_PROJECT_ID --file role-definition.yaml
+gcloud iam roles create $CUSTOM_SECURIY_ROLE \
+    --project $DEVSHELL_PROJECT_ID \
+    --file role-definition.yaml
 
 # Task 2:-
 echo "👤 Creating main service account..."
