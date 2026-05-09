@@ -32,9 +32,9 @@ export REGION=$(gcloud compute project-info describe \
 gcloud config set compute/region $REGION
 export ZONE=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
-echo -e "${YELLOW}Google Cloud project: ${CYAN}$PROJECT_ID${NC}"
-echo -e "${YELLOW}Using region: ${CYAN}$REGION${NC}"
-echo -e "${YELLOW}Using zone: ${CYAN}$ZONE${NC}\n"
+echo -e "${YELLOW_TEXT}Google Cloud project: ${CYAN_TEXT}$PROJECT_ID${NO_COLOR}"
+echo -e "${YELLOW_TEXT}Using region: ${CYAN_TEXT}$REGION${NO_COLOR}"
+echo -e "${YELLOW_TEXT}Using zone: ${CYAN_TEXT}$ZONE${NO_COLOR}\n"
 
 # Instruction for entering the region
 # read -p "${YELLOW_TEXT}${BOLD_TEXT}Enter the region:${RESET_FORMAT} " REGION
