@@ -24,3 +24,5 @@ sudo chmod +x abhishek.sh
   Task 6. Create the test environment and CD pipeline   
   Create the Test Environment and CD Pipeline   
   Please create the trigger for the continuous delivery pipeline as per given configuration.   
+
+  🔹 Solution: Add commands to create CI and CD triggers.   
