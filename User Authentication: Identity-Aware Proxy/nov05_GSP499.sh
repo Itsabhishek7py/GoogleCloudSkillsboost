@@ -75,7 +75,6 @@ echo -e "${YELLOW_TEXT}User email: ${CYAN_TEXT}$USER_EMAIL${NO_COLOR}"
 
 # Grant IAP access to a user (UI “Add Principal”)
 gcloud projects add-iam-policy-binding $PROJECT_ID \
-  --resource-type=app-engine \
   --member="user:$USER_EMAIL" \
   --role="roles/iap.httpsResourceAccessor"
   
