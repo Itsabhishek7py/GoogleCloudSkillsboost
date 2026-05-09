@@ -179,9 +179,7 @@ git checkout master
 (kubectl expose deployment development-deployment -n dev --name=dev-deployment-service --type=LoadBalancer --port 8080 --target-port 8080 > /dev/null 2>&1) & spinner
 
 sed -i "11c\    args: ['build', '-t', '$REGION-docker.pkg.dev/\$PROJECT_ID/my-repository/hello-cloudbuild:v1.0', '.']" cloudbuild.yaml
-
 sed -i "16c\    args: ['push', '$REGION-docker.pkg.dev/\$PROJECT_ID/my-repository/hello-cloudbuild:v1.0']" cloudbuild.yaml
-
 sed -i "17c\        image:  $REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:v1.0" prod/deployment.yaml
 
 git add .
@@ -217,9 +215,7 @@ func redHandler(w http.ResponseWriter, r *http.Request) { \
 }' main.go
 
 sed -i "9c\    args: ['build', '-t', '$REGION-docker.pkg.dev/\$PROJECT_ID/my-repository/hello-cloudbuild-dev:v2.0', '.']" cloudbuild-dev.yaml
-
 sed -i "13c\    args: ['push', '$REGION-docker.pkg.dev/\$PROJECT_ID/my-repository/hello-cloudbuild-dev:v2.0']" cloudbuild-dev.yaml
-
 sed -i "17c\        image: $REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:v2.0" dev/deployment.yaml
 
 git add .
@@ -230,9 +226,6 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Deploying development v2.0..."
 (gcloud builds submit --config=cloudbuild-dev.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}✅  Development v2.0 deployment completed!${RESET_FORMAT}"
 
-echo
-echo "${CYAN_TEXT}${BOLD_TEXT} $msg ${RESET_FORMAT}"
-echo
 echo "${MAGENTA_TEXT}${BOLD_TEXT}🎯  PHASE 15: Production v2.0 Deployment${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Merging new features to production branch and updating deployment configurations...${RESET_FORMAT}"
 echo
@@ -248,11 +241,8 @@ func redHandler(w http.ResponseWriter, r *http.Request) { \
   png.Encode(w, img) \
 }' main.go
 
-
 sed -i "11c\    args: ['build', '-t', '$REGION-docker.pkg.dev/\$PROJECT_ID/my-repository/hello-cloudbuild:v2.0', '.']" cloudbuild.yaml
-
 sed -i "16c\    args: ['push', '$REGION-docker.pkg.dev/\$PROJECT_ID/my-repository/hello-cloudbuild:v2.0']" cloudbuild.yaml
-
 sed -i "17c\        image: $REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:v2.0" prod/deployment.yaml
 
 git add .
@@ -271,8 +261,3 @@ echo
 kubectl -n prod get pods -o jsonpath --template='{range .items[*]}{.metadata.name}{"\t"}{"\t"}{.spec.containers[0].image}{"\n"}{end}'
 
 cd
-
-echo
-echo "${MAGENTA_TEXT}${BOLD_TEXT}💖  IF YOU FOUND THIS HELPFUL, SUBSCRIBE TO DR ABHISHEK! 👇${RESET_FORMAT}"
-echo "${BLUE_TEXT}${BOLD_TEXT}${UNDERLINE_TEXT}https://www.youtube.com/@drabhishek.5460/videos${RESET_FORMAT}"
-echo
