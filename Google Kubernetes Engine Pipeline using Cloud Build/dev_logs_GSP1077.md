@@ -6,13 +6,11 @@ https://www.skills.google/games/7173/labs/44433
 curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/dev/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/abhishek.sh
 sudo chmod +x abhishek.sh
 ./abhishek.sh
-```
 
-<br>  
 
----   
 
-<br>  
+
+<br><br>  
 
 * 2026-05-09 [Test result](https://github.com/nov05/gcp-skills-boost/tree/dev/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build) for [Commit dd53be2](https://github.com/nov05/gcp-skills-boost/commit/dd53be229d8746520b842107ada7fd1b0355a6af)
   
