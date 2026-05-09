@@ -80,8 +80,12 @@ gcloud iap web enable \
   
 # Grant IAP access to a user (Cloud console “Add Principal”)
 gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --resource-type=app-engine \
   --member="user:$USER_EMAIL" \
   --role="roles/iap.httpsResourceAccessor"
+# gcloud projects add-iam-policy-binding $PROJECT_ID \
+#   --member="user:allAuthenticatedUsers" \
+#   --role="roles/iap.httpsResourceAccessor"
   
 echo
 echo "${BLUE_TEXT}${BOLD_TEXT}================================================================${RESET_FORMAT}"
