@@ -76,12 +76,21 @@ sleep 10
 echo "${GREEN_TEXT}${BOLD_TEXT}Fetching Instance ID...${RESET_FORMAT}"
 
 INSTANCE_ID="$(gcloud compute instances describe lamp-1-vm --project=$DEVSHELL_PROJECT_ID --zone=$ZONE --format='value(id)')"
-
+EXTERNAL_IP="$(gcloud compute instances describe lamp-1-vm --zone=$ZONE --format="get(networkInterfaces[0].accessConfigs[0].natIP)")"
+  
 echo "${BLUE_TEXT}${BOLD_TEXT}Setting up Uptime Monitoring...${RESET_FORMAT}"
 
-gcloud monitoring uptime create lamp-uptime-check \
-  --resource-type="gce-instance" \
-  --resource-labels=project_id=$DEVSHELL_PROJECT_ID,instance_id=$INSTANCE_ID,zone=$ZONE
+# gcloud monitoring uptime create lamp-uptime-check \
+#   --resource-type="gce-instance" \
+#   --resource-labels=project_id=$DEVSHELL_PROJECT_ID,instance_id=$INSTANCE_ID,zone=$ZONE
+gcloud monitoring uptime create "Lamp Uptime Check" \
+  --resource-type="uptime-url" \
+  --resource-labels=host="$EXTERNAL_IP" \
+  --path="/" \
+  --protocol="http" \
+  --port=80 \
+  --period=1 \
+  --timeout=10
 
 echo "${YELLOW_TEXT}${BOLD_TEXT}Creating an email notification channel...${RESET_FORMAT}"
 
