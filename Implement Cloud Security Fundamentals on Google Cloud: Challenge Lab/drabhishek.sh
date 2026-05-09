@@ -47,7 +47,10 @@ echo ""
 echo "⏳ Setting up your GCP environment..."
 echo ""
 
+########################################################
 # Task 1:-
+########################################################
+
 echo "📝 Setting compute zone..."
 gcloud config set compute/zone $ZONE
 
@@ -74,7 +77,10 @@ gcloud iam roles create $CUSTOM_SECURITY_ROLE \
     --project $DEVSHELL_PROJECT_ID \
     --file role-definition.yaml
 
+########################################################
 # Task 2:-
+########################################################
+
 echo "👤 Creating main service account..."
 gcloud iam service-accounts create $SERVICE_ACCOUNT \
     --display-name "Orca Private Cluster Service Account"
@@ -105,7 +111,9 @@ gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
     --role projects/$DEVSHELL_PROJECT_ID/roles/$CUSTOM_SECURITY_ROLE  
 ## nov05: fix typo "SECURIY"
 
+########################################################
 # Task 4:-
+########################################################
 
 echo "🏗️ Creating GKE cluster..."
 echo "   This may take a few minutes..."
