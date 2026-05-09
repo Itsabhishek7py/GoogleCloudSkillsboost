@@ -39,7 +39,8 @@ sudo chmod +x abhishek.sh
 
 ### 🛠️ **Cloud Build Trigger Configuration**  
 
-* Production Deployment Trigger: 
+* Production Deployment Trigger:
+  
   Name:
   ```
   sample-app-prod-deploy
@@ -54,6 +55,7 @@ sudo chmod +x abhishek.sh
   ```
 
 * Development Deployment Trigger:
+  
   Name:
   ```
   sample-app-dev-deploy
