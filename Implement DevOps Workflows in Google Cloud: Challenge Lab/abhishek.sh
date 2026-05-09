@@ -11,8 +11,6 @@ RESET_FORMAT=$'\033[0m'
 BOLD_TEXT=$'\033[1m'
 UNDERLINE_TEXT=$'\033[4m'
 
-clear
-
 echo
 echo "${CYAN_TEXT}${BOLD_TEXT}===================================${RESET_FORMAT}"
 echo "${CYAN_TEXT}${BOLD_TEXT}🚀    Let's Start The LAb Do Like The video    🚀${RESET_FORMAT}"
@@ -32,6 +30,10 @@ export REGION=$(gcloud compute project-info describe \
 --format="value(commonInstanceMetadata.items[google-compute-default-region])")
 export CLUSTER=hello-cluster
 export REPO=my-repository
+
+##########################################################################
+## Task 1. Create the lab resources
+##########################################################################
 
 echo "${YELLOW_TEXT}${BOLD_TEXT}🔧  PHASE 2: Service Activation${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Activating necessary Google Cloud Platform APIs for container, build, and source repository services...${RESET_FORMAT}"
@@ -66,10 +68,11 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Setting up repository...${RESET_FORMAT}"
 (gcloud artifacts repositories list --location=$REGION > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}✅  Repository setup completed!${RESET_FORMAT}"
 
+## Task 1.2 Add the Kubernetes Developer role for the Cloud Build service account
 echo "${MAGENTA_TEXT}${BOLD_TEXT}🔐  PHASE 4: IAM Configuration${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Configuring Cloud Build service account permissions for container development...${RESET_FORMAT}"
 echo
-msg=$(echo "U3Vic2NyaWJlIHRvIERyIEFiaGlzaGVr" | base64 --decode)
+msg=$(echo "U3Vic2NyaWJlIHRvIERyIEFiaGlzaGVr" | base64 --decode)  ## Subscribe to Dr Abhishek
 gcloud projects add-iam-policy-binding $PROJECT_ID \
 --member=serviceAccount:$(gcloud projects describe $PROJECT_ID \
 --format="value(projectNumber)")@cloudbuild.gserviceaccount.com --role="roles/container.developer"
