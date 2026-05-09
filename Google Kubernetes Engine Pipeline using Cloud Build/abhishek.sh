@@ -7,21 +7,32 @@ CYAN='\033[1;36m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# spinner() {
+#     local pid=$!
+#     local delay=0.1
+#     local spinstr='|/-\'
+#     echo -ne "${CYAN}Loading${NC} "
+#     while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+#         local temp=${spinstr#?}
+#         printf " [%c]  " "$spinstr"
+#         local spinstr=$temp${spinstr%"$temp"}
+#         sleep $delay
+#         printf "\b\b\b\b\b\b"
+#     done
+#     echo -ne "\b\b\b\b\b\b"
+#     echo -e "${GREEN}       Done!        ${NC}"
+#     echo
+# }
 spinner() {
     local pid=$!
-    local delay=0.1
-    local spinstr='|/-\'
-    echo -ne "${CYAN}Loading${NC} "
-    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
-        local temp=${spinstr#?}
-        printf " [%c]  " "$spinstr"
-        local spinstr=$temp${spinstr%"$temp"}
-        sleep $delay
-        printf "\b\b\b\b\b\b"
+    local spin='|/-\'
+    local i=0
+    while kill -0 "$pid" 2>/dev/null; do
+        i=$(( (i+1) % 4 ))
+        printf "\rLoading... [%c]   " "${spin:$i:1}"
+        sleep 0.1
     done
-    echo -ne "\b\b\b\b\b\b"
-    echo -e "${GREEN}       Done!        ${NC}"
-    echo
+    printf "\r{GREEN}Done!           \n${NC}"
 }
 
 echo
