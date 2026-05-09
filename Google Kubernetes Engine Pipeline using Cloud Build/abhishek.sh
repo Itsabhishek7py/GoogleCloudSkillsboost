@@ -7,6 +7,7 @@ CYAN='\033[1;36m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+## Changed by nov05, 2026-05-09
 # spinner() {
 #     local pid=$!
 #     local delay=0.1
@@ -32,7 +33,7 @@ spinner() {
         printf "\rLoading... [%c]   " "${spin:$i:1}"
         sleep 0.1
     done
-    printf "\r{GREEN}Done!           \n${NC}"
+    printf "\r${GREEN}Done!           \n${NC}"
 }
 
 echo
@@ -53,9 +54,9 @@ export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(pro
 export REGION=$(gcloud compute project-info describe \
     --format="value(commonInstanceMetadata.items[google-compute-default-region])")
 gcloud config set compute/region $REGION
-echo "Project ID: $PROJECT_ID"
-echo "Project number: $PROJECT_NUMBER"
-echo "Region: $REGION"
+echo "🔹  Project ID: $PROJECT_ID"
+echo "🔹  Project number: $PROJECT_NUMBER"
+echo "🔹  Region: $REGION"
 echo
 
 gcloud services enable container.googleapis.com \
