@@ -34,7 +34,7 @@ spinner() {
         sleep 0.1
     done
     ## \033[K clears from the cursor position to the end of the line
-    printf "\r\033[K${GREEN}Done!${NC}\n\n"  
+    printf "\r${GREEN}Done!         ${NC}\n\n"  
 }
 
 echo
