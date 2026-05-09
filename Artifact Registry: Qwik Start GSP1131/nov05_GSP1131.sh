@@ -1,7 +1,7 @@
 #!/bin/bash
 ## Created by nov05, 2026-05-09
 
-set -e
+set -e # exit immediately if a command fails
 
 # Define color variables
 BLACK_TEXT=$'\033[0;90m'
@@ -18,7 +18,7 @@ RESET_FORMAT=$'\033[0m'
 BOLD_TEXT=$'\033[1m'
 UNDERLINE_TEXT=$'\033[4m'
 
-# Get project, region, and zone details
+# Get project, region, and zone 
 echo "${CYAN_TEXT}${BOLD_TEXT}Fetching the current project ID and setting the compute region...${RESET_FORMAT}"
 export PROJECT_ID=$(gcloud config get-value project)
 export REGION=$(gcloud compute project-info describe \
@@ -36,7 +36,7 @@ echo -e "${YELLOW_TEXT}Using zone: ${CYAN_TEXT}$ZONE${NO_COLOR}\n"
 
 echo
 echo "${BLUE_TEXT}${BOLD_TEXT}=======================================${RESET_FORMAT}"
-echo "${BLUE_TEXT}${BOLD_TEXT}         START EXECUTION               ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}         START TASKS                   ${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}=======================================${RESET_FORMAT}"
 echo
 
