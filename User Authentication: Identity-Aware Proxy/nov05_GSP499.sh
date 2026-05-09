@@ -22,11 +22,14 @@ echo "${BLUE_TEXT}${BOLD_TEXT}         INITIATING EXECUTION...        ${RESET_FO
 echo "${BLUE_TEXT}${BOLD_TEXT}=======================================${RESET_FORMAT}"
 echo
 
-# Instruction for entering the region
-read -p "${YELLOW_TEXT}${BOLD_TEXT}Enter the region:${RESET_FORMAT} " REGION
-export REGION=$REGION
-
-# Instruction for setting project ID
+# Get project, region, and zone details
 echo "${CYAN_TEXT}${BOLD_TEXT}Fetching the current project ID and setting the compute region...${RESET_FORMAT}"
 export PROJECT_ID=$(gcloud config get-value project)
+export REGION=$(gcloud compute project-info describe \
+  --format="value(commonInstanceMetadata.items[google-compute-default-region])")
 gcloud config set compute/region $REGION
+export ZONE=$(gcloud compute project-info describe \
+  --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+echo -e "${YELLOW_TEXT}Google Cloud project: ${CYAN_TEXT}$PROJECT_ID${NO_COLOR}"
+echo -e "${YELLOW_TEXT}Using region: ${CYAN_TEXT}$REGION${NO_COLOR}"
+echo -e "${YELLOW_TEXT}Using zone: ${CYAN_TEXT}$ZONE${NO_COLOR}\n"
