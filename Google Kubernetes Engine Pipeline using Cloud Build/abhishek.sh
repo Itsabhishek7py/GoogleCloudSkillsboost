@@ -20,7 +20,7 @@ spinner() {
         printf "\b\b\b\b\b\b"
     done
     echo -ne "\b\b\b\b\b\b"
-    echo -e "${GREEN}   Done!   ${NC}"
+    echo -e "${GREEN}Done!${NC}"
 }
 
 echo
