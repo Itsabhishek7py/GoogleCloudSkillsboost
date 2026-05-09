@@ -17,10 +17,10 @@ spinner() {
         printf " [%c]  " "$spinstr"
         local spinstr=$temp${spinstr%"$temp"}
         sleep $delay
-        printf "\b\b\b\b\b\b"
+        printf "\b\b\b\b\b\b\b\b"
     done
-    echo -ne "\b\b\b\b\b\b"
-    echo -e "${GREEN}Done!${NC}"
+    echo -ne "\b\b\b\b\b\b\b\b"
+    echo -e "${GREEN}Done!   ${NC}"
     echo
 }
 
