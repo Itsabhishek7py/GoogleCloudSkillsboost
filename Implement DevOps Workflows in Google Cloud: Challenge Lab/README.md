@@ -1,8 +1,8 @@
-# Implement DevOps Workflows in Google Cloud
+# 🟢 Implement DevOps Workflows in Google Cloud (GSP330)
 
-### Challenge Lab (GSP330)
+https://www.skills.google/games/7173/labs/44434
 
----
+### Challenge Lab 
 
 [<img src="https://img.shields.io/badge/Open_Lab-Cloud_Skills_Boost-4285F4?style=for-the-badge&logo=google&logoColor=white&labelColor=34A853" alt="Open Lab Badge">](https://www.cloudskillsboost.google/focuses/13287?parent=catalog)
 ---
