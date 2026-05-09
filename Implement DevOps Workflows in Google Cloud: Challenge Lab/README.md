@@ -29,7 +29,8 @@ https://www.skills.google/games/7173/labs/44434
 <p><strong>☁️ Run in Cloud Shell:</strong></p>
 
 ```bash
-curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%3A%20Challenge%20Lab/abhishek.sh
+rm -f abhishek.sh
+curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%3A%20Challenge%20Lab/abhishek.sh
 sudo chmod +x abhishek.sh
 ./abhishek.sh
 ```
