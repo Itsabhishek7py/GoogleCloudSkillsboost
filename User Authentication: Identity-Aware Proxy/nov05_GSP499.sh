@@ -33,3 +33,18 @@ export ZONE=$(gcloud compute project-info describe \
 echo -e "${YELLOW_TEXT}Google Cloud project: ${CYAN_TEXT}$PROJECT_ID${NO_COLOR}"
 echo -e "${YELLOW_TEXT}Using region: ${CYAN_TEXT}$REGION${NO_COLOR}"
 echo -e "${YELLOW_TEXT}Using zone: ${CYAN_TEXT}$ZONE${NO_COLOR}\n"
+
+gsutil cp gs://spls/gsp499/user-authentication-with-iap.zip .
+unzip user-authentication-with-iap.zip
+cd user-authentication-with-iap
+
+###########################################################
+# Task 1. Deploy the application and protect it with IAP
+###########################################################
+
+cd 1-HelloWorld
+sed -i 's/python37/python313/g' app.yaml
+cat main.py
+gcloud app create --region=$REGION
+gcloud app deploy --quiet
+gcloud app browse
