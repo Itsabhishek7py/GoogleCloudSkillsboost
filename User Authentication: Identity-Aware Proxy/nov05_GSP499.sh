@@ -82,3 +82,25 @@ gcloud alpha iap oauth-brands create \
   --application_title="IAP Example" \
   --support_email="$USER_EMAIL" \
   --project=$PROJECT_ID
+
+echo
+echo "${BLUE_TEXT}${BOLD_TEXT}================================================================${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}         Task 2. Access user identity information               ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}================================================================${RESET_FORMAT}"
+echo
+
+cd ~/user-authentication-with-iap/2-HelloUser
+sed -i 's/python37/python313/g' app.yaml
+gcloud app deploy --quiet 
+gcloud app browse
+
+echo
+echo "${BLUE_TEXT}${BOLD_TEXT}================================================================${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}         Task 3. Use Cryptographic Verification                 ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}================================================================${RESET_FORMAT}"
+echo
+
+cd ~/user-authentication-with-iap/3-HelloVerifiedUser
+sed -i 's/python37/python313/g' app.yaml
+gcloud app deploy --quiet
+gcloud app browse
