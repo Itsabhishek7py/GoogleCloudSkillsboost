@@ -130,10 +130,34 @@ gcloud container clusters create $CLUSTER_NAME \
     --service-account $SERVICE_ACCOUNT@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com \
     --zone $ZONE
 
+########################################################
 # Task 5:-
+########################################################
+
 echo "🔗 Configuring jumphost and deploying application..."
 echo "   Setting up Kubernetes resources..."
-gcloud compute ssh --zone "$ZONE" "orca-jumphost" --project "$DEVSHELL_PROJECT_ID" --quiet --command "gcloud config set compute/zone $ZONE && gcloud container clusters get-credentials $CLUSTER_NAME --internal-ip && sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin && kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0 && kubectl expose deployment hello-server --name orca-hello-service --type LoadBalancer --port 80 --target-port 8080"
+
+## Changed by nov05, 2026-05-09  
+# gcloud compute ssh \
+#     --zone "$ZONE" "orca-jumphost" \
+#     --project "$DEVSHELL_PROJECT_ID" \
+#     --quiet \
+#     --command "gcloud config set compute/zone $ZONE && gcloud container clusters get-credentials $CLUSTER_NAME --internal-ip && sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin && kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0 && kubectl expose deployment hello-server --name orca-hello-service --type LoadBalancer --port 80 --target-port 8080"
+gcloud compute ssh \
+  --zone "$ZONE" "orca-jumphost" \
+  --project "$DEVSHELL_PROJECT_ID" \
+  --quiet << 'EOF'
+gcloud config set compute/zone "$ZONE"
+gcloud container clusters get-credentials "$CLUSTER_NAME" --internal-ip
+sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
+kubectl create deployment hello-server \
+  --image=gcr.io/google-samples/hello-app:1.0
+kubectl expose deployment hello-server \
+  --name orca-hello-service \
+  --type LoadBalancer \
+  --port 80 \
+  --target-port 8080
+EOF
 
 echo ""
 echo "✅ Script execution completed!"
