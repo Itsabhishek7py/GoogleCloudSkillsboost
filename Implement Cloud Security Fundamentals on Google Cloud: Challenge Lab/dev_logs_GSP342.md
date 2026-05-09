@@ -10,5 +10,5 @@ sudo chmod +x drabhishek.sh
 ```
 
 * 2026-05-09 https://www.skills.google/games/7173  
-  ⚠️ Didn't pass the Task 3 check. [See the test result.](https://gist.github.com/nov05/1b57c1b3341adcd2e5d3820014376dca)
+  ⚠️ Didn't pass the Task 3 check. [See the test result.](https://gist.github.com/nov05/1b57c1b3341adcd2e5d3820014376dca)  
   ✅ Bug fixed: There is a typo when binding an IAM role. [See the test result.](https://gist.github.com/nov05/1b57c1b3341adcd2e5d3820014376dca?permalink_comment_id=6141666#gistcomment-6141666)    
