@@ -59,7 +59,11 @@ gh auth login
 gh api user -q ".login"
 GITHUB_USERNAME=$(gh api user -q ".login")
 git config --global user.name "${GITHUB_USERNAME}"
-git config --global user.email "you@example.com"
+# git config --global user.email "you@example.com" 
+git config --global user.email "${USER_EMAIL}"  # e.g. student-03-758816dbe52c@qwiklabs.net
+echo "GitHub username: $GITHUB_USERNAME"
+echo "User email: $USER_EMAIL"
+
 
 ## Create 2 GitHub repos as the lab requires
 gh repo create hello-cloudbuild-app --private 
@@ -75,28 +79,50 @@ sed -i "s/us-central1/$REGION/g" cloudbuild-delivery.yaml
 sed -i "s/us-central1/$REGION/g" cloudbuild-trigger-cd.yaml
 sed -i "s/us-central1/$REGION/g" kubernetes.yaml.tpl
 
-PROJECT_ID=$(gcloud config get-value project)
-
 git init
 git config credential.helper gcloud.sh
 git remote add google https://github.com/${GITHUB_USERNAME}/hello-cloudbuild-app
 git branch -m master
 git add . && git commit -m "initial commit"
 
+#######################################################
+## Task 3
+#######################################################
+
 cd ~/hello-cloudbuild-app
 COMMIT_ID="$(git rev-parse --short=7 HEAD)"
-
 gcloud builds submit --tag="${REGION}-docker.pkg.dev/${PROJECT_ID}/my-repository/hello-cloudbuild:${COMMIT_ID}" .
+
+#######################################################
+## Task 4
+#######################################################
+# -----------------------------
+# CI Trigger (app repo)
+# -----------------------------
+echo "👉  Creating CI trigger..."
+gcloud builds triggers create github \
+  --name="hello-cloudbuild" \
+  --repo-name="hello-cloudbuild-app" \
+  --repo-owner="$GITHUB_USERNAME" \
+  --branch-pattern=".*" \
+  --build-config="cloudbuild.yaml" \
+  --included-files="**" \
+  --region="$REGION"
 
 cd ~/hello-cloudbuild-app
 git add .
 git commit -m "Type Any Commit Message here"
 git push google master
 
+#######################################################
+## Task 5 Accessing GitHub from a build via SSH keys
+#######################################################
+
 cd ~
 mkdir workingdir
 cd workingdir
 
+## Create a new GitHub SSH key
 ssh-keygen -t rsa -b 4096 -N '' -f id_github -C "${USER_EMAIL}"
 
 gcloud secrets create ssh_key_secret --replication-policy="automatic"
@@ -156,6 +182,19 @@ git checkout -b candidate
 git push google production
 git push google candidate
 
+# -----------------------------
+# CD Trigger (env repo)
+# -----------------------------
+echo "👉  Creating CD trigger..."
+gcloud builds triggers create github \
+  --name="hello-cloudbuild-deploy" \
+  --repo-name="hello-cloudbuild-env" \
+  --repo-owner="$GITHUB_USERNAME" \
+  --branch-pattern="^candidate$" \
+  --build-config="cloudbuild.yaml" \
+  --included-files="**" \
+  --region="$REGION"
+  
 cd ~/hello-cloudbuild-app
 ssh-keyscan -t rsa github.com > known_hosts.github
 chmod +x known_hosts.github
