@@ -17,9 +17,9 @@ spinner() {
         printf " [%c]  " "$spinstr"
         local spinstr=$temp${spinstr%"$temp"}
         sleep $delay
-        printf "\b\b\b\b\b\b"
+        printf "\b\b\b\b\b\b\b"
     done
-    echo -ne "\b\b\b\b\b\b"
+    echo -ne "\b\b\b\b\b\b\b"
     echo -e "${GREEN}Done!${NC}"
 }
 
@@ -42,6 +42,10 @@ export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(pro
 export REGION=$(gcloud compute project-info describe \
     --format="value(commonInstanceMetadata.items[google-compute-default-region])")
 gcloud config set compute/region $REGION
+echo "Project ID: $PROJECT_ID"
+echo "Project number: $PROJECT_NUMBER"
+echo "Region: $REGION"
+echo
 
 gcloud services enable container.googleapis.com \
     cloudbuild.googleapis.com \
