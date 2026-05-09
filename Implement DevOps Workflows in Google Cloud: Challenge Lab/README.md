@@ -13,9 +13,9 @@ https://www.skills.google/course_templates/716/labs/598755
 ### ©Credit
 - DM for credit or removal request (no copyright intended) ©All rights and credits for the original content belong to Google Cloud [Google Cloud Skill Boost website](https://www.cloudskillsboost.google/) 🙏
 
-### 📋 <ins>**Prerequisites**</ins>
+### 📋 Prerequisites   
 
-* If you do not already have a **GitHub** account, you will need to create a [GitHub account](https://github.com/signup)  
+* If you do not already have a `GitHub` account, you will need to create a [GitHub account](https://github.com/signup)  
 
 <br>  
 
