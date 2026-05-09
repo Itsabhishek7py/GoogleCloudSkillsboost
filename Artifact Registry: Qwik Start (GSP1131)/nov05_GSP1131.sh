@@ -18,9 +18,27 @@ RESET_FORMAT=$'\033[0m'
 BOLD_TEXT=$'\033[1m'
 UNDERLINE_TEXT=$'\033[4m'
 
+echo
+echo "${BLUE_TEXT}${BOLD_TEXT}=======================================${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}         INITIATING EXECUTION...        ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}=======================================${RESET_FORMAT}"
+echo
+
+# Get project, region, and zone details
+echo "${CYAN_TEXT}${BOLD_TEXT}Fetching the current project ID and setting the compute region...${RESET_FORMAT}"
+export PROJECT_ID=$(gcloud config get-value project)
+export REGION=$(gcloud compute project-info describe \
+  --format="value(commonInstanceMetadata.items[google-compute-default-region])")
+gcloud config set compute/region $REGION
+export ZONE=$(gcloud compute project-info describe \
+  --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+echo -e "${YELLOW}Google Cloud project: ${CYAN}$PROJECT_ID${NC}"
+echo -e "${YELLOW}Using region: ${CYAN}$REGION${NC}"
+echo -e "${YELLOW}Using zone: ${CYAN}$ZONE${NC}\n"
+
 # Instruction for entering the region
-read -p "${YELLOW_TEXT}${BOLD_TEXT}Enter the region:${RESET_FORMAT} " REGION
-export REGION=$REGION
+# read -p "${YELLOW_TEXT}${BOLD_TEXT}Enter the region:${RESET_FORMAT} " REGION
+# export REGION=$REGION
 
 # ====== CONFIG ======
 # REGION="us-central1"   # <-- change this to your lab region if different
