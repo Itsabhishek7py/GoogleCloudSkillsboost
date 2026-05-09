@@ -32,14 +32,17 @@ echo -e "${YELLOW}--------------------------------------------------------${NC}"
 
 (sleep 3) & spinner
 
+#######################################################
+## Task 1. Initialize your lab
+#######################################################
 
-export REGION=$(gcloud compute project-info describe \
---format="value(commonInstanceMetadata.items[google-compute-default-region])")
-
+## Get project id, project number, region
 export PROJECT_ID=$(gcloud config get-value project)
 export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
 gcloud config set compute/region $REGION
-
+export REGION=$(gcloud compute project-info describe \
+    --format="value(commonInstanceMetadata.items[google-compute-default-region])")
+    
 gcloud services enable container.googleapis.com \
     cloudbuild.googleapis.com \
     secretmanager.googleapis.com \
@@ -56,10 +59,9 @@ gh auth login
 gh api user -q ".login"
 GITHUB_USERNAME=$(gh api user -q ".login")
 git config --global user.name "${GITHUB_USERNAME}"
-git config --global user.email "${USER_EMAIL}"
-echo ${GITHUB_USERNAME}
-echo ${USER_EMAIL}
+git config --global user.email "you@example.com"
 
+## Create 2 GitHub repos as the lab requires
 gh repo create hello-cloudbuild-app --private 
 gh repo create hello-cloudbuild-env --private
 
