@@ -146,6 +146,8 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Creating GitHub repository and cloning sample app
 echo
 
 (gh repo create sample-app --private > /dev/null 2>&1) & spinner
+sleep 3  
+echo "git clone https://github.com/${GITHUB_USERNAME}/sample-app.git"
 git clone https://github.com/${GITHUB_USERNAME}/sample-app.git
 cd ~
 (gsutil cp -r gs://spls/gsp330/sample-app/* sample-app > /dev/null 2>&1) & spinner
