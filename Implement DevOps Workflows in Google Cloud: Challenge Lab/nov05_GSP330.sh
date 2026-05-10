@@ -155,11 +155,12 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Creating GitHub repository and cloning sample app
 echo
 
 (gh repo create sample-app --private > /dev/null 2>&1) & spinner
-wait 3
+sleep 3
 # git clone https://github.com/${GITHUB_USERNAME}/sample-app.git
 gh repo clone ${GITHUB_USERNAME}/sample-app
 cd ~
 (gsutil cp -r gs://spls/gsp330/sample-app/* sample-app > /dev/null 2>&1) & spinner
+sleep 5
 for file in sample-app/cloudbuild-dev.yaml sample-app/cloudbuild.yaml; do
   sed -i "s/<your-region>/${REGION}/g" "$file"
   sed -i "s/<your-zone>/${ZONE}/g" "$file"
