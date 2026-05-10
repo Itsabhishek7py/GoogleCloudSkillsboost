@@ -15,4 +15,5 @@ sudo chmod +x nov05_GSP330.sh
 
 ## Logs
 
-* 2026-05-09 ✅ Lab completed. The updated bash script `nov05_GSP330.sh` works, which requires manual creation of `Cloud Build` triggers during the exection and manual deletion of the `GitHub` repo `sample-app` after execution. And the Task 1 check for the k8s cluster `hello-cluster` might need seveal retries.   
+* 2026-05-09 Lab completed. The updated bash script `nov05_GSP330.sh` works, which requires manual creation of `Cloud Build` triggers during the exection and manual deletion of the `GitHub` repo `sample-app` after execution. And the Task 1 check for the k8s cluster `hello-cluster` might need seveal retries.
+  ✅ [Test result](https://github.com/nov05/gcp-skills-boost/commit/6e4a21f91e7d72f695017bbc2f9e002f255e53bb) for [Commit 6e4a21f](https://github.com/nov05/gcp-skills-boost/commit/6e4a21f91e7d72f695017bbc2f9e002f255e53bb)   
