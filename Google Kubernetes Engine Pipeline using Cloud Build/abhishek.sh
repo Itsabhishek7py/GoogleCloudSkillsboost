@@ -120,7 +120,8 @@ echo "${CYAN_TEXT}${BOLD_TEXT}           NOW MANUAL STEPS                  ${RES
 echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}Click the url to connect GitHub repos hello-cloudbuild-app and hello-cloudbuild-env:${RESET_FORMAT}"
-echo "  https://console.cloud.google.com/cloud-build/repositories/1st-gen;region=$REGION/add?project=$PROJECT_ID"
+echo "  Using region $REGION"
+echo "  https://console.cloud.google.com/cloud-build/triggers?project=$PROJECT_ID"
 echo
 
 answer=""
