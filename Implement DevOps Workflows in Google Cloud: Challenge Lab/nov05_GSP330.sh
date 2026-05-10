@@ -242,10 +242,10 @@ git push -u origin dev
 
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying development version..."
 (gcloud builds submit --config=cloudbuild-dev.yaml . > /dev/null 2>&1) & spinner
-echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Development deployment completed!${RESET_FORMAT}"
+echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Dev v1.0 deployment completed!${RESET_FORMAT}"
 
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 12: Production Branch Setup${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 12: Prod Branch Setup${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Switching to master branch and exposing development deployment service...${RESET_FORMAT}"
 echo
 
@@ -263,7 +263,29 @@ git push -u origin master
 
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying production version..."
 (gcloud builds submit --config=cloudbuild.yaml . > /dev/null 2>&1) & spinner
-echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Production deployment completed!${RESET_FORMAT}"
+echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Prod v1.0 deployment completed!${RESET_FORMAT}"
+
+export DEV_EXTERNAL_IP=$(kubectl get svc dev-deployment-service -n dev -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+export PROD_EXTERNAL_IP=$(kubectl get svc prod-deployment-service -n prod -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}Verify the application is up and running${RESET_FORMAT}"
+echo "=================================="
+echo "      APP V1.0 ENDPOINTS"
+echo "=================================="
+echo "DEV APP:"
+echo "http://$DEV_EXTERNAL_IP:8080/blue"
+echo ""
+echo "PROD APP:"
+echo "http://$PROD_EXTERNAL_IP:8080/blue"
+echo "=================================="
+answer=""
+while true; do
+  echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+  read -p " (y/n): " answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+done
 
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 13: Production Service Exposure${RESET_FORMAT}"
@@ -277,7 +299,7 @@ echo
     --target-port 8080 > /dev/null 2>&1) & spinner
 
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 14: Development v2.0 Enhancement${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 14: Dev v2.0 Enhancement${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Implementing new features in development branch with red handler functionality...${RESET_FORMAT}"
 echo
 
@@ -301,7 +323,7 @@ git push -u origin dev
 
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying development v2.0..."
 (gcloud builds submit --config=cloudbuild-dev.yaml . > /dev/null 2>&1) & spinner
-echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Development v2.0 deployment completed!${RESET_FORMAT}"
+echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Dev v2.0 deployment completed!${RESET_FORMAT}"
 
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 15: Production v2.0 Deployment${RESET_FORMAT}"
@@ -328,7 +350,31 @@ git push -u origin master
 
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying production v2.0..."
 (gcloud builds submit --config=cloudbuild.yaml . > /dev/null 2>&1) & spinner
-echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Production v2.0 deployment completed!${RESET_FORMAT}"
+echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Prod v2.0 deployment completed!${RESET_FORMAT}"
+
+export DEV_EXTERNAL_IP=$(kubectl get svc dev-deployment-service -n dev -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+export PROD_EXTERNAL_IP=$(kubectl get svc prod-deployment-service -n prod -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}Verify v2.0 is up and running${RESET_FORMAT}"
+echo "=================================="
+echo "      APP V2.0 ENDPOINTS"
+echo "=================================="
+echo "DEV APP:"
+echo "Red  : http://$DEV_EXTERNAL_IP:8080/red"
+echo "Blue : http://$DEV_EXTERNAL_IP:8080/blue"
+echo ""
+echo "PROD APP:"
+echo "Red  : http://$PROD_EXTERNAL_IP:8080/red"
+echo "Blue : http://$PROD_EXTERNAL_IP:8080/blue"
+echo "=================================="
+answer=""
+while true; do
+  echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+  read -p " (y/n): " answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+done
 
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 16: Rollback & Validation${RESET_FORMAT}"
@@ -338,4 +384,21 @@ echo
 (kubectl -n prod rollout undo deployment/production-deployment > /dev/null 2>&1) & spinner
 kubectl -n prod get pods -o jsonpath --template='{range .items[*]}{.metadata.name}{"\t"}{"\t"}{.spec.containers[0].image}{"\n"}{end}'
 
+export DEV_EXTERNAL_IP=$(kubectl get svc dev-deployment-service -n dev -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+export PROD_EXTERNAL_IP=$(kubectl get svc prod-deployment-service -n prod -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}Verify the rollback${RESET_FORMAT}"
+echo "=================================="
+echo "      APP V2.0 ENDPOINTS"
+echo "=================================="
+echo "DEV APP:"
+echo "Red  : http://$DEV_EXTERNAL_IP:8080/red"
+echo "Blue : http://$DEV_EXTERNAL_IP:8080/blue"
+echo ""
+echo "PROD APP:"
+echo "Red  : http://$PROD_EXTERNAL_IP:8080/red"
+echo "Blue : http://$PROD_EXTERNAL_IP:8080/blue"
+echo "=================================="
+
 cd ~ # Back to home directory
+
