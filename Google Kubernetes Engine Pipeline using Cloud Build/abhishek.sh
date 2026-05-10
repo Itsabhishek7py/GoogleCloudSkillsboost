@@ -78,8 +78,8 @@ GITHUB_USERNAME=$(gh api user -q ".login")
 git config --global user.name "${GITHUB_USERNAME}"
 # git config --global user.email "you@example.com" 
 git config --global user.email "${USER_EMAIL}"  # e.g. student-03-758816dbe52c@qwiklabs.net
-echo "GitHub username: $GITHUB_USERNAME"
-echo "User email: $USER_EMAIL"
+echo "🔹  GitHub username: $GITHUB_USERNAME"
+echo "🔹  User email: $USER_EMAIL"
 
 
 ## Create 2 GitHub repos as the lab requires
@@ -103,7 +103,7 @@ git branch -m master
 git add . && git commit -m "initial commit"
 
 #######################################################
-## Task 3
+## Task 3 Create a container image with Cloud Build
 #######################################################
 
 cd ~/hello-cloudbuild-app
@@ -136,12 +136,14 @@ git push google master
 #######################################################
 ## Task 5 Accessing GitHub from a build via SSH keys
 #######################################################
+## In this step use the Secret Manager with Cloud Build to access private GitHub repositories.
 
 cd ~
 mkdir workingdir
 cd workingdir
 
 ## Create a new GitHub SSH key
+## This step creates two files, id_github and id_github.pub
 ssh-keygen -t rsa -b 4096 -N '' -f id_github -C "${USER_EMAIL}"
 
 gcloud secrets create ssh_key_secret --replication-policy="automatic"
@@ -158,6 +160,7 @@ gh api --method POST -H "Accept: application/vnd.github.v3+json" \
 
 rm id_github*
 
+## Grant the service account permission to access Secret Manager
 gcloud projects add-iam-policy-binding ${PROJECT_NUMBER} \
 --member=serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com \
 --role=roles/secretmanager.secretAccessor
@@ -188,20 +191,21 @@ git init
 git config credential.helper gcloud.sh
 git remote add google https://github.com/${GITHUB_USERNAME}/hello-cloudbuild-env
 git branch -m master
-git add . && git commit -m "initial commit"
+git add . && git commit -m "GSP1077 Initial commit"
 git push google master
 
 git checkout -b production
 rm cloudbuild.yaml
 
-curl -LO raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/env-cloudbuild.yaml
-mv env-cloudbuild.yaml cloudbuild.yaml
+curl -L \
+  -o cloudbuild.yaml \
+  https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/env-cloudbuild.yaml
 
 sed -i "s/REGION-/$REGION/g" cloudbuild.yaml
 sed -i "s/GITHUB-USERNAME/${GITHUB_USERNAME}/g" cloudbuild.yaml
 
 git add .
-git commit -m "Create cloudbuild.yaml for deployment"
+git commit -m "GSP1077 Create cloudbuild.yaml for deployment"
 git checkout -b candidate
 git push google production
 git push google candidate
@@ -220,23 +224,26 @@ gcloud builds triggers create github \
   --region="$REGION"
 gcloud builds triggers list --region=$REGION 
 
+## Task 6.12 In your hello-cloudbuild-app directory, create a file named known_hosts.github, 
+##   add the public SSH key to this file and provide the necessary permission to the file
 cd ~/hello-cloudbuild-app
 ssh-keyscan -t rsa github.com > known_hosts.github
 chmod +x known_hosts.github
 git add .
-git commit -m "Adding known_host file."
+git commit -m "GSP1077 Adding known_host file"
 git push google master
 
 rm cloudbuild.yaml
 
-curl -LO raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/app-cloudbuild.yaml
-mv app-cloudbuild.yaml cloudbuild.yaml
+curl -L \
+  -o cloudbuild.yaml \
+  https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/app-cloudbuild.yaml
 
 sed -i "s/REGION/$REGION/g" cloudbuild.yaml
 sed -i "s/GITHUB-USERNAME/${GITHUB_USERNAME}/g" cloudbuild.yaml
 
 git add cloudbuild.yaml
-git commit -m "Trigger CD pipeline"
+git commit -m "GSP1077 Trigger CD pipeline"
 git push google master
 # --- End Original Script ---
 
