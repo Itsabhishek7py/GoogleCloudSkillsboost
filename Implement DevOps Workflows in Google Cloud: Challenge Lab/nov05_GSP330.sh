@@ -158,32 +158,33 @@ git init
 cd sample-app/
 git checkout -b master
 git add .
-git commit -m "Dr Abhishek" 
+git commit -m "GSP330 Initial commit" 
 git push -u origin master
 
 git add .
-git commit -m "Initial commit with sample code"
+git commit -m "GSP330 Initial commit with sample code"
 git push origin master
 git checkout -b dev
-git commit -m "Initial commit for dev branch"
+git commit -m "GSP330 Initial commit for dev branch"
 git push origin dev
 
 echo
 echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
-echo "${CYAN_TEXT}${BOLD_TEXT}           NOW FOLLOW VIDEO STEPS            ${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}           NOW MANUAL STEPS                  ${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}Cloud Build Trigger Configuration${RESET_FORMAT}"
 echo "https://console.cloud.google.com/cloud-build/triggers;region=global/add?project=$PROJECT_ID"
 echo
-echo "${GREEN_TEXT}${BOLD_TEXT}❓  Have you completed the video steps and created the Cloud Build trigger?${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}Have you created the Task 3 Cloud Build triggers?${RESET_FORMAT}"
 read -p " (y/n): " answer
 if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
-  echo "${GREEN_TEXT}${BOLD_TEXT}✅  Excellent! Proceeding with application deployment...${RESET_FORMAT}"
+  echo "${GREEN_TEXT}${BOLD_TEXT}Excellent! Proceeding with application deployment...${RESET_FORMAT}"
 else
-  echo "${RED_TEXT}${BOLD_TEXT}⚠️  Please complete the video steps to create the Cloud Build trigger before continuing.${RESET_FORMAT}"
+  echo "${RED_TEXT}${BOLD_TEXT}Please create the Cloud Build triggers before continuing.${RESET_FORMAT}"
 fi
 
+echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}Re-initializing Environment Variables${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Refreshing project configuration to ensure consistency...${RESET_FORMAT}"
 echo
