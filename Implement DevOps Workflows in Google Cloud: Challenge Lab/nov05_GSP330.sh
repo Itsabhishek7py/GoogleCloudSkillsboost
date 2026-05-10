@@ -191,7 +191,8 @@ echo
 get_trigger_count() {
   gcloud builds triggers list \
     --filter="name:(sample-app-dev-deploy OR sample-app-prod-deploy)" \
-    --format="value(name)" | sort -u | wc -l
+    --format="value(name)" \
+    2>/dev/null | sort -u | wc -l
 }
 while [[ "$(get_trigger_count)" -ne 2 ]]; do
   sleep 3
