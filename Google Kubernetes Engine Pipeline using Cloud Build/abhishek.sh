@@ -7,38 +7,57 @@ CYAN='\033[1;36m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Spinner Function
+## Changed by nov05, 2026-05-09
+# spinner() {
+#     local pid=$!
+#     local delay=0.1
+#     local spinstr='|/-\'
+#     echo -ne "${CYAN}Loading${NC} "
+#     while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+#         local temp=${spinstr#?}
+#         printf " [%c]  " "$spinstr"
+#         local spinstr=$temp${spinstr%"$temp"}
+#         sleep $delay
+#         printf "\b\b\b\b\b\b"
+#     done
+#     echo -ne "\b\b\b\b\b\b"
+#     echo -e "${GREEN}       Done!        ${NC}"
+#     echo
+# }
 spinner() {
     local pid=$!
-    local delay=0.1
-    local spinstr='|/-\'
-    echo -ne "${CYAN}Loading${NC} "
-    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
-        local temp=${spinstr#?}
-        printf " [%c]  " "$spinstr"
-        local spinstr=$temp${spinstr%"$temp"}
-        sleep $delay
-        printf "\b\b\b\b\b\b"
+    local spin='|/-\'
+    local i=0
+    while kill -0 "$pid" 2>/dev/null; do
+        i=$(( (i+1) % 4 ))
+        printf "\r${CYAN}Loading...${NC} [%c]   " "${spin:$i:1}"
+        sleep 0.1
     done
-    echo -ne "\b\b\b\b\b\b"
-    echo -e "${GREEN} Done!${NC}"
+    printf "\r${GREEN}Done!         ${NC}\n\n"  
 }
 
-# Welcome Message
+echo
 echo -e "${YELLOW}--------------------------------------------------------"
-echo -e "${GREEN}🎓 Welcome to Dr Abhishek's Cloud Tutorials! ☁️"
+echo -e "${GREEN}🎓  Welcome to Dr Abhishek's Cloud Tutorials! ☁️"
 echo -e "${CYAN}Subscribe to the channel: https://www.youtube.com/@drabhishek.5460/videos"
 echo -e "${YELLOW}--------------------------------------------------------${NC}"
 
 (sleep 3) & spinner
 
+#######################################################
+## Task 1. Initialize your lab
+#######################################################
 
-export REGION=$(gcloud compute project-info describe \
---format="value(commonInstanceMetadata.items[google-compute-default-region])")
-
+## Get project id, project number, region
 export PROJECT_ID=$(gcloud config get-value project)
 export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
+export REGION=$(gcloud compute project-info describe \
+    --format="value(commonInstanceMetadata.items[google-compute-default-region])")
 gcloud config set compute/region $REGION
+echo "🔹  Project ID: $PROJECT_ID"
+echo "🔹  Project number: $PROJECT_NUMBER"
+echo "🔹  Region: $REGION"
+echo
 
 gcloud services enable container.googleapis.com \
     cloudbuild.googleapis.com \
@@ -56,10 +75,13 @@ gh auth login
 gh api user -q ".login"
 GITHUB_USERNAME=$(gh api user -q ".login")
 git config --global user.name "${GITHUB_USERNAME}"
-git config --global user.email "${USER_EMAIL}"
-echo ${GITHUB_USERNAME}
-echo ${USER_EMAIL}
+# git config --global user.email "you@example.com" 
+git config --global user.email "${USER_EMAIL}"  # e.g. student-03-758816dbe52c@qwiklabs.net
+echo "GitHub username: $GITHUB_USERNAME"
+echo "User email: $USER_EMAIL"
 
+
+## Create 2 GitHub repos as the lab requires
 gh repo create hello-cloudbuild-app --private 
 gh repo create hello-cloudbuild-env --private
 
@@ -73,28 +95,52 @@ sed -i "s/us-central1/$REGION/g" cloudbuild-delivery.yaml
 sed -i "s/us-central1/$REGION/g" cloudbuild-trigger-cd.yaml
 sed -i "s/us-central1/$REGION/g" kubernetes.yaml.tpl
 
-PROJECT_ID=$(gcloud config get-value project)
-
 git init
 git config credential.helper gcloud.sh
 git remote add google https://github.com/${GITHUB_USERNAME}/hello-cloudbuild-app
 git branch -m master
 git add . && git commit -m "initial commit"
 
+#######################################################
+## Task 3
+#######################################################
+
 cd ~/hello-cloudbuild-app
 COMMIT_ID="$(git rev-parse --short=7 HEAD)"
-
 gcloud builds submit --tag="${REGION}-docker.pkg.dev/${PROJECT_ID}/my-repository/hello-cloudbuild:${COMMIT_ID}" .
+
+#######################################################
+## Task 4 Create the Continuous Integration (CI) pipeline
+#######################################################
+
+# -----------------------------
+# CI Trigger (app repo)
+# -----------------------------
+echo "👉  Creating CI trigger..."
+gcloud builds triggers create github \
+  --name="hello-cloudbuild" \
+  --repo-name="hello-cloudbuild-app" \
+  --repo-owner="$GITHUB_USERNAME" \
+  --branch-pattern=".*" \
+  --build-config="cloudbuild.yaml" \
+  --included-files="**" \
+  --region="$REGION"
+gcloud builds triggers list --region=$REGION 
 
 cd ~/hello-cloudbuild-app
 git add .
 git commit -m "Type Any Commit Message here"
 git push google master
 
+#######################################################
+## Task 5 Accessing GitHub from a build via SSH keys
+#######################################################
+
 cd ~
 mkdir workingdir
 cd workingdir
 
+## Create a new GitHub SSH key
 ssh-keygen -t rsa -b 4096 -N '' -f id_github -C "${USER_EMAIL}"
 
 gcloud secrets create ssh_key_secret --replication-policy="automatic"
@@ -115,6 +161,11 @@ gcloud projects add-iam-policy-binding ${PROJECT_NUMBER} \
 --member=serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com \
 --role=roles/secretmanager.secretAccessor
 
+#######################################################
+## Task 6. Create the test environment and CD pipeline
+#######################################################
+
+## Grant Cloud Build access to GKE
 cd ~
 gcloud projects add-iam-policy-binding ${PROJECT_NUMBER} \
 --member=serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com \
@@ -154,6 +205,20 @@ git checkout -b candidate
 git push google production
 git push google candidate
 
+# -----------------------------
+# CD Trigger (env repo)
+# -----------------------------
+echo "👉  Creating CD trigger..."
+gcloud builds triggers create github \
+  --name="hello-cloudbuild-deploy" \
+  --repo-name="hello-cloudbuild-env" \
+  --repo-owner="$GITHUB_USERNAME" \
+  --branch-pattern="^candidate$" \
+  --build-config="cloudbuild.yaml" \
+  --included-files="**" \
+  --region="$REGION"
+gcloud builds triggers list --region=$REGION 
+
 cd ~/hello-cloudbuild-app
 ssh-keyscan -t rsa github.com > known_hosts.github
 chmod +x known_hosts.github
@@ -175,6 +240,6 @@ git push google master
 # --- End Original Script ---
 
 # Final Message
-echo -e "${GREEN}✅ Lab is now Completed!"
-echo -e "${CYAN}🙏 Thanks for using Dr Abhishek's Cloud Tutorials!"
-echo -e "${YELLOW}👉 Subscribe here: ${NC}https://www.youtube.com/@drabhishek.5460/videos"
+echo -e "${GREEN}✅  Lab is now Completed!"
+echo -e "${CYAN}🙏  Thanks for using Dr Abhishek's Cloud Tutorials!"
+echo -e "${YELLOW}👉  Subscribe here: ${NC}https://www.youtube.com/@drabhishek.5460/videos"
