@@ -266,9 +266,17 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Deploying prod v1.0..."
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Prod v1.0 deployment completed!${RESET_FORMAT}"
 
 export DEV_EXTERNAL_IP=$(kubectl get svc dev-deployment-service -n dev -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
-export PROD_EXTERNAL_IP=$(kubectl get svc prod-deployment-service -n prod -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+while true; do
+  PROD_EXTERNAL_IP=$(kubectl get svc prod-deployment-service -n prod -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+  if [ -n "$PROD_EXTERNAL_IP" ]; then
+    break
+  fi
+  echo "Prod external IP is not ready yet, retrying in 5 seconds..."
+  sleep 5
+done
+
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}Verify the application is up and running${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}Verify app v1.0 is up and running${RESET_FORMAT}"
 echo "=================================="
 echo "      APP V1.0 ENDPOINTS"
 echo "=================================="
@@ -321,12 +329,12 @@ git add .
 git commit -m "GSP330 dev v2.0" 
 git push -u origin dev
 
-echo "${WHITE_TEXT}${BOLD_TEXT}Deploying development v2.0..."
+echo "${WHITE_TEXT}${BOLD_TEXT}Deploying dev v2.0..."
 (gcloud builds submit --config=cloudbuild-dev.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Dev v2.0 deployment completed!${RESET_FORMAT}"
 
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 15: Production v2.0 Deployment${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 15: Prod v2.0 Deployment${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Merging new features to production branch and updating deployment configurations...${RESET_FORMAT}"
 echo
 
@@ -348,7 +356,7 @@ git add .
 git commit -m "GSP330 v2.0" 
 git push -u origin master
 
-echo "${WHITE_TEXT}${BOLD_TEXT}Deploying production v2.0..."
+echo "${WHITE_TEXT}${BOLD_TEXT}Deploying prod v2.0..."
 (gcloud builds submit --config=cloudbuild.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Prod v2.0 deployment completed!${RESET_FORMAT}"
 
@@ -360,12 +368,12 @@ echo "=================================="
 echo "      APP V2.0 ENDPOINTS"
 echo "=================================="
 echo "DEV APP:"
-echo "Red  : http://$DEV_EXTERNAL_IP:8080/red"
-echo "Blue : http://$DEV_EXTERNAL_IP:8080/blue"
+echo "Blue: http://$DEV_EXTERNAL_IP:8080/blue"
+echo "Red : http://$DEV_EXTERNAL_IP:8080/red"
 echo ""
 echo "PROD APP:"
-echo "Red  : http://$PROD_EXTERNAL_IP:8080/red"
-echo "Blue : http://$PROD_EXTERNAL_IP:8080/blue"
+echo "Blue: http://$PROD_EXTERNAL_IP:8080/blue"
+echo "Red : http://$PROD_EXTERNAL_IP:8080/red"
 echo "=================================="
 answer=""
 while true; do
@@ -392,12 +400,12 @@ echo "=================================="
 echo "      APP V2.0 ENDPOINTS"
 echo "=================================="
 echo "DEV APP:"
-echo "Red  : http://$DEV_EXTERNAL_IP:8080/red"
-echo "Blue : http://$DEV_EXTERNAL_IP:8080/blue"
+echo "Blue: http://$DEV_EXTERNAL_IP:8080/blue"
+echo "Red : http://$DEV_EXTERNAL_IP:8080/red"
 echo ""
 echo "PROD APP:"
-echo "Red  : http://$PROD_EXTERNAL_IP:8080/red"
-echo "Blue : http://$PROD_EXTERNAL_IP:8080/blue"
+echo "Blue: http://$PROD_EXTERNAL_IP:8080/blue"
+echo "Red : http://$PROD_EXTERNAL_IP:8080/red"
 echo "=================================="
 
 cd ~ # Back to home directory
