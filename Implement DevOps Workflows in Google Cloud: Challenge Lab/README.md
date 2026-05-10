@@ -21,7 +21,7 @@ https://www.skills.google/course_templates/716/labs/598755
 
 ---
 
-> 👉 **Tip:** After the lab, make sure to manually delete the GitHub repository named `sample-app` that was created by the script.
+👉 **IMPORTANT:** After the lab, make sure to manually delete the GitHub repository named `sample-app` that was created by the script.
 
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>👉 Run in Cloud Shell:</strong></p>  
