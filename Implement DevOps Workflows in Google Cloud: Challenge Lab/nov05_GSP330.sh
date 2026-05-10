@@ -185,6 +185,8 @@ echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RES
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}Click the url to create Cloud Build triggers${RESET_FORMAT}"
 echo "https://console.cloud.google.com/cloud-build/triggers;region=global/add?project=$PROJECT_ID"
+echo "Refer to GSP330 Task 3 for trigger configuration:"
+echo "https://www.skills.google/games/7173/labs/44434"
 echo
 
 ## Loop to ensure trigger readiness
