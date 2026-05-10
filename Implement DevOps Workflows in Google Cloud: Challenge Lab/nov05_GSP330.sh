@@ -341,7 +341,7 @@ while true; do
 done
 
 ##########################################################################
-##Task 5. Deploy the second versions of the application
+## Task 5. Deploy the second versions of the application
 ##########################################################################
 
 echo
@@ -425,6 +425,10 @@ while true; do
   # move cursor up one line and clear it
   echo -ne "\033[1A\033[2K"
 done
+
+##########################################################################
+## Task 6. Roll back the production deployment
+##########################################################################
 
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 16: Prod Rollback & Validation${RESET_FORMAT}"
