@@ -159,7 +159,6 @@ wait $pid
 gh repo clone ${GITHUB_USERNAME}/sample-app
 cd ~
 (gsutil cp -r gs://spls/gsp330/sample-app/* sample-app > /dev/null 2>&1) & spinner
-wait
 for file in sample-app/cloudbuild-dev.yaml sample-app/cloudbuild.yaml; do
   sed -i "s/<your-region>/${REGION}/g" "$file"
   sed -i "s/<your-zone>/${ZONE}/g" "$file"
@@ -167,16 +166,14 @@ done
 
 git init
 cd sample-app/
+
 git checkout -b master
 git add .
 git commit -m "GSP330 Initial commit" 
 git push -u origin master
 
-git add .
-git commit -m "GSP330 Initial commit with sample code"
-git push origin master
 git checkout -b dev
-git commit -m "GSP330 Initial commit for dev branch"
+git commit --allow-empty -m "GSP330 Initial commit for dev branch"
 git push origin dev
 
 echo
