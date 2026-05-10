@@ -9,4 +9,10 @@ sudo chmod +x nov05_GSP330.sh
 ./nov05_GSP330.sh
 ```
 
+<br>  
+
+---  
+
+## Logs
+
 * 2026-05-09 ✅ Lab completed. The updated bash script `nov05_GSP330.sh` works, which requires manual creation of `Cloud Build` triggers during the exection and manual deletion of the `GitHub` repo `sample-app` after execution. And the Task 1 check for the k8s cluster `hello-cluster` might need seveal retries.   
