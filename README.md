@@ -1,4 +1,11 @@
+# 🟢 Google Skills labs automation  
 
+* Example lab - [GSP330 Implement DevOps Workflows in Google Cloud](https://github.com/nov05/gcp-skills-boost/tree/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%3A%20Challenge%20Lab)  
+* Example bash script - [nov05_GSP330.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%3A%20Challenge%20Lab/nov05_GSP330.sh)
+
+<br><br><br>
+
+---
 
 <div align="center">
   
