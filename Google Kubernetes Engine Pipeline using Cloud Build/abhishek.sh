@@ -148,7 +148,8 @@ gcloud builds triggers create github \
     --repo-name="hello-cloudbuild-app" \
     --branch-pattern=".*" \
     --build-config="cloudbuild.yaml" \
-    --region="$REGION"
+    --region="$REGION" \
+    --description="GSP1077 Continuous integration (CI) pipeline"
 gcloud builds triggers list --region=$REGION 
 
 cd ~/hello-cloudbuild-app
@@ -243,7 +244,8 @@ gcloud builds triggers create github \
     --repo-name="hello-cloudbuild-env" \
     --branch-pattern="^candidate$" \
     --build-config="cloudbuild.yaml" \
-    --region="$REGION"
+    --region="$REGION" \
+    --description="GSP1077 Test environment and CD pipeline"
 gcloud builds repositories list --region="$REGION"
 gcloud builds triggers list --region=$REGION 
 
