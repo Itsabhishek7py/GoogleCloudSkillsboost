@@ -145,12 +145,17 @@ echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 8: Repository Initialization${RESET_
 echo "${WHITE_TEXT}${BOLD_TEXT}Creating GitHub repository and cloning sample application code for DevOps workflow...${RESET_FORMAT}"
 echo
 
-(gh repo create sample-app --private > /dev/null 2>&1) & spinner
-sleep 3  
-echo "git clone https://github.com/${GITHUB_USERNAME}/sample-app.git"
-git clone https://github.com/${GITHUB_USERNAME}/sample-app.git
+# (gh repo create sample-app --private > /dev/null 2>&1) & spinner
+# git clone https://github.com/${GITHUB_USERNAME}/sample-app.git
+## It requires the spinner to accept a PID to proper background and wait.  
+gh repo create sample-app --private > /dev/null 2>&1 &
+pid=$!
+spinner $pid
+wait $pid
+gh repo clone ${GITHUB_USERNAME}/sample-app
 cd ~
 (gsutil cp -r gs://spls/gsp330/sample-app/* sample-app > /dev/null 2>&1) & spinner
+wait
 for file in sample-app/cloudbuild-dev.yaml sample-app/cloudbuild.yaml; do
   sed -i "s/<your-region>/${REGION}/g" "$file"
   sed -i "s/<your-zone>/${ZONE}/g" "$file"
