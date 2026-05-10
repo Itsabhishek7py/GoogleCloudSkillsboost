@@ -20,7 +20,7 @@ sudo chmod +x abhishek.sh
 ./abhishek.sh
 ```
 
-  ⚠️ Remember to delete the GitHub repositories that were created for this lab.   
+⚠️ Remember to delete the GitHub repositories that were created for this lab after completing it.
   
 ```bash
 gh repo create hello-cloudbuild-app --private 
