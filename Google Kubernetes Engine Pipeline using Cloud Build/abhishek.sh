@@ -196,7 +196,6 @@ git push google master
 
 git checkout -b production
 rm cloudbuild.yaml
-
 curl -L \
   -o cloudbuild.yaml \
   https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/env-cloudbuild.yaml
@@ -233,21 +232,16 @@ git add .
 git commit -m "GSP1077 Adding known_host file"
 git push google master
 
+## Download and modify ./Google Kubernetes Engine Pipeline using Cloud Build/app-cloudbuild.yaml
 rm cloudbuild.yaml
-
 curl -L \
   -o cloudbuild.yaml \
   https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/app-cloudbuild.yaml
-
 sed -i "s/REGION/$REGION/g" cloudbuild.yaml
 sed -i "s/GITHUB-USERNAME/${GITHUB_USERNAME}/g" cloudbuild.yaml
 
 git add cloudbuild.yaml
 git commit -m "GSP1077 Trigger CD pipeline"
 git push google master
-# --- End Original Script ---
 
-# Final Message
-echo -e "${GREEN}✅  Lab is now Completed!"
-echo -e "${CYAN}🙏  Thanks for using Dr Abhishek's Cloud Tutorials!"
-echo -e "${YELLOW}👉  Subscribe here: ${NC}https://www.youtube.com/@drabhishek.5460/videos"
+# --- End of script ---
