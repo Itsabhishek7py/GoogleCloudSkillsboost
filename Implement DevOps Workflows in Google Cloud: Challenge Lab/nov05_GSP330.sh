@@ -241,7 +241,7 @@ COMMIT_ID="$(git rev-parse --short=7 HEAD)"
 EXPORTED_IMAGE="$(gcloud builds submit --tag="${REGION}-docker.pkg.dev/${PROJECT_ID}/$REPO/hello-cloudbuild:${COMMIT_ID}" . | grep IMAGES | awk '{print $2}')"
 
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 11: Development Branch Configuration${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 11: Dev V1.0 Configuration and Deployment${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Switching to development branch and updating Cloud Build configuration files...${RESET_FORMAT}"
 echo
 
@@ -259,36 +259,52 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Deploying dev v1.0..."
 (gcloud builds submit --config=cloudbuild-dev.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Dev v1.0 deployment completed!${RESET_FORMAT}"
 
+## Dev V1.0 service exposure
+(kubectl expose deployment development-deployment -n dev 
+    --name=dev-deployment-service 
+    --type=LoadBalancer 
+    --port 8080 
+    --target-port 8080 > /dev/null 2>&1) & spinner
+    
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 12: Prod Branch Setup${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 12: Prod V1.0 Configuration and Deployment${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Switching to master branch and exposing development deployment service...${RESET_FORMAT}"
 echo
 
 git checkout master
-
-(kubectl expose deployment development-deployment -n dev --name=dev-deployment-service --type=LoadBalancer --port 8080 --target-port 8080 > /dev/null 2>&1) & spinner
 
 sed -i "11c\    args: ['build', '-t', '$REGION-docker.pkg.dev/\$PROJECT_ID/my-repository/hello-cloudbuild:v1.0', '.']" cloudbuild.yaml
 sed -i "16c\    args: ['push', '$REGION-docker.pkg.dev/\$PROJECT_ID/my-repository/hello-cloudbuild:v1.0']" cloudbuild.yaml
 sed -i "17c\        image:  $REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:v1.0" prod/deployment.yaml
 
 git add .
-git commit -m "GSP330 v1.0" 
+git commit -m "GSP330 prod v1.0" 
 git push -u origin master
 
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying prod v1.0..."
 (gcloud builds submit --config=cloudbuild.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Prod v1.0 deployment completed!${RESET_FORMAT}"
 
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 13: Prod V1.0 Service Exposure${RESET_FORMAT}"
+echo "${WHITE_TEXT}${BOLD_TEXT}Creating LoadBalancer service for production deployment accessibility...${RESET_FORMAT}"
+echo
+
+(kubectl expose deployment production-deployment -n prod \
+    --name=prod-deployment-service \
+    --type=LoadBalancer \
+    --port 8080 \
+    --target-port 8080 > /dev/null 2>&1) & spinner
+    
 until kubectl get svc dev-deployment-service -n dev >/dev/null 2>&1; do
   echo "Waiting for Service dev-deployment-service to be created..."
-  sleep 3
+  sleep 10
 done
 export DEV_EXTERNAL_IP=$(kubectl get svc dev-deployment-service -n dev -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
 
 until kubectl get svc prod-deployment-service -n prod >/dev/null 2>&1; do
   echo "Waiting for Service prod-deployment-service to be created..."
-  sleep 3
+  sleep 10
 done
 while true; do
   PROD_EXTERNAL_IP=$(kubectl get svc prod-deployment-service -n prod -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
@@ -321,17 +337,6 @@ while true; do
   # move cursor up one line and clear it
   echo -ne "\033[1A\033[2K"
 done
-
-echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 13: Production Service Exposure${RESET_FORMAT}"
-echo "${WHITE_TEXT}${BOLD_TEXT}Creating LoadBalancer service for production deployment accessibility...${RESET_FORMAT}"
-echo
-
-(kubectl expose deployment production-deployment -n prod \
-    --name=prod-deployment-service \
-    --type=LoadBalancer \
-    --port 8080 \
-    --target-port 8080 > /dev/null 2>&1) & spinner
 
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 14: Dev v2.0 Enhancement${RESET_FORMAT}"
