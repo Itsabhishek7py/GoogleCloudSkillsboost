@@ -340,6 +340,10 @@ while true; do
   echo -ne "\033[1A\033[2K"
 done
 
+##########################################################################
+##Task 5. Deploy the second versions of the application
+##########################################################################
+
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 14: Dev v2.0 Enhancement${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Implementing new features in development branch with red handler functionality...${RESET_FORMAT}"
