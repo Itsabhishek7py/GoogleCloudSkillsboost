@@ -1,6 +1,8 @@
 #!/bin/bash
 ## Changed by nov05, on 2026-05-09
 
+set -e 
+
 BLACK_TEXT=$'\033[0;90m'
 RED_TEXT=$'\033[0;91m'
 GREEN_TEXT=$'\033[0;92m'
@@ -123,7 +125,7 @@ echo
     --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver \
     --enable-autoupgrade \
     --enable-autorepair \
-    --max-surge-upgrade 1
+    --max-surge-upgrade 1 \
     --max-unavailable-upgrade 0 \
     --enable-shielded-nodes \
     --node-locations "$ZONE") & spinner
