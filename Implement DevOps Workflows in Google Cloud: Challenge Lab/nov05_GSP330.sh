@@ -240,7 +240,7 @@ git add .
 git commit -m "GSP330 dev v1.0" 
 git push -u origin dev
 
-echo "${WHITE_TEXT}${BOLD_TEXT}Deploying development version..."
+echo "${WHITE_TEXT}${BOLD_TEXT}Deploying dev v1.0..."
 (gcloud builds submit --config=cloudbuild-dev.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Dev v1.0 deployment completed!${RESET_FORMAT}"
 
@@ -261,7 +261,7 @@ git add .
 git commit -m "GSP330 v1.0" 
 git push -u origin master
 
-echo "${WHITE_TEXT}${BOLD_TEXT}Deploying production version..."
+echo "${WHITE_TEXT}${BOLD_TEXT}Deploying prod v1.0..."
 (gcloud builds submit --config=cloudbuild.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Prod v1.0 deployment completed!${RESET_FORMAT}"
 
