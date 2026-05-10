@@ -187,6 +187,7 @@ echo "${YELLOW_TEXT}${BOLD_TEXT}Cloud Build Trigger Configuration${RESET_FORMAT}
 echo "https://console.cloud.google.com/cloud-build/triggers;region=global/add?project=$PROJECT_ID"
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}Have you created the Task 3 Cloud Build triggers?${RESET_FORMAT}"
+answer=""
 read -p " (y/n): " answer
 if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
   echo "${GREEN_TEXT}${BOLD_TEXT}Excellent! Proceeding with application deployment...${RESET_FORMAT}"
