@@ -25,6 +25,7 @@ spinner() {
     printf "\r${GREEN_TEXT}Done!         ${RESET_FORMAT}\n\n"  
 }
 
+echo
 echo "${GREEN_TEXT}${BOLD_TEXT}👉  PHASE 1: Environment Configuration${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Setting up essential project variables and environment parameters...${RESET_FORMAT}"
 echo
@@ -40,6 +41,7 @@ export REPO=my-repository
 ## Task 1. Create the lab resources
 ##########################################################################
 
+echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}🔧  PHASE 2: Service Activation${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Activating necessary Google Cloud Platform APIs for container, build, and source repository services...${RESET_FORMAT}"
 echo
@@ -47,9 +49,11 @@ gcloud services enable container.googleapis.com \
   cloudbuild.googleapis.com \
   sourcerepo.googleapis.com
 
+echo
 echo "${CYAN_TEXT}${BOLD_TEXT}👉  PHASE 3: Artifact Repository Setup${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Creating Docker artifact repository for storing container images...${RESET_FORMAT}"
 echo
+
 gcloud artifacts repositories create $REPO \
   --repository-format=docker \
   --location=$REGION \
@@ -59,10 +63,12 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Setting up repository...${RESET_FORMAT}"
 (gcloud artifacts repositories list --location=$REGION > /dev/null 2>&1) & 
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}✅  Repository setup completed!${RESET_FORMAT}"
 
-## Task 1.2 Add the Kubernetes Developer role for the Cloud Build service account
+echo
 echo "${MAGENTA_TEXT}${BOLD_TEXT}👉  PHASE 4: IAM Configuration${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Configuring Cloud Build service account permissions for container development...${RESET_FORMAT}"
 echo
+
+## Task 1.2 Add the Kubernetes Developer role for the Cloud Build service account
 gcloud projects add-iam-policy-binding $PROJECT_ID \
 --member=serviceAccount:$(gcloud projects describe $PROJECT_ID \
 --format="value(projectNumber)")@cloudbuild.gserviceaccount.com --role="roles/container.developer"
@@ -71,9 +77,11 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 ## Task 2. Create a repository in GitHub Repositories
 ##########################################################################
 
+echo
 echo "${BLUE_TEXT}${BOLD_TEXT}👉  PHASE 5: GitHub Integration${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Installing GitHub CLI and setting up Git configuration for repository management...${RESET_FORMAT}"
 echo
+
 (echo "Installing GitHub CLI..." && curl -sS https://webi.sh/gh | sh) & spinner
 gh auth login
 gh api user -q ".login"
@@ -81,10 +89,13 @@ GITHUB_USERNAME=$(gh api user -q ".login")
 git config --global user.name "${GITHUB_USERNAME}"
 git config --global user.email "${USER_EMAIL}"
 
-## Task 1.5 Create a GKE Standard cluster named hello-cluster
+echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 6: Kubernetes Cluster Deployment${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Creating Google Kubernetes Engine cluster with optimized settings for development and production...${RESET_FORMAT}"
 echo
+
+## Task 1.5 Create a GKE Standard cluster named hello-cluster
+## https://docs.cloud.google.com/sdk/gcloud/reference/container/clusters/create
 (gcloud beta container \
     --project "$PROJECT_ID" clusters create "$CLUSTER" \
     --zone "$ZONE" \
@@ -104,6 +115,7 @@ echo
     --no-enable-intra-node-visibility \
     --default-max-pods-per-node "110" \
     --enable-autoscaling \
+    --num-nodes "3" \
     --min-nodes "2" \
     --max-nodes "6" \
     --location-policy "BALANCED" \
@@ -123,9 +135,11 @@ echo
 kubectl create namespace prod
 kubectl create namespace dev
 
+echo
 echo "${MAGENTA_TEXT}${BOLD_TEXT}👉  PHASE 8: Repository Initialization${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Creating GitHub repository and cloning sample application code for DevOps workflow...${RESET_FORMAT}"
 echo
+
 (gh repo create sample-app --private > /dev/null 2>&1) & spinner
 git clone https://github.com/${GITHUB_USERNAME}/sample-app.git
 cd ~
@@ -134,10 +148,6 @@ for file in sample-app/cloudbuild-dev.yaml sample-app/cloudbuild.yaml; do
   sed -i "s/<your-region>/${REGION}/g" "$file"
   sed -i "s/<your-zone>/${ZONE}/g" "$file"
 done
-
-echo
-echo "${CYAN_TEXT}${BOLD_TEXT} $msg ${RESET_FORMAT}"
-echo
 
 git init
 cd sample-app/
@@ -158,12 +168,9 @@ echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RES
 echo "${CYAN_TEXT}${BOLD_TEXT}           NOW FOLLOW VIDEO STEPS            ${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
 echo
-
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  Cloud Build Trigger Configuration${RESET_FORMAT}"
 echo "https://console.cloud.google.com/cloud-build/triggers;region=global/add?project=$PROJECT_ID"
-
 echo
-
 echo "${GREEN_TEXT}${BOLD_TEXT}👉  Have you completed the video steps and created the Cloud Build trigger?${RESET_FORMAT}"
 read -p " (y/n): " answer
 if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
@@ -175,31 +182,37 @@ fi
 echo "${GREEN_TEXT}${BOLD_TEXT}👉  Re-initializing Environment Variables${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Refreshing project configuration to ensure consistency...${RESET_FORMAT}"
 echo
+
 export PROJECT_ID=$(gcloud config get-value project)
 export ZONE=$(gcloud compute project-info describe \
---format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+    --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
 export REGION=$(gcloud compute project-info describe \
---format="value(commonInstanceMetadata.items[google-compute-default-region])")
+    --format="value(commonInstanceMetadata.items[google-compute-default-region])")
 export CLUSTER=hello-cluster
 export REPO=my-repository
 
+echo
 echo "${BLUE_TEXT}${BOLD_TEXT}👉  PHASE 9: Application Directory Navigation${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Moving to sample application directory for build operations...${RESET_FORMAT}"
 echo
+
 cd sample-app
 
+echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 10: Container Image Build & Push${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Building Docker image and pushing to Artifact Registry using Cloud Build...${RESET_FORMAT}"
 echo
-msg=$(echo "U3Vic2NyaWJlIHRvIERyIEFiaGlzaGVr" | base64 --decode)
+
 COMMIT_ID="$(git rev-parse --short=7 HEAD)"
 (gcloud builds submit --tag="${REGION}-docker.pkg.dev/${PROJECT_ID}/$REPO/hello-cloudbuild:${COMMIT_ID}" .) & spinner
 
 EXPORTED_IMAGE="$(gcloud builds submit --tag="${REGION}-docker.pkg.dev/${PROJECT_ID}/$REPO/hello-cloudbuild:${COMMIT_ID}" . | grep IMAGES | awk '{print $2}')"
 
+echo
 echo "${CYAN_TEXT}${BOLD_TEXT}👉  PHASE 11: Development Branch Configuration${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Switching to development branch and updating Cloud Build configuration files...${RESET_FORMAT}"
 echo
+
 git checkout dev
 
 sed -i "9c\    args: ['build', '-t', '$REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v1.0', '.']" cloudbuild-dev.yaml
@@ -214,9 +227,11 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Deploying development version..."
 (gcloud builds submit --config=cloudbuild-dev.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}✅  Development deployment completed!${RESET_FORMAT}"
 
+echo
 echo "${MAGENTA_TEXT}${BOLD_TEXT}👉  PHASE 12: Production Branch Setup${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Switching to master branch and exposing development deployment service...${RESET_FORMAT}"
 echo
+
 git checkout master
 
 (kubectl expose deployment development-deployment -n dev --name=dev-deployment-service --type=LoadBalancer --port 8080 --target-port 8080 > /dev/null 2>&1) & spinner
@@ -233,14 +248,22 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Deploying production version..."
 (gcloud builds submit --config=cloudbuild.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}✅  Production deployment completed!${RESET_FORMAT}"
 
+echo
 echo "${BLUE_TEXT}${BOLD_TEXT}👉  PHASE 13: Production Service Exposure${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Creating LoadBalancer service for production deployment accessibility...${RESET_FORMAT}"
 echo
-(kubectl expose deployment production-deployment -n prod --name=prod-deployment-service --type=LoadBalancer --port 8080 --target-port 8080 > /dev/null 2>&1) & spinner
 
+(kubectl expose deployment production-deployment -n prod \
+    --name=prod-deployment-service \
+    --type=LoadBalancer \
+    --port 8080 \
+    --target-port 8080 > /dev/null 2>&1) & spinner
+
+echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 14: Development v2.0 Enhancement${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Implementing new features in development branch with red handler functionality...${RESET_FORMAT}"
 echo
+
 git checkout dev
 
 sed -i '28a\	http.HandleFunc("/red", redHandler)' main.go
@@ -263,9 +286,11 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Deploying development v2.0..."
 (gcloud builds submit --config=cloudbuild-dev.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}✅  Development v2.0 deployment completed!${RESET_FORMAT}"
 
+echo
 echo "${MAGENTA_TEXT}${BOLD_TEXT}🎯  PHASE 15: Production v2.0 Deployment${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Merging new features to production branch and updating deployment configurations...${RESET_FORMAT}"
 echo
+
 git checkout master
 
 sed -i '28a\	http.HandleFunc("/red", redHandler)' main.go
@@ -288,9 +313,11 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Deploying production v2.0..."
 (gcloud builds submit --config=cloudbuild.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}✅  Production v2.0 deployment completed!${RESET_FORMAT}"
 
+echo
 echo "${GREEN_TEXT}${BOLD_TEXT}👉  PHASE 16: Rollback & Validation${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Performing deployment rollback and validating container image versions...${RESET_FORMAT}"
 echo
+
 (kubectl -n prod rollout undo deployment/production-deployment > /dev/null 2>&1) & spinner
 kubectl -n prod get pods -o jsonpath --template='{range .items[*]}{.metadata.name}{"\t"}{"\t"}{.spec.containers[0].image}{"\n"}{end}'
 
