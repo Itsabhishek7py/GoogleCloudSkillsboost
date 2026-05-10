@@ -183,17 +183,31 @@ echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RES
 echo "${CYAN_TEXT}${BOLD_TEXT}           NOW MANUAL STEPS                  ${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}Cloud Build Trigger Configuration${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}Click the url to create Cloud Build triggers${RESET_FORMAT}"
 echo "https://console.cloud.google.com/cloud-build/triggers;region=global/add?project=$PROJECT_ID"
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}Have you created the Task 3 Cloud Build triggers?${RESET_FORMAT}"
+
+## Loop to ensure trigger readiness
+get_trigger_count() {
+  gcloud builds triggers list \
+    --filter="name:(sample-app-dev-deploy OR sample-app-prod-deploy)" \
+    --format="value(name)" | sort -u | wc -l
+}
+while [[ "$(get_trigger_count)" -ne 2 ]]; do
+  sleep 3
+done
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}Triggers created. Ready to proceed?${RESET_FORMAT}"
 answer=""
-read -p " (y/n): " answer
-if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
-  echo "${GREEN_TEXT}${BOLD_TEXT}Excellent! Proceeding with application deployment...${RESET_FORMAT}"
-else
-  echo "${RED_TEXT}${BOLD_TEXT}Please create the Cloud Build triggers before continuing.${RESET_FORMAT}"
-fi
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
 
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}Re-initializing Environment Variables${RESET_FORMAT}"
