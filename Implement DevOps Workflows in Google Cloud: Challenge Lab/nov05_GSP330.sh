@@ -337,4 +337,4 @@ echo
 (kubectl -n prod rollout undo deployment/production-deployment > /dev/null 2>&1) & spinner
 kubectl -n prod get pods -o jsonpath --template='{range .items[*]}{.metadata.name}{"\t"}{"\t"}{.spec.containers[0].image}{"\n"}{end}'
 
-cd  # Back to home directory
+cd ~ # Back to home directory
