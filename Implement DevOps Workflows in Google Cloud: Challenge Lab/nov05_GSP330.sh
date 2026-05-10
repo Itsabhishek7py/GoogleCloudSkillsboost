@@ -19,10 +19,10 @@ spinner() {
     local i=0
     while kill -0 "$pid" 2>/dev/null; do
         i=$(( (i+1) % 4 ))
-        printf "\r${CYAN}Loading...${NC} [%c]   " "${spin:$i:1}"
+        printf "\r${CYAN}Loading...${RESET_FORMAT} [%c]   " "${spin:$i:1}"
         sleep 0.1
     done
-    printf "\r${GREEN}Done!         ${NC}\n\n"  
+    printf "\r${GREEN_TEXT}Done!         ${RESET_FORMAT}\n\n"  
 }
 
 echo "${GREEN_TEXT}${BOLD_TEXT}👉  PHASE 1: Environment Configuration${RESET_FORMAT}"
