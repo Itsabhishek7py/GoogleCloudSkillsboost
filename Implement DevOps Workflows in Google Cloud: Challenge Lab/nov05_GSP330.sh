@@ -73,10 +73,13 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Creating Docker artifact repository for storing c
 echo
 
 ## Task 1.4 Create an Artifact Registry Docker repository named my-repository
-gcloud artifacts repositories create $REPO \
-  --repository-format=docker \
-  --location=$REGION \
-  --description="GSP330"
+if ! gcloud artifacts repositories describe "$REPO" \
+    --location="$REGION" >/dev/null 2>&1; then
+    gcloud artifacts repositories create $REPO \
+      --repository-format=docker \
+      --location=$REGION \
+      --description="GSP330"
+fi
 
 echo "${WHITE_TEXT}${BOLD_TEXT}Setting up artifact repository...${RESET_FORMAT}"
 (gcloud artifacts repositories list --location=$REGION > /dev/null 2>&1) & 
