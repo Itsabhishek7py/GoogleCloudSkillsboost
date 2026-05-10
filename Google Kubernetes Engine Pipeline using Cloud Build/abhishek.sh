@@ -293,8 +293,40 @@ echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RES
 echo "${CYAN_TEXT}${BOLD_TEXT}           NOW MANUAL STEPS                  ${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}Click the url to connect GitHub repos hello-cloudbuild-app and hello-cloudbuild-env:${RESET_FORMAT}"
 echo "Click on the endpoint for the hello-cloudbuild service. You should see \"Hello World!\".
+echo "  http://$EXTERNAL_IP"
+echo
+
+answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  Task 8. Test the complete pipeline${RESET_FORMAT}"
+
+## Task 8.3, Replace "Hello World" with "Hello Cloud Build", both in the application and in the unit test
+cd ~/hello-cloudbuild-app
+sed -i 's/Hello World/Hello Cloud Build/g' app.py
+sed -i 's/Hello World/Hello Cloud Build/g' test_app.py
+
+## Task 8.4, Commit and push the change to GitHub repositories
+git add app.py test_app.py
+git commit -m "GCP1077 Task 8.4, Hello Cloud Build"
+git push google master
+
+echo
+echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}           NOW MANUAL STEPS                  ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
+echo
+echo "Waite a few minutes, reload the application in your browser. You should see \"Hello Cloud Build!\".
 echo "  http://$EXTERNAL_IP"
 echo
 
