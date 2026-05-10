@@ -198,8 +198,8 @@ while [[ "$(get_trigger_count)" -ne 2 ]]; do
   sleep 3
 done
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}Triggers created. Ready to proceed?${RESET_FORMAT}"
 answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Triggers created. Ready to proceed?${RESET_FORMAT}"
 while true; do
   printf " (y/n): "
   read answer
@@ -420,7 +420,7 @@ while true; do
 done
 
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 16: Rollback & Validation${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 16: Prod Rollback & Validation${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Performing deployment rollback and validating container image versions...${RESET_FORMAT}"
 echo
 
