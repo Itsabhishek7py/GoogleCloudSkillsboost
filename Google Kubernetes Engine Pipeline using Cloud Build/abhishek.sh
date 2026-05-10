@@ -1,4 +1,5 @@
 #!/bin/bash
+## Changed by nov05, 2026-05-09  
 
 # Colors
 RED='\033[0;31m'
