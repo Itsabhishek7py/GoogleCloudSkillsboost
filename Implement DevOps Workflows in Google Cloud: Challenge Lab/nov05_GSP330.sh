@@ -149,13 +149,9 @@ echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 8: Repository Initialization${RESET_
 echo "${WHITE_TEXT}${BOLD_TEXT}Creating GitHub repository and cloning sample application code for DevOps workflow...${RESET_FORMAT}"
 echo
 
-# (gh repo create sample-app --private > /dev/null 2>&1) & spinner
+(gh repo create sample-app --private > /dev/null 2>&1) & spinner
+wait 3
 # git clone https://github.com/${GITHUB_USERNAME}/sample-app.git
-## It requires the spinner to accept a PID to proper background and wait.  
-gh repo create sample-app --private > /dev/null 2>&1 &
-pid=$!
-spinner $pid
-wait $pid
 gh repo clone ${GITHUB_USERNAME}/sample-app
 cd ~
 (gsutil cp -r gs://spls/gsp330/sample-app/* sample-app > /dev/null 2>&1) & spinner
