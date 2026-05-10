@@ -13,6 +13,21 @@ RESET_FORMAT=$'\033[0m'
 BOLD_TEXT=$'\033[1m'
 UNDERLINE_TEXT=$'\033[4m'
 
+spinner() {
+    local pid=$!
+    local spin='|/-\'
+    local i=0
+    while kill -0 "$pid" 2>/dev/null; do
+        i=$(( (i+1) % 4 ))
+        printf "\r${CYAN}Loading...${NC} [%c]   " "${spin:$i:1}"
+        sleep 0.1
+    done
+    printf "\r${GREEN}Done!         ${NC}\n\n"  
+}
+
+echo "${GREEN_TEXT}${BOLD_TEXT}👉  PHASE 1: Environment Configuration${RESET_FORMAT}"
+echo "${WHITE_TEXT}${BOLD_TEXT}Setting up essential project variables and environment parameters...${RESET_FORMAT}"
+echo
 export PROJECT_ID=$(gcloud config get-value project)
 export ZONE=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
@@ -41,7 +56,7 @@ gcloud artifacts repositories create $REPO \
   --description="Dr Abhishek"
 
 echo "${WHITE_TEXT}${BOLD_TEXT}Setting up repository...${RESET_FORMAT}"
-(gcloud artifacts repositories list --location=$REGION > /dev/null 2>&1) & spinner
+(gcloud artifacts repositories list --location=$REGION > /dev/null 2>&1) & 
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}✅  Repository setup completed!${RESET_FORMAT}"
 
 ## Task 1.2 Add the Kubernetes Developer role for the Cloud Build service account
