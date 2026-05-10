@@ -31,6 +31,7 @@ echo
 echo "${GREEN_TEXT}${BOLD_TEXT}👉  PHASE 1: Environment Configuration${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Setting up essential project variables and environment parameters...${RESET_FORMAT}"
 echo
+
 export PROJECT_ID=$(gcloud config get-value project)
 export ZONE=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
@@ -47,12 +48,14 @@ echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 2: Service Activation${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Activating necessary Google Cloud Platform APIs for container, build, and source repository services...${RESET_FORMAT}"
 echo
+
 gcloud services enable container.googleapis.com \
   cloudbuild.googleapis.com \
-  sourcerepo.googleapis.com
+  sourcerepo.googleapis.com \
+  artifactregistry.googleapis.com
 
 echo
-echo "${CYAN_TEXT}${BOLD_TEXT}👉  PHASE 3: Artifact Repository Setup${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 3: Artifact Repository Setup${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Creating Docker artifact repository for storing container images...${RESET_FORMAT}"
 echo
 
@@ -66,7 +69,7 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Setting up artifact repository...${RESET_FORMAT}"
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}✅  Repository setup completed!${RESET_FORMAT}"
 
 echo
-echo "${MAGENTA_TEXT}${BOLD_TEXT}👉  PHASE 4: IAM Configuration${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 4: IAM Configuration${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Configuring Cloud Build service account permissions for container development...${RESET_FORMAT}"
 echo
 
@@ -80,7 +83,7 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 ##########################################################################
 
 echo
-echo "${BLUE_TEXT}${BOLD_TEXT}👉  PHASE 5: GitHub Integration${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 5: GitHub Integration${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Installing GitHub CLI and setting up Git configuration for repository management...${RESET_FORMAT}"
 echo
 
@@ -130,7 +133,7 @@ echo
     --enable-shielded-nodes \
     --node-locations "$ZONE") & spinner
 
-echo "${CYAN_TEXT}${BOLD_TEXT}👉  PHASE 7: Kubernetes Environment Setup${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 7: Kubernetes Environment Setup${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Configuring cluster credentials and creating development and production namespaces...${RESET_FORMAT}"
 echo
 (gcloud container clusters get-credentials hello-cluster --zone=$ZONE > /dev/null 2>&1) & spinner
@@ -138,7 +141,7 @@ kubectl create namespace prod
 kubectl create namespace dev
 
 echo
-echo "${MAGENTA_TEXT}${BOLD_TEXT}👉  PHASE 8: Repository Initialization${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 8: Repository Initialization${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Creating GitHub repository and cloning sample application code for DevOps workflow...${RESET_FORMAT}"
 echo
 
@@ -170,10 +173,10 @@ echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RES
 echo "${CYAN_TEXT}${BOLD_TEXT}           NOW FOLLOW VIDEO STEPS            ${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}👉  Cloud Build Trigger Configuration${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}Cloud Build Trigger Configuration${RESET_FORMAT}"
 echo "https://console.cloud.google.com/cloud-build/triggers;region=global/add?project=$PROJECT_ID"
 echo
-echo "${GREEN_TEXT}${BOLD_TEXT}👉  Have you completed the video steps and created the Cloud Build trigger?${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}❓  Have you completed the video steps and created the Cloud Build trigger?${RESET_FORMAT}"
 read -p " (y/n): " answer
 if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
   echo "${GREEN_TEXT}${BOLD_TEXT}✅  Excellent! Proceeding with application deployment...${RESET_FORMAT}"
@@ -181,7 +184,7 @@ else
   echo "${RED_TEXT}${BOLD_TEXT}⚠️  Please complete the video steps to create the Cloud Build trigger before continuing.${RESET_FORMAT}"
 fi
 
-echo "${GREEN_TEXT}${BOLD_TEXT}👉  Re-initializing Environment Variables${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}Re-initializing Environment Variables${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Refreshing project configuration to ensure consistency...${RESET_FORMAT}"
 echo
 
@@ -194,7 +197,7 @@ export CLUSTER=hello-cluster
 export REPO=my-repository
 
 echo
-echo "${BLUE_TEXT}${BOLD_TEXT}👉  PHASE 9: Application Directory Navigation${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 9: Application Directory Navigation${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Moving to sample application directory for build operations...${RESET_FORMAT}"
 echo
 
@@ -211,7 +214,7 @@ COMMIT_ID="$(git rev-parse --short=7 HEAD)"
 EXPORTED_IMAGE="$(gcloud builds submit --tag="${REGION}-docker.pkg.dev/${PROJECT_ID}/$REPO/hello-cloudbuild:${COMMIT_ID}" . | grep IMAGES | awk '{print $2}')"
 
 echo
-echo "${CYAN_TEXT}${BOLD_TEXT}👉  PHASE 11: Development Branch Configuration${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 11: Development Branch Configuration${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Switching to development branch and updating Cloud Build configuration files...${RESET_FORMAT}"
 echo
 
@@ -227,10 +230,10 @@ git push -u origin dev
 
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying development version..."
 (gcloud builds submit --config=cloudbuild-dev.yaml . > /dev/null 2>&1) & spinner
-echo -e "\r${GREEN_TEXT}${BOLD_TEXT}✅  Development deployment completed!${RESET_FORMAT}"
+echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Development deployment completed!${RESET_FORMAT}"
 
 echo
-echo "${MAGENTA_TEXT}${BOLD_TEXT}👉  PHASE 12: Production Branch Setup${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 12: Production Branch Setup${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Switching to master branch and exposing development deployment service...${RESET_FORMAT}"
 echo
 
@@ -248,10 +251,10 @@ git push -u origin master
 
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying production version..."
 (gcloud builds submit --config=cloudbuild.yaml . > /dev/null 2>&1) & spinner
-echo -e "\r${GREEN_TEXT}${BOLD_TEXT}✅  Production deployment completed!${RESET_FORMAT}"
+echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Production deployment completed!${RESET_FORMAT}"
 
 echo
-echo "${BLUE_TEXT}${BOLD_TEXT}👉  PHASE 13: Production Service Exposure${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 13: Production Service Exposure${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Creating LoadBalancer service for production deployment accessibility...${RESET_FORMAT}"
 echo
 
@@ -286,10 +289,10 @@ git push -u origin dev
 
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying development v2.0..."
 (gcloud builds submit --config=cloudbuild-dev.yaml . > /dev/null 2>&1) & spinner
-echo -e "\r${GREEN_TEXT}${BOLD_TEXT}✅  Development v2.0 deployment completed!${RESET_FORMAT}"
+echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Development v2.0 deployment completed!${RESET_FORMAT}"
 
 echo
-echo "${MAGENTA_TEXT}${BOLD_TEXT}🎯  PHASE 15: Production v2.0 Deployment${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 15: Production v2.0 Deployment${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Merging new features to production branch and updating deployment configurations...${RESET_FORMAT}"
 echo
 
@@ -313,10 +316,10 @@ git push -u origin master
 
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying production v2.0..."
 (gcloud builds submit --config=cloudbuild.yaml . > /dev/null 2>&1) & spinner
-echo -e "\r${GREEN_TEXT}${BOLD_TEXT}✅  Production v2.0 deployment completed!${RESET_FORMAT}"
+echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Production v2.0 deployment completed!${RESET_FORMAT}"
 
 echo
-echo "${GREEN_TEXT}${BOLD_TEXT}👉  PHASE 16: Rollback & Validation${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 16: Rollback & Validation${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Performing deployment rollback and validating container image versions...${RESET_FORMAT}"
 echo
 
