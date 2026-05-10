@@ -21,12 +21,11 @@ https://www.skills.google/course_templates/716/labs/598755
 
 ---
 
-## 🛠️ Configuration Steps 🚀
-
-> 💡 **Pro Tip:** Watch the full video to ensure you achieve full scores on all "Check My Progress" steps!
+> **Tip:** Watch the full video to ensure you achieve full scores on all "Check My Progress" steps!
+>   Remember to manually delete the GitHub repo `sample-app` created by the script after completion. 
 
 <div style="padding: 15px; margin: 10px 0;">
-<p><strong>☁️ Run in Cloud Shell:</strong></p>  
+<p><strong>👉 Run in Cloud Shell:</strong></p>  
  
 ```bash
 rm -f abhishek.sh
@@ -37,7 +36,7 @@ sudo chmod +x abhishek.sh
 
 </div>
 
-### 🛠️ **Cloud Build Trigger Configuration**  
+👉 **Cloud Build Trigger Configuration**  
 
 * Production Deployment Trigger:
   
