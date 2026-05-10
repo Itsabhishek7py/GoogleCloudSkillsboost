@@ -110,19 +110,23 @@ gcloud builds submit --tag="${REGION}-docker.pkg.dev/${PROJECT_ID}/my-repository
 #######################################################
 ## Task 4 Create the Continuous Integration (CI) pipeline
 #######################################################
+## Gen 1 GitHub App repository binding:
+##   1. On GitHub: selecting repositories in GitHub App connection
+##   2. On GCP: registering repos into “Cloud Build GitHub App” UI list
 
 # -----------------------------
 # CI Trigger (app repo)
 # -----------------------------
 echo "👉  Creating CI trigger..."
+## https://docs.cloud.google.com/sdk/gcloud/reference/builds/triggers/create/github
 gcloud builds triggers create github \
-  --name="hello-cloudbuild" \
-  --repo-name="hello-cloudbuild-app" \
-  --repo-owner="$GITHUB_USERNAME" \
-  --branch-pattern=".*" \
-  --build-config="cloudbuild.yaml" \
-  --included-files="**" \
-  --region="$REGION"
+    --name="hello-cloudbuild" \
+    --service-account="projects/$PROJECT_ID/serviceAccounts/$SERVICE_ACCOUNT" \
+    --repo-owner="$GITHUB_USERNAME" \
+    --repo-name="hello-cloudbuild-app" \
+    --branch-pattern=".*" \
+    --build-config="cloudbuild.yaml" \
+    --region="$REGION"
 gcloud builds triggers list --region=$REGION 
 
 cd ~/hello-cloudbuild-app
