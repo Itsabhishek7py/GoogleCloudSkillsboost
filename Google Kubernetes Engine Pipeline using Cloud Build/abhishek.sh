@@ -36,18 +36,12 @@ spinner() {
     done
     printf "\r${GREEN}Done!         ${NC}\n\n"  
 }
-
-echo
-echo -e "${YELLOW}--------------------------------------------------------"
-echo -e "${GREEN}🎓  Welcome to Dr Abhishek's Cloud Tutorials! ☁️"
-echo -e "${CYAN}Subscribe to the channel: https://www.youtube.com/@drabhishek.5460/videos"
-echo -e "${YELLOW}--------------------------------------------------------${NC}"
-
 (sleep 3) & spinner
 
 #######################################################
 ## Task 1. Initialize your lab
 #######################################################
+## Objective: Enable services, create an artifact registry and the GKE cluster   
 
 ## Get project id, project number, region
 export PROJECT_ID=$(gcloud config get-value project)
@@ -71,6 +65,10 @@ gcloud artifacts repositories create my-repository \
 
 gcloud container clusters create hello-cloudbuild --num-nodes 1 --region $REGION
 
+#######################################################
+## Task 2. Create the Git repositories in GitHub repositories
+#######################################################
+
 curl -sS https://webi.sh/gh | sh 
 gh auth login 
 gh api user -q ".login"
@@ -80,7 +78,6 @@ git config --global user.name "${GITHUB_USERNAME}"
 git config --global user.email "${USER_EMAIL}"  # e.g. student-03-758816dbe52c@qwiklabs.net
 echo "🔹  GitHub username: $GITHUB_USERNAME"
 echo "🔹  User email: $USER_EMAIL"
-
 
 ## Create 2 GitHub repos as the lab requires
 gh repo create hello-cloudbuild-app --private 
@@ -221,6 +218,7 @@ gcloud builds triggers create github \
   --build-config="cloudbuild.yaml" \
   --included-files="**" \
   --region="$REGION"
+gcloud builds repositories list --region="$REGION"
 gcloud builds triggers list --region=$REGION 
 
 ## Task 6.12 In your hello-cloudbuild-app directory, create a file named known_hosts.github, 
@@ -243,5 +241,15 @@ sed -i "s/GITHUB-USERNAME/${GITHUB_USERNAME}/g" cloudbuild.yaml
 git add cloudbuild.yaml
 git commit -m "GSP1077 Trigger CD pipeline"
 git push google master
+
+#######################################################
+## Task 7. Review Cloud Build pipeline
+#######################################################
+#######################################################
+## Task 8. Test the complete pipeline
+#######################################################
+#######################################################
+## Task 9. Test the rollback
+#######################################################
 
 # --- End of script ---
