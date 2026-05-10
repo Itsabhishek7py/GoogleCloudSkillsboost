@@ -28,7 +28,7 @@ spinner() {
 }
 
 echo
-echo "${GREEN_TEXT}${BOLD_TEXT}👉  PHASE 1: Environment Configuration${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 1: Environment Configuration${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Setting up essential project variables and environment parameters...${RESET_FORMAT}"
 echo
 
@@ -51,25 +51,10 @@ echo
 
 gcloud services enable container.googleapis.com \
   cloudbuild.googleapis.com \
-  sourcerepo.googleapis.com \
-  artifactregistry.googleapis.com
+  sourcerepo.googleapis.com 
 
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 3: Artifact Repository Setup${RESET_FORMAT}"
-echo "${WHITE_TEXT}${BOLD_TEXT}Creating Docker artifact repository for storing container images...${RESET_FORMAT}"
-echo
-
-gcloud artifacts repositories create $REPO \
-  --repository-format=docker \
-  --location=$REGION \
-  --description="Dr Abhishek"
-
-echo "${WHITE_TEXT}${BOLD_TEXT}Setting up artifact repository...${RESET_FORMAT}"
-(gcloud artifacts repositories list --location=$REGION > /dev/null 2>&1) & 
-echo -e "\r${GREEN_TEXT}${BOLD_TEXT}✅  Repository setup completed!${RESET_FORMAT}"
-
-echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 4: IAM Configuration${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 3: IAM Configuration${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Configuring Cloud Build service account permissions for container development...${RESET_FORMAT}"
 echo
 
@@ -77,6 +62,21 @@ echo
 gcloud projects add-iam-policy-binding $PROJECT_ID \
 --member=serviceAccount:$(gcloud projects describe $PROJECT_ID \
 --format="value(projectNumber)")@cloudbuild.gserviceaccount.com --role="roles/container.developer"
+
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 4: Artifact Repository Setup${RESET_FORMAT}"
+echo "${WHITE_TEXT}${BOLD_TEXT}Creating Docker artifact repository for storing container images...${RESET_FORMAT}"
+echo
+
+## Task 1.4 Create an Artifact Registry Docker repository named my-repository
+gcloud artifacts repositories create $REPO \
+  --repository-format=docker \
+  --location=$REGION \
+  --description="GSP330"
+
+echo "${WHITE_TEXT}${BOLD_TEXT}Setting up artifact repository...${RESET_FORMAT}"
+(gcloud artifacts repositories list --location=$REGION > /dev/null 2>&1) & 
+echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Repository setup completed!${RESET_FORMAT}"
 
 ##########################################################################
 ## Task 2. Create a repository in GitHub Repositories
