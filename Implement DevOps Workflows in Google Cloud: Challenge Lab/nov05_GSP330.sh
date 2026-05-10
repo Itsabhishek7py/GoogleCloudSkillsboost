@@ -409,6 +409,7 @@ echo "PROD V1.0:"
 echo "Blue: http://$PROD_EXTERNAL_IP:8080/blue"
 echo "Red : http://$PROD_EXTERNAL_IP:8080/red"
 echo "=================================="
+echo "Check progress at the end of Task 5: https://www.skills.google/games/7173/labs/44434" 
 answer=""
 echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
 while true; do
