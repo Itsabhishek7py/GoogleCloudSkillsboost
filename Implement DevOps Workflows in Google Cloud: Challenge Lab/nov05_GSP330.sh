@@ -82,24 +82,8 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Setting up artifact repository...${RESET_FORMAT}"
 (gcloud artifacts repositories list --location=$REGION > /dev/null 2>&1) & 
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Repository setup completed!${RESET_FORMAT}"
 
-##########################################################################
-## Task 2. Create a repository in GitHub Repositories
-##########################################################################
-
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 5: GitHub Integration${RESET_FORMAT}"
-echo "${WHITE_TEXT}${BOLD_TEXT}Installing GitHub CLI and setting up Git configuration for repository management...${RESET_FORMAT}"
-echo
-
-(echo "Installing GitHub CLI..." && curl -sS https://webi.sh/gh | sh) & spinner
-gh auth login
-gh api user -q ".login"
-GITHUB_USERNAME=$(gh api user -q ".login")
-git config --global user.name "${GITHUB_USERNAME}"
-git config --global user.email "${USER_EMAIL}"
-
-echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 6: Kubernetes Cluster Creation${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 5: Kubernetes Cluster Creation${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Creating Google Kubernetes Engine cluster with optimized settings for development and production...${RESET_FORMAT}"
 echo
 
@@ -137,12 +121,28 @@ echo
     --enable-shielded-nodes \
     --node-locations "$ZONE") & spinner
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 7: Kubernetes Environment Setup${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 6: Kubernetes Environment Setup${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Configuring cluster credentials and creating development and production namespaces...${RESET_FORMAT}"
 echo
 (gcloud container clusters get-credentials hello-cluster --zone=$ZONE > /dev/null 2>&1) & spinner
 kubectl create namespace prod
 kubectl create namespace dev
+
+##########################################################################
+## Task 2. Create a repository in GitHub Repositories
+##########################################################################
+
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 7: GitHub Integration${RESET_FORMAT}"
+echo "${WHITE_TEXT}${BOLD_TEXT}Installing GitHub CLI and setting up Git configuration for repository management...${RESET_FORMAT}"
+echo
+
+(echo "Installing GitHub CLI..." && curl -sS https://webi.sh/gh | sh) & spinner
+gh auth login
+gh api user -q ".login"
+GITHUB_USERNAME=$(gh api user -q ".login")
+git config --global user.name "${GITHUB_USERNAME}"
+git config --global user.email "${USER_EMAIL}"
 
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 8: Repository Initialization${RESET_FORMAT}"
