@@ -99,7 +99,7 @@ git config --global user.name "${GITHUB_USERNAME}"
 git config --global user.email "${USER_EMAIL}"
 
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 6: Kubernetes Cluster Deployment${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 6: Kubernetes Cluster Creation${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Creating Google Kubernetes Engine cluster with optimized settings for development and production...${RESET_FORMAT}"
 echo
 
