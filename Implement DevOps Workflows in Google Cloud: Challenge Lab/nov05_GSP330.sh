@@ -75,7 +75,7 @@ echo
 ## Task 1.4 Create an Artifact Registry Docker repository named my-repository
 if gcloud artifacts repositories describe "$REPO" \
     --location="$REGION" >/dev/null 2>&1; then
-    echo "⚠️  Repository already exists, skipping creation"
+    echo "Repository already exists, skipping creation"
 else
     gcloud artifacts repositories create $REPO \
       --repository-format=docker \
@@ -130,8 +130,8 @@ echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 6: Kubernetes Environment Setup${RES
 echo "${WHITE_TEXT}${BOLD_TEXT}Configuring cluster credentials and creating development and production namespaces...${RESET_FORMAT}"
 echo
 (gcloud container clusters get-credentials hello-cluster --zone=$ZONE > /dev/null 2>&1) & spinner
-kubectl create namespace prod
-kubectl create namespace dev
+kubectl get namespace prod >/dev/null 2>&1 || kubectl create namespace prod
+kubectl get namespace dev >/dev/null 2>&1 || kubectl create namespace dev
 
 ##########################################################################
 ## Task 2. Create a repository in GitHub Repositories
