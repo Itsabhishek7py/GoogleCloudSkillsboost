@@ -114,14 +114,35 @@ gcloud builds submit --tag="${REGION}-docker.pkg.dev/${PROJECT_ID}/my-repository
 ##   1. On GitHub: selecting repositories in GitHub App connection
 ##   2. On GCP: registering repos into “Cloud Build GitHub App” UI list
 
+echo
+echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}           NOW MANUAL STEPS                  ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}Click the url to connect GitHub repos hello-cloudbuild-app and hello-cloudbuild-env:${RESET_FORMAT}"
+echo "  https://console.cloud.google.com/cloud-build/repositories/1st-gen;region=$REGION/add?project=$PROJECT_ID"
+echo
+
+answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
+
 # -----------------------------
 # CI Trigger (app repo)
 # -----------------------------
-echo "👉  Creating CI trigger..."
+echo "👉  Creating CI trigger (1st-gen) hello-cloudbuild..."
 ## https://docs.cloud.google.com/sdk/gcloud/reference/builds/triggers/create/github
 gcloud builds triggers create github \
     --name="hello-cloudbuild" \
-    --service-account="projects/$PROJECT_ID/serviceAccounts/$SERVICE_ACCOUNT" \
+    --service-account="projects/$PROJECT_ID/serviceAccounts/${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
     --repo-owner="$GITHUB_USERNAME" \
     --repo-name="hello-cloudbuild-app" \
     --branch-pattern=".*" \
@@ -213,15 +234,15 @@ git push google candidate
 # -----------------------------
 # CD Trigger (env repo)
 # -----------------------------
-echo "👉  Creating CD trigger..."
+echo "👉  Creating CD trigger (1st-gen) hello-cloudbuild-deploy..."
 gcloud builds triggers create github \
-  --name="hello-cloudbuild-deploy" \
-  --repo-name="hello-cloudbuild-env" \
-  --repo-owner="$GITHUB_USERNAME" \
-  --branch-pattern="^candidate$" \
-  --build-config="cloudbuild.yaml" \
-  --included-files="**" \
-  --region="$REGION"
+    --name="hello-cloudbuild-deploy" \
+    --service-account="projects/$PROJECT_ID/serviceAccounts/${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
+    --repo-owner="$GITHUB_USERNAME" \
+    --repo-name="hello-cloudbuild-env" \
+    --branch-pattern="^candidate$" \
+    --build-config="cloudbuild.yaml" \
+    --region="$REGION"
 gcloud builds repositories list --region="$REGION"
 gcloud builds triggers list --region=$REGION 
 
