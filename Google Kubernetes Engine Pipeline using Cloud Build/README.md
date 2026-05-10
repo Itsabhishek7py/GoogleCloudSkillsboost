@@ -1,7 +1,7 @@
 # 🟢 **Google Kubernetes Engine Pipeline using Cloud Build (GSP1077)**  
 
-https://www.skills.google/games/7173/labs/44433
-https://www.skills.google/games/7173
+https://www.skills.google/games/7173/labs/44433    
+https://www.skills.google/games/7173   
 
 ### ⚠️ Disclaimer
 - **This script and guide are provided for  the educational purposes to help you understand the lab services and boost your career. Before using the script, please open and review it to familiarize yourself with Google Cloud services. Ensure that you follow 'Qwiklabs' terms of service and YouTube’s community guidelines. The goal is to enhance your learning experience, not to bypass it.**
