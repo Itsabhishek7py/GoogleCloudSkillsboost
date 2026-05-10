@@ -287,12 +287,15 @@ echo "PROD V1.0:"
 echo "http://$PROD_EXTERNAL_IP:8080/blue"
 echo "=================================="
 answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
 while true; do
-  echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
-  read -p " (y/n): " answer
+  printf " (y/n): "
+  read answer
   if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
     break
   fi
+  # move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
 done
 
 echo
@@ -376,12 +379,15 @@ echo "Blue: http://$PROD_EXTERNAL_IP:8080/blue"
 echo "Red : http://$PROD_EXTERNAL_IP:8080/red"
 echo "=================================="
 answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
 while true; do
-  echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
-  read -p " (y/n): " answer
+  printf " (y/n): "
+  read answer
   if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
     break
   fi
+  # move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
 done
 
 echo
