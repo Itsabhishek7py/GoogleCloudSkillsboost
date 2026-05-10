@@ -59,7 +59,7 @@ gcloud artifacts repositories create $REPO \
   --location=$REGION \
   --description="Dr Abhishek"
 
-echo "${WHITE_TEXT}${BOLD_TEXT}Setting up repository...${RESET_FORMAT}"
+echo "${WHITE_TEXT}${BOLD_TEXT}Setting up artifact repository...${RESET_FORMAT}"
 (gcloud artifacts repositories list --location=$REGION > /dev/null 2>&1) & 
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}✅  Repository setup completed!${RESET_FORMAT}"
 
