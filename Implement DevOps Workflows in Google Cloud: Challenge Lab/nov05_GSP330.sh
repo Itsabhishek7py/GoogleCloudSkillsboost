@@ -81,10 +81,40 @@ GITHUB_USERNAME=$(gh api user -q ".login")
 git config --global user.name "${GITHUB_USERNAME}"
 git config --global user.email "${USER_EMAIL}"
 
+## Task 1.5 Create a GKE Standard cluster named hello-cluster
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 6: Kubernetes Cluster Deployment${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Creating Google Kubernetes Engine cluster with optimized settings for development and production...${RESET_FORMAT}"
 echo
-(gcloud beta container --project "$PROJECT_ID" clusters create "$CLUSTER" --zone "$ZONE" --no-enable-basic-auth --cluster-version latest --release-channel "regular" --machine-type "e2-medium" --image-type "COS_CONTAINERD" --disk-type "pd-balanced" --disk-size "100" --metadata disable-legacy-endpoints=true  --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/$PROJECT_ID/global/networks/default" --subnetwork "projects/$PROJECT_ID/regions/$REGION/subnetworks/default" --no-enable-intra-node-visibility --default-max-pods-per-node "110" --enable-autoscaling --min-nodes "2" --max-nodes "6" --location-policy "BALANCED" --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --enable-shielded-nodes --node-locations "$ZONE") & spinner
+(gcloud beta container \
+    --project "$PROJECT_ID" clusters create "$CLUSTER" \
+    --zone "$ZONE" \
+    --no-enable-basic-auth \
+    --cluster-version latest \
+    --release-channel "regular" \
+    --machine-type "e2-medium" \
+    --image-type "COS_CONTAINERD" \
+    --disk-type "pd-balanced" \
+    --disk-size "100" \
+    --metadata disable-legacy-endpoints=true  \
+    --logging=SYSTEM,WORKLOAD \
+    --monitoring=SYSTEM \
+    --enable-ip-alias \
+    --network "projects/$PROJECT_ID/global/networks/default" \
+    --subnetwork "projects/$PROJECT_ID/regions/$REGION/subnetworks/default" \
+    --no-enable-intra-node-visibility \
+    --default-max-pods-per-node "110" \
+    --enable-autoscaling \
+    --min-nodes "2" \
+    --max-nodes "6" \
+    --location-policy "BALANCED" \
+    --no-enable-master-authorized-networks \
+    --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver \
+    --enable-autoupgrade \
+    --enable-autorepair \
+    --max-surge-upgrade 1
+    --max-unavailable-upgrade 0 \
+    --enable-shielded-nodes \
+    --node-locations "$ZONE") & spinner
 
 echo "${CYAN_TEXT}${BOLD_TEXT}👉  PHASE 7: Kubernetes Environment Setup${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Configuring cluster credentials and creating development and production namespaces...${RESET_FORMAT}"
