@@ -262,10 +262,10 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Deploying dev v1.0..."
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Dev v1.0 deployment completed!${RESET_FORMAT}"
 
 ## Dev V1.0 service exposure
-(kubectl expose deployment development-deployment -n dev 
-    --name=dev-deployment-service 
-    --type=LoadBalancer 
-    --port 8080 
+(kubectl expose deployment development-deployment -n dev \
+    --name=dev-deployment-service \
+    --type=LoadBalancer \
+    --port 8080 \
     --target-port 8080 > /dev/null 2>&1) & spinner
     
 echo
