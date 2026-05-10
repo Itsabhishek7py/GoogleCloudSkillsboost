@@ -40,6 +40,10 @@ export REGION=$(gcloud compute project-info describe \
 export CLUSTER=hello-cluster
 export REPO=my-repository
 
+echo -e "${YELLOW_TEXT}Google Cloud Project ID: ${CYAN_TEXT}$PROJECT_ID${RESET_FORMAT}"
+echo -e "${YELLOW_TEXT}Region: ${CYAN_TEXT}$REGION${RESET_FORMAT}"
+echo -e "${YELLOW_TEXT}Zone: ${CYAN_TEXT}$ZONE${RESET_FORMAT}"
+
 ##########################################################################
 ## Task 1. Create the lab resources
 ##########################################################################
