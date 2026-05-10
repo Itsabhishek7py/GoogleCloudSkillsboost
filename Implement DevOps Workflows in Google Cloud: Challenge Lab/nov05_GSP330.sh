@@ -265,7 +265,16 @@ echo "${WHITE_TEXT}${BOLD_TEXT}Deploying prod v1.0..."
 (gcloud builds submit --config=cloudbuild.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Prod v1.0 deployment completed!${RESET_FORMAT}"
 
+until kubectl get svc dev-deployment-service -n dev >/dev/null 2>&1; do
+  echo "Waiting for Service dev-deployment-service to be created..."
+  sleep 3
+done
 export DEV_EXTERNAL_IP=$(kubectl get svc dev-deployment-service -n dev -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+
+until kubectl get svc prod-deployment-service -n prod >/dev/null 2>&1; do
+  echo "Waiting for Service prod-deployment-service to be created..."
+  sleep 3
+done
 while true; do
   PROD_EXTERNAL_IP=$(kubectl get svc prod-deployment-service -n prod -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
   if [ -n "$PROD_EXTERNAL_IP" ]; then
