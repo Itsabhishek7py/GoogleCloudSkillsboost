@@ -183,10 +183,10 @@ echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RES
 echo "${CYAN_TEXT}${BOLD_TEXT}           NOW MANUAL STEPS                  ${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}Click the url to create Cloud Build triggers${RESET_FORMAT}"
-echo "https://console.cloud.google.com/cloud-build/triggers;region=global/add?project=$PROJECT_ID"
+echo "${YELLOW_TEXT}${BOLD_TEXT}Click the url to create Cloud Build triggers:${RESET_FORMAT}"
+echo "  https://console.cloud.google.com/cloud-build/triggers;region=global/add?project=$PROJECT_ID"
 echo "Refer to GSP330 Task 3 for trigger configuration:"
-echo "https://www.skills.google/games/7173/labs/44434"
+echo "  https://www.skills.google/games/7173/labs/44434"
 echo
 
 ## Loop to ensure trigger readiness
@@ -417,7 +417,7 @@ echo "PROD V1.0:"
 echo "Blue: http://$PROD_EXTERNAL_IP:8080/blue"
 echo "Red: http://$PROD_EXTERNAL_IP:8080/red"
 echo "=================================="
-# echo "Check progress at the end of Task 5: https://www.skills.google/games/7173/labs/44434" 
+echo "Check progress at the end of Task 5: https://www.skills.google/games/7173/labs/44434" 
 answer=""
 echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
 while true; do
