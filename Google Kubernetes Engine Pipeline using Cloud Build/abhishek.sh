@@ -273,9 +273,43 @@ git push google master
 #######################################################
 ## Task 7. Review Cloud Build pipeline
 #######################################################
+
 #######################################################
 ## Task 8. Test the complete pipeline
 #######################################################
+
+EXTERNAL_IP=""
+while [ -z "$EXTERNAL_IP" ]; do
+  EXTERNAL_IP=$(kubectl get service hello-cloudbuild \
+    -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null)
+  if [ -z "$EXTERNAL_IP" ]; then
+    echo "Waiting for service hello-cloudbuild external IP..."
+    sleep 5
+  fi
+done
+
+echo
+echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}           NOW MANUAL STEPS                  ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}Click the url to connect GitHub repos hello-cloudbuild-app and hello-cloudbuild-env:${RESET_FORMAT}"
+echo "Click on the endpoint for the hello-cloudbuild service. You should see \"Hello World!\".
+echo "  http://$EXTERNAL_IP"
+echo
+
+answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
+
 #######################################################
 ## Task 9. Test the rollback
 #######################################################
