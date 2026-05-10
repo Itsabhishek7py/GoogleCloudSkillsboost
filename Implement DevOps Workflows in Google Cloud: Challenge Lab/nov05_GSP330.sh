@@ -42,7 +42,7 @@ export REPO=my-repository
 ##########################################################################
 
 echo
-echo "${YELLOW_TEXT}${BOLD_TEXT}🔧  PHASE 2: Service Activation${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 2: Service Activation${RESET_FORMAT}"
 echo "${WHITE_TEXT}${BOLD_TEXT}Activating necessary Google Cloud Platform APIs for container, build, and source repository services...${RESET_FORMAT}"
 echo
 gcloud services enable container.googleapis.com \
