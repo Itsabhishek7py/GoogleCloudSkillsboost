@@ -257,6 +257,7 @@ git add .
 git commit -m "GSP330 dev v1.0" 
 git push -u origin dev
 
+## ⚠️ This bypasses the Cloud Build trigger workflow.
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying dev v1.0..."
 (gcloud builds submit --config=cloudbuild-dev.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Dev v1.0 deployment completed!${RESET_FORMAT}"
@@ -283,6 +284,7 @@ git add .
 git commit -m "GSP330 prod v1.0" 
 git push -u origin master
 
+## ⚠️ This bypasses the Cloud Build trigger workflow.
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying prod v1.0..."
 (gcloud builds submit --config=cloudbuild.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Prod v1.0 deployment completed!${RESET_FORMAT}"
@@ -361,12 +363,13 @@ func redHandler(w http.ResponseWriter, r *http.Request) { \
 }' main.go
 sed -i "9c\    args: ['build', '-t', '$REGION-docker.pkg.dev/\$PROJECT_ID/my-repository/hello-cloudbuild-dev:v2.0', '.']" cloudbuild-dev.yaml
 sed -i "13c\    args: ['push', '$REGION-docker.pkg.dev/\$PROJECT_ID/my-repository/hello-cloudbuild-dev:v2.0']" cloudbuild-dev.yaml
-sed -i "17c\        image: $REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:v2.0" dev/deployment.yaml
+sed -i "17c\        image: $REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v2.0" dev/deployment.yaml
 
 git add .
 git commit -m "GSP330 dev v2.0" 
 git push -u origin dev
 
+## ⚠️ This bypasses the Cloud Build trigger workflow.
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying dev v2.0..."
 (gcloud builds submit --config=cloudbuild-dev.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Dev v2.0 deployment completed!${RESET_FORMAT}"
@@ -394,6 +397,7 @@ git add .
 git commit -m "GSP330 v2.0" 
 git push -u origin master
 
+## ⚠️ This bypasses the Cloud Build trigger workflow.
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying prod v2.0..."
 (gcloud builds submit --config=cloudbuild.yaml . > /dev/null 2>&1) & spinner
 echo -e "\r${GREEN_TEXT}${BOLD_TEXT}Prod v2.0 deployment completed!${RESET_FORMAT}"
