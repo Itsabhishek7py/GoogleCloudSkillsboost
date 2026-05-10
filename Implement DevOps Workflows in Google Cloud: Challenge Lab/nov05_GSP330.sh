@@ -212,7 +212,7 @@ echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 9: Application Directory Navigation$
 echo "${WHITE_TEXT}${BOLD_TEXT}Moving to sample application directory for build operations...${RESET_FORMAT}"
 echo
 
-cd sample-app
+cd ~/sample-app
 
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  PHASE 10: Container Image Build & Push${RESET_FORMAT}"
@@ -236,7 +236,7 @@ sed -i "13c\    args: ['push', '$REGION-docker.pkg.dev/$PROJECT_ID/my-repository
 sed -i "17s|        image: <todo>|        image: $REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v1.0|" dev/deployment.yaml
 
 git add .
-git commit -m "Dr Abhishek" 
+git commit -m "GSP330 dev v1.0" 
 git push -u origin dev
 
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying development version..."
@@ -257,7 +257,7 @@ sed -i "16c\    args: ['push', '$REGION-docker.pkg.dev/\$PROJECT_ID/my-repositor
 sed -i "17c\        image:  $REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:v1.0" prod/deployment.yaml
 
 git add .
-git commit -m "Dr Abhishek" 
+git commit -m "GSP330 v1.0" 
 git push -u origin master
 
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying production version..."
@@ -295,7 +295,7 @@ sed -i "13c\    args: ['push', '$REGION-docker.pkg.dev/\$PROJECT_ID/my-repositor
 sed -i "17c\        image: $REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:v2.0" dev/deployment.yaml
 
 git add .
-git commit -m "Dr Abhishek" 
+git commit -m "GSP330 dev v2.0" 
 git push -u origin dev
 
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying development v2.0..."
@@ -322,7 +322,7 @@ sed -i "16c\    args: ['push', '$REGION-docker.pkg.dev/\$PROJECT_ID/my-repositor
 sed -i "17c\        image: $REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:v2.0" prod/deployment.yaml
 
 git add .
-git commit -m "Dr Abhishek" 
+git commit -m "GSP330 v2.0" 
 git push -u origin master
 
 echo "${WHITE_TEXT}${BOLD_TEXT}Deploying production v2.0..."
