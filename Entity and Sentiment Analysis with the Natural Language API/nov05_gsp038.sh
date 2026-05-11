@@ -78,10 +78,11 @@ cat request.json
 
 echo -e "\n👉  Analysis result:"
 curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
-  -s -X POST -H "Content-Type: application/json" --data-binary @request.json
+  -s -X POST -H "Content-Type: application/json" --data-binary @request.json > result.json
+cat result.json
 
 ## Clean up 
-rm -f task.sh request.json
+rm -f task.sh request.json result.json
 EOF
 
 # Copy the script into $HOME dir
@@ -165,7 +166,6 @@ cat request.json
 echo -e "\n👉  Analysis result:"
 curl "https://language.googleapis.com/v1/documents:analyzeEntitySentiment?key=${API_KEY}" \
   -s -X POST -H "Content-Type: application/json" --data-binary @request.json
-cat result.json
 rm -f task.sh request.json
 EOF
 
@@ -207,7 +207,6 @@ cat request.json
 echo -e "\n👉  Analysis result:"
 curl "https://language.googleapis.com/v1/documents:analyzeSyntax?key=${API_KEY}" \
   -s -X POST -H "Content-Type: application/json" --data-binary @request.json
-cat result.json
 rm -f task.sh request.json
 EOF
 
