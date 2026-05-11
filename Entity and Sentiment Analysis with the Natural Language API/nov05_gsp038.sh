@@ -26,9 +26,18 @@ cat << 'EOF'
 
 EOF
 
-gcloud services enable apikeys.googleapis.com
+gcloud services enable \
+  apikeys.googleapis.com \
+  language.googleapis.com
 gcloud alpha services api-keys create \
   --display-name="nlp-analysis-key"
+gcloud services api-keys update \
+  $(gcloud services api-keys list \
+      --filter="displayName=nlp-analysis-key" \
+      --format="value(name)" \
+      --limit=1) \
+  --location=global \
+  --api-target=service=speech.googleapis.com
 # export KEY_STRING=$(gcloud alpha services api-keys list \
 #   --format="value(name)" \
 #   --filter="displayName=nlp-analysis-key")
@@ -64,7 +73,8 @@ cat > task.sh <<'EOF'
 export API_KEY=$(gcloud alpha services api-keys get-key-string \
   $(gcloud alpha services api-keys list \
       --filter="displayName=nlp-analysis-key" \
-      --format="value(name)") \
+      --format="value(name)" \
+      --limit=1) \
   --format="value(keyString)")
 echo "$API_KEY" > ~/api_key.txt
 chmod 600 ~/api_key.txt
