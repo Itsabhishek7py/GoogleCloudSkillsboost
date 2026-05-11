@@ -1,6 +1,6 @@
 #!/bin/bash
 ## Changed by nov05, 2026-05-09  
-set -e
+
 set +H
 
 # Colors
