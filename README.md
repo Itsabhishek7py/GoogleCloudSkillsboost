@@ -9,7 +9,7 @@
   lab - [GSP1077 Google Kubernetes Engine Pipeline using Cloud Build](https://github.com/nov05/gcp-skills-boost/tree/dev/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build)     
   bash script - [abhishek.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/abhishek.sh)
 
-* Example of ensuring VM running status and its SSH readiness
+* Example of ensuring VM running status and its SSH readiness   
   bash script - [nov05_GSP004.sh](https://github.com/nov05/gcp-skills-boost/blob/dev/Creating%20a%20Persistent%20Disk/nov05_GSP004.sh)
   
 <br><br><br>
