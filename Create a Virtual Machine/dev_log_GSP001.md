@@ -1,4 +1,4 @@
-## For devlopment 
+## 👉 For devlopment 
 
 ```bash
 rm -f nov05_GSP001.sh
