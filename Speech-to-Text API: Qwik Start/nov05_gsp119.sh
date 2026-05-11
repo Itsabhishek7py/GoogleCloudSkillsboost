@@ -41,7 +41,6 @@ cat << 'EOF'
 ###################################################################
 
 EOF
-# Create request.json file
 rm -f request.json
 cat > request.json << 'EOL'
 {
