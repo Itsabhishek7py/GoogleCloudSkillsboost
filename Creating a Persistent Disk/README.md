@@ -18,10 +18,11 @@ https://www.skills.google/games/7174/labs/44440
 
 ### 👉 Run the following Commands in CloudShell
 
-```
-curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Creating%20a%20Persistent%20Disk/abhishek.sh
-sudo chmod +x abhishek.sh
-./abhishek.sh
+```bash
+rm -f nov05_GSP004.sh
+curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/main/Creating%20a%20Persistent%20Disk/nov05_GSP004.sh
+sudo chmod +x nov05_GSP004.sh
+./nov05_GSP004.sh
 ```
 
 <br>  
