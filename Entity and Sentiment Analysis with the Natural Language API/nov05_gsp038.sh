@@ -30,31 +30,24 @@ gcloud alpha services api-keys create \
 #   --filter="displayName=nlp-analysis-key")
 # export API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_STRING \
 #   --format="value(keyString)")
-export API_KEY=$(gcloud alpha services api-keys get-key-string \
-  $(gcloud alpha services api-keys list \
-      --filter="displayName=nlp-analysis-key" \
-      --format="value(name)") \
-      --format="value(keyString)")
 
-gcloud compute ssh linux-instance \
-  --project=$DEVSHELL_PROJECT_ID \
-  --zone=$ZONE 
+###################################################################
+## Task 2. Make an entity analysis request
+###################################################################
 
-## Prepare Analysis Script
-cat > nlp_analysis.sh <<'EOL'
+## Prepare script for the task
+cat > task2.sh <<'EOL'
 #!/bin/bash
 
-## Retrieve API Key
+## Retrieve and store API Key 
 export API_KEY=$(gcloud alpha services api-keys get-key-string \
   $(gcloud alpha services api-keys list \
       --filter="displayName=nlp-analysis-key" \
       --format="value(name)") \
       --format="value(keyString)")
 echo -e "🔹  API Key: $API_KEY"
-
-###################################################################
-## Task 2. Make an entity analysis request
-###################################################################
+echo "$API_KEY" > ~/api_key.txt
+chmod 600 ~/api_key.txt
 
 ## Create NLP Request
 cat > request.json <<EOF
@@ -66,23 +59,26 @@ cat > request.json <<EOF
   "encodingType":"UTF8"
 }
 EOF
-echo -e "🔹  Sample text prepared for analysis"
+echo -e "/n👉  Analysis request:"
+cat request.json
 
 ###################################################################
 ## Task 3. Call the Natural Language API
 ###################################################################
 
-echo -e "🔹  Analyzing text with NLP API..."
 curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
   -s -X POST -H "Content-Type: application/json" --data-binary @request.json > result.json
 
 ## Display result
-echo -e "👉  Analysis result:"
+echo -e "/n👉  Analysis result:"
 cat result.json
+
+## Clean up 
+rm -f task2.sh request.json result.json
 EOL
 
-# Copy the script into /tmp dir
-gcloud compute scp nlp_analysis.sh linux-instance:/tmp \
+# Copy the script into $HOME dir
+gcloud compute scp task2.sh linux-instance:~ \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet
@@ -92,11 +88,52 @@ gcloud compute ssh linux-instance \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet \
-  --command="chmod +x /tmp/nlp_analysis.sh && /tmp/nlp_analysis.sh"
+  --command="chmod +x task2.sh && task2.sh"
 
 ###################################################################
 ## Task 4. Sentiment analysis with the Natural Language API
 ###################################################################
+
+## Prepare script for the task
+cat > task4.sh <<'EOL'
+#!/bin/bash
+
+## Load API Key 
+export API_KEY=$(cat ~/api_key.txt)
+
+## Create NLP Request
+cat > request.json <<EOF
+{
+  "document":{
+    "type":"PLAIN_TEXT",
+    "content":"Joanne Rowling, who writes under the pen names J. K. Rowling and Robert Galbraith, is a British novelist and screenwriter who wrote the Harry Potter fantasy series."
+  },
+  "encodingType":"UTF8"
+}
+EOF
+cat request.json
+
+curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
+  -s -X POST -H "Content-Type: application/json" --data-binary @request.json > result.json
+
+## Display result
+echo -e "👉  Analysis result:"
+cat result.json
+
+## Clean up
+rm -f task4.sh result.json
+EOL
+
+gcloud compute scp task4.sh linux-instance:~ \
+  --project=$DEVSHELL_PROJECT_ID \
+  --zone=$ZONE \
+  --quiet
+gcloud compute ssh linux-instance \
+  --project=$DEVSHELL_PROJECT_ID \
+  --zone=$ZONE \
+  --quiet \
+  --command="chmod +x task4.sh && task4.sh"
+  
 ###################################################################
 ## Task 5. Analyzing entity sentiment
 ###################################################################
