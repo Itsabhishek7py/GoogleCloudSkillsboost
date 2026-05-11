@@ -248,7 +248,8 @@ cat request.json
 echo -e "\n👉  Analysis result:"
 curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
   -s -X POST -H "Content-Type: application/json" --data-binary @request.json
-rm -f task.sh request.json
+## Keep the files for lab checks
+# rm -f task.sh request.json
 EOF
 
 gcloud compute scp task.sh request.json linux-instance:~ \
