@@ -78,7 +78,7 @@ echo "👉 Check result.json:"
 curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json \
 "https://speech.googleapis.com/v1/speech:recognize?key=${API_KEY}"
 
-# curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json \
-#   "https://speech.googleapis.com/v1/speech:recognize?key=${API_KEY}" > result.json
-# echo 
-# cat result.json
+curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json \
+  "https://speech.googleapis.com/v1/speech:recognize?key=${API_KEY}" > result.json
+echo 
+cat result.json
