@@ -16,6 +16,9 @@
 
 * Example of ensuring service account readiness   
   bash script - [nov05_gsp097.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Cloud%20Natural%20Language%20API%3A%20Qwik%20Start/nov05_gsp097.sh)       
+
+* Example of calling APIs from a VM
+  bash script - [nov05_gsp038.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Entity%20and%20Sentiment%20Analysis%20with%20the%20Natural%20Language%20API/nov05_gsp038.sh)
   
 <br><br><br>
 
