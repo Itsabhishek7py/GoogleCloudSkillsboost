@@ -1,31 +1,10 @@
 #!/bin/bash
 ## Changed by nov05, 2026-05-11  
 
-# Define color variables
-BLACK=`tput setaf 0`
-RED=`tput setaf 1`
-GREEN=`tput setaf 2`
-YELLOW=`tput setaf 3`
-BLUE=`tput setaf 4`
-MAGENTA=`tput setaf 5`
-CYAN=`tput setaf 6`
-WHITE=`tput setaf 7`
-
-BG_BLACK=`tput setab 0`
-BG_RED=`tput setab 1`
-BG_GREEN=`tput setab 2`
-BG_YELLOW=`tput setab 3`
-BG_BLUE=`tput setab 4`
-BG_MAGENTA=`tput setab 5`
-BG_CYAN=`tput setab 6`
-BG_WHITE=`tput setab 7`
-
-BOLD=`tput bold`
-RESET=`tput sgr0`
-
-#----------------------------------------------------start--------------------------------------------------#
-
-echo "${BG_MAGENTA}${BOLD}Starting Execution${RESET}"
+echo
+echo "============================================"
+echo "           Starting Execution"
+echo "============================================"
 
 export ZONE=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
@@ -33,6 +12,11 @@ export PROJECT_ID=$(gcloud config get-value project)
 export PROJECT_NUMBER=$(gcloud projects describe ${PROJECT_ID} \
     --format="value(projectNumber)")
 
+gcloud compute firewall-rules create allow-http \
+  --network=default \
+  --allow=tcp:80 \
+  --target-tags=allow-http
+  
 gcloud compute instances create gcelab \
   --project="$PROJECT_ID" \
   --zone="$ZONE" \
@@ -44,17 +28,12 @@ gcloud compute instances create gcelab \
   --tags=http-server \
   --metadata=enable-oslogin=true
 
-gcloud compute instances create gcelab2 \
-  --machine-type e2-medium \
-  --zone=$ZONE
-
 gcloud compute ssh \
   --zone "$ZONE" "gcelab" \
   --project "$PROJECT_ID" \
   --quiet \
-  --command "sudo apt-get update && sudo apt-get install -y nginx && ps auwx | grep nginx "
+  --command "sudo apt-get update && sudo apt-get install -y nginx && ps auwx | grep nginx"
 
-gcloud compute firewall-rules create allow-http \
-  --network=default \
-  --allow=tcp:80 \
-  --target-tags=allow-http
+gcloud compute instances create gcelab2 \
+  --machine-type e2-medium \
+  --zone=$ZONE
