@@ -419,7 +419,7 @@ echo "  2. Click the View all link under Build History for the hello-cloudbuild-
 echo "  3. Click on the second most recent build available."
 echo "  4. Click Rebuild."
 echo
-echo "Instead, the script has just rollbacked for you."
+echo "Instead, the script has just done the rollback for you."
 echo
 echo "Waite a few minutes, reload the application in your browser. You should see \"Hello World!\."
 echo "  http://$EXTERNAL_IP"
