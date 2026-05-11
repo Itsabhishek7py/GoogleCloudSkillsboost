@@ -382,14 +382,44 @@ done
 ## Task 9. Test the rollback
 #######################################################
 
+## Get trigger id with trigger name
+REGION=us-west1
+TRIGGER_ID=$(gcloud builds triggers list \
+  --region=$REGION \
+  --filter="name=hello-cloudbuild-deploy" \
+  --format="value(id)")
+echo "TRIGGER_ID: $TRIGGER_ID"
+
+## Get the last but one successful build ID
+BUILD_ID=$(gcloud builds list \
+  --region=$REGION \
+  --filter="buildTriggerId=$TRIGGER_ID AND status=SUCCESS" \
+  --sort-by="~createTime" \
+  --limit=2 \
+  --format="value(id)" | tail -n1)
+echo "BUILD_ID: $BUILD_ID"  
+
+## Get the commit SHA with build ID
+COMMIT_SHA=$(gcloud builds describe $BUILD_ID \
+  --region=$REGION \
+  --format="value(sourceProvenance.resolvedRepoSource.commitSha))
+echo "COMMIT_SHA: $COMMIT_SHA"
+
+## Retry the build
+gcloud builds triggers run $TRIGGER_ID \
+  --region=$REGION \
+  --sha="$COMMIT_SHA"
+  
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  Task 9. Test the rollback${RESET_FORMAT}"
 echo
-echo "In this task, you rollback to the version of the application that said \"Hello World!\"."
+echo "In this task, you are supposed to rollback to the version of the application that said \"Hello World!\"."
 echo "  1. In the console title bar, type Cloud Build Dashboard in the Search field, and then click Cloud Build in the search results. Be sure Dashboard is selected in the left pane."
 echo "  2. Click the View all link under Build History for the hello-cloudbuild-env repository."
 echo "  3. Click on the second most recent build available."
 echo "  4. Click Rebuild."
+echo
+echo "Instead, the script has just rollbacked for you."
 echo
 echo "Waite a few minutes, reload the application in your browser. You should see \"Hello World!\."
 echo "  http://$EXTERNAL_IP"
