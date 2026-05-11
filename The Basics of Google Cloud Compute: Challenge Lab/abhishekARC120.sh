@@ -1,6 +1,7 @@
 #!/bin/bash
-# Define color variables
+## Changed by nov05, 2026-05-11
 
+# Define color variables
 BLACK=`tput setaf 0`
 RED=`tput setaf 1`
 GREEN=`tput setaf 2`
@@ -43,7 +44,7 @@ if [[ -z "$PROJECT_ID" ]]; then
     echo "${RED}${BOLD}❌ Error: Could not get Project ID. Please ensure you're logged into gcloud.${RESET}"
     exit 1
 fi
-echo "${GREEN}✅ Project ID: ${PROJECT_ID}${RESET}"
+echo "${GREEN}🔹  Project ID: ${PROJECT_ID}${RESET}"
 
 # Get Zone dynamically
 ZONE=$(gcloud compute project-info describe --format="value(commonInstanceMetadata.items[google-compute-default-zone])" 2>/dev/null)
@@ -51,7 +52,7 @@ if [[ -z "$ZONE" ]]; then
     ZONE="us-central1-a"
     echo "${YELLOW}⚠ Zone not found in metadata, using default: $ZONE${RESET}"
 else
-    echo "${GREEN}✅ Zone detected: ${ZONE}${RESET}"
+    echo "${GREEN}🔹  Zone detected: ${ZONE}${RESET}"
 fi
 
 # Get Region dynamically from Zone
@@ -60,7 +61,7 @@ if [[ -z "$REGION" ]]; then
     REGION="us-central1"
     echo "${YELLOW}⚠ Region derived from zone, using: $REGION${RESET}"
 else
-    echo "${GREEN}✅ Region detected: ${REGION}${RESET}"
+    echo "${GREEN}🔹  Region detected: ${REGION}${RESET}"
 fi
 
 echo ""
@@ -74,17 +75,17 @@ echo ""
 echo "${YELLOW}${BOLD}Task 1: Creating Cloud Storage bucket...${RESET}"
 BUCKET_NAME="${PROJECT_ID}-bucket"
 if gsutil ls -b "gs://${BUCKET_NAME}" >/dev/null 2>&1; then
-    echo "${YELLOW}⚠ Bucket already exists: ${BUCKET_NAME}${RESET}"
+    echo "${YELLOW}⚠️  Bucket already exists: ${BUCKET_NAME}${RESET}"
 else
     gsutil mb -l US "gs://${BUCKET_NAME}"
-    echo "${GREEN}✅ Bucket created: ${BUCKET_NAME}${RESET}"
+    echo "${GREEN}✅  Bucket created: ${BUCKET_NAME}${RESET}"
 fi
 
 # Task 2: Create Compute Engine instance with correct configuration
 echo ""
 echo "${YELLOW}${BOLD}Task 2: Creating Compute Engine instance...${RESET}"
 if gcloud compute instances describe my-instance --zone=$ZONE --format="get(name)" 2>/dev/null; then
-    echo "${YELLOW}⚠ Instance 'my-instance' already exists. Deleting and recreating...${RESET}"
+    echo "${YELLOW}⚠️  Instance 'my-instance' already exists. Deleting and recreating...${RESET}"
     gcloud compute instances delete my-instance --zone=$ZONE --quiet
     sleep 10
 fi
@@ -98,7 +99,7 @@ gcloud compute instances create my-instance \
     --boot-disk-type=pd-balanced \
     --tags=http-server
 
-echo "${GREEN}✅ Instance 'my-instance' created${RESET}"
+echo "${GREEN}✅  Instance 'my-instance' created${RESET}"
 
 # Create persistent disk
 echo ""
@@ -113,7 +114,7 @@ gcloud compute disks create mydisk \
     --size=200GB \
     --zone=$ZONE
 
-echo "${GREEN}✅ Disk 'mydisk' created${RESET}"
+echo "${GREEN}✅  Disk 'mydisk' created${RESET}"
 
 # Attach disk to instance
 echo ""
@@ -122,7 +123,7 @@ gcloud compute instances attach-disk my-instance \
     --disk=mydisk \
     --zone=$ZONE
 
-echo "${GREEN}✅ Disk attached to instance${RESET}"
+echo "${GREEN}✅  Disk attached to instance${RESET}"
 
 # Wait for instance to be ready
 echo ""
@@ -138,7 +139,7 @@ sudo apt update -y
 sudo apt install nginx -y
 sudo systemctl start nginx
 sudo systemctl enable nginx
-echo "NGINX installation completed successfully!"
+echo "NGINX installation completed"
 EOF_END
 
 # Make script executable
@@ -161,32 +162,32 @@ EXTERNAL_IP=$(gcloud compute instances describe my-instance --zone=$ZONE --forma
 echo ""
 echo "${GREEN}${BOLD}"
 echo "=================================================="
-echo "✅ NGINX installed successfully!"
+echo "✅  NGINX installed successfully
 echo "=================================================="
 echo "${RESET}"
-echo "${CYAN}🌐 Access your web server at: http://${EXTERNAL_IP}${RESET}"
+echo "${CYAN}👉  Access your web server at: http://${EXTERNAL_IP}${RESET}"
 echo ""
 
 # Test the web server
 echo "${YELLOW}${BOLD}Testing web server...${RESET}"
 if curl -s --head --max-time 5 "http://${EXTERNAL_IP}" | grep "200 OK" > /dev/null; then
-    echo "${GREEN}✅ Web server is responding with HTTP 200 OK${RESET}"
+    echo "${GREEN}✅  Web server is responding with HTTP 200 OK${RESET}"
 else
-    echo "${YELLOW}⚠ Web server may take a few moments to fully start. Please check manually.${RESET}"
+    echo "${YELLOW}⚠️  Web server may take a few moments to fully start. Please check manually.${RESET}"
 fi
 
 echo ""
-echo "${BG_GREEN}${BOLD}All Tasks Completed Successfully!${RESET}"
+echo "${BG_GREEN}${BOLD}All Tasks Completed Successfully${RESET}"
 echo ""
 echo "${CYAN}${BOLD}Task Summary:${RESET}"
-echo "  ✅ Task 1: Cloud Storage bucket created (${BUCKET_NAME})"
-echo "  ✅ Task 2: Instance 'my-instance' created with attached disk 'mydisk'"
-echo "  ✅ Task 3: NGINX web server installed and running"
+echo "  Task 1: Cloud Storage bucket $BUCKET_NAME created"
+echo "  Task 2: Instance 'my-instance' created with attached disk 'mydisk'"
+echo "  Task 3: NGINX web server installed and running"
 echo ""
 
-echo "${BG_RED}${BOLD}Congratulations For Completing The Lab !!!${RESET}"
+echo "${BG_RED}${BOLD}Congratulations For Completing The Lab${RESET}"
 
-echo "${CYAN}${BOLD}"
+echo "${CYAN}"
 echo "**********************************************************************"
 echo "* Don't forget to subscribe to Dr. Abhishek's YouTube channel:       *"
 echo "* https://www.youtube.com/@drabhishek.5460/videos                    *"
