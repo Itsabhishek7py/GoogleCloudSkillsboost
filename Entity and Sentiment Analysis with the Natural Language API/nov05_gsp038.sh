@@ -42,7 +42,7 @@ gcloud services api-keys update \
       --format="value(name)" \
       --limit=1) \
   --location=global \
-  --api-target=service=speech.googleapis.com
+  --api-target=service=language.googleapis.com
   
 # export KEY_STRING=$(gcloud alpha services api-keys list \
 #   --format="value(name)" \
