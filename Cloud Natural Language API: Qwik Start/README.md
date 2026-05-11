@@ -1,6 +1,6 @@
-## Cloud Natural Language API: Qwik Start
+# 🟢 Cloud Natural Language API: Qwik Start (GSP097) 
 
-
+https://www.skills.google/games/7174/labs/44444
 
 
 ### Create an API key
