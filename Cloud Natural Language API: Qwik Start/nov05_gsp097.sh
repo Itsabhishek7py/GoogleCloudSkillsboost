@@ -58,10 +58,11 @@ gcloud compute ssh \
   --quiet \
   --command "$REMOTE_CMD"
 
-echo "✅  ALL DONE"
-
 ## Pretty print JSON
 gcloud compute ssh \
+
+echo 
+echo "✅  ALL DONE"
   --zone "$ZONE" "linux-instance" \
   --project "$DEVSHELL_PROJECT_ID" \
   --quiet \
