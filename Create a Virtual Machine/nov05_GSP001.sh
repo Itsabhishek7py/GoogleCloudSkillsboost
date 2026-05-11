@@ -29,6 +29,18 @@ gcloud compute instances create gcelab \
   --tags=http-server \
   --metadata=enable-oslogin=true
 
+while true; do
+  STATUS=$(gcloud compute instances describe gcelab \
+    --zone "$ZONE" \
+    --format='get(status)')
+  echo "VM gcelab Current status: $STATUS"
+  if [ "$STATUS" = "RUNNING" ]; then
+    echo "VM gcelab is running!"
+    break
+  fi
+  sleep 5
+done
+
 gcloud compute ssh \
   --zone "$ZONE" "gcelab" \
   --project "$PROJECT_ID" \
@@ -39,3 +51,14 @@ gcloud compute instances create gcelab2 \
   --project="$PROJECT_ID" \
   --zone=$ZONE \
   --machine-type e2-medium
+
+EXTERNAL_IP=$(gcloud compute instances describe gcelab \
+  --zone "$ZONE" \
+  --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+
+echo
+echo "============================================"
+echo "Task 2. Install an NGINX web server"
+echo "  Check http://$EXTERNAL_IP"
+echo "  A default web page should open that says: Welcome to nginx!"
+echo "============================================"
