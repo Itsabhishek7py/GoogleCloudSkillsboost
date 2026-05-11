@@ -2,11 +2,22 @@
 ## Changed by nov05, 2026-05-09  
 
 # Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-CYAN='\033[1;36m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+# RED='\033[0;31m'
+# GREEN='\033[0;32m'
+# CYAN='\033[1;36m'
+# YELLOW='\033[1;33m'
+# NC='\033[0m' # No Color
+BLACK_TEXT=$'\033[0;90m'
+RED_TEXT=$'\033[0;91m'
+GREEN_TEXT=$'\033[0;92m'
+YELLOW_TEXT=$'\033[0;93m'
+BLUE_TEXT=$'\033[0;94m'
+MAGENTA_TEXT=$'\033[0;95m'
+CYAN_TEXT=$'\033[0;96m'
+WHITE_TEXT=$'\033[0;97m'
+RESET_FORMAT=$'\033[0m'
+BOLD_TEXT=$'\033[1m'
+UNDERLINE_TEXT=$'\033[4m'
 
 ## Changed by nov05, 2026-05-09
 # spinner() {
@@ -31,10 +42,10 @@ spinner() {
     local i=0
     while kill -0 "$pid" 2>/dev/null; do
         i=$(( (i+1) % 4 ))
-        printf "\r${CYAN}Loading...${NC} [%c]   " "${spin:$i:1}"
+        printf "\r${CYAN_TEXT}Loading...${RESET_FORMAT} [%c]   " "${spin:$i:1}"
         sleep 0.1
     done
-    printf "\r${GREEN}Done!         ${NC}\n\n"  
+    printf "\r${GREEN_TEXT}Done!         ${RESET_FORMAT}\n\n"  
 }
 (sleep 3) & spinner
 
@@ -311,7 +322,7 @@ while [ -z "$EXTERNAL_IP" ]; do
 done
 
 echo
-echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
+echo "${BLUE}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
 echo "${CYAN_TEXT}${BOLD_TEXT}           NOW MANUAL STEPS                  ${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
 echo
@@ -369,5 +380,32 @@ done
 #######################################################
 ## Task 9. Test the rollback
 #######################################################
+
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  Task 9. Test the rollback${RESET_FORMAT}"
+echo
+echo "In this task, you rollback to the version of the application that said \"Hello World!\"."
+echo "  1. In the console title bar, type Cloud Build Dashboard in the Search field, and then click Cloud Build in the search results. Be sure Dashboard is selected in the left pane."
+echo "  2. Click the View all link under Build History for the hello-cloudbuild-env repository."
+echo "  3. Click on the second most recent build available."
+echo "  4. Click Rebuild."
+echo
+echo "Waite a few minutes, reload the application in your browser. You should see \"Hello World!\".
+echo "  http://$EXTERNAL_IP"
+echo
+
+answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
+
+echo "${GREEN_TEXT}${BOLD_TEXT}ALL DONE!${RESET_FORMAT}"
 
 # --- End of script ---
