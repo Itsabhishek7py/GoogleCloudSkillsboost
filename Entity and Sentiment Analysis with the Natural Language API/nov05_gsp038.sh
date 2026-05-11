@@ -29,6 +29,11 @@ EOF
 gcloud services enable \
   apikeys.googleapis.com \
   language.googleapis.com
+
+## Tips: API keys in Google Cloud follow a pattern:
+##   1. Create key (identity only)
+##   2 Apply restrictions (security step)
+## This prevents accidentally locking yourself out during creation.
 gcloud alpha services api-keys create \
   --display-name="nlp-analysis-key"
 gcloud services api-keys update \
@@ -38,6 +43,7 @@ gcloud services api-keys update \
       --limit=1) \
   --location=global \
   --api-target=service=speech.googleapis.com
+  
 # export KEY_STRING=$(gcloud alpha services api-keys list \
 #   --format="value(name)" \
 #   --filter="displayName=nlp-analysis-key")
