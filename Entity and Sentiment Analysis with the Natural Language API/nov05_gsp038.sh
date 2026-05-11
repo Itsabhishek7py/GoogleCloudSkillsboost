@@ -81,8 +81,8 @@ curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY
   -s -X POST -H "Content-Type: application/json" --data-binary @request.json > result.json
 cat result.json
 
-## Clean up 
-rm -f task.sh request.json result.json
+## Clean up. Keep request.json, result.json for the lab checks.
+rm -f task.sh 
 EOF
 
 # Copy the script into $HOME dir
@@ -105,8 +105,8 @@ cat << 'EOF'
 
 EOF
 
-rm -f request.json
-cat > request.json <<'EOF'
+rm -f request2.json
+cat > request2.json <<'EOF'
 {
   "document":{
     "type":"PLAIN_TEXT",
@@ -121,14 +121,14 @@ cat > task.sh <<'EOF'
 #!/bin/bash
 export API_KEY=$(< ~/api_key.txt)
 echo -e "\n👉  Analysis request:"
-cat request.json
+cat request2.json
 echo -e "\n👉  Analysis result:"
 curl "https://language.googleapis.com/v1/documents:analyzeSentiment?key=${API_KEY}" \
-  -s -X POST -H "Content-Type: application/json" --data-binary @request.json
-rm -f task.sh request.json
+  -s -X POST -H "Content-Type: application/json" --data-binary @request2.json
+rm -f task.sh request2.json
 EOF
 
-gcloud compute scp task.sh request.json linux-instance:~ \
+gcloud compute scp task.sh request2.json linux-instance:~ \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet
@@ -146,8 +146,8 @@ cat << 'EOF'
 
 EOF
 
-rm -f request.json
-cat > request.json <<'EOF'
+rm -f request2.json
+cat > request2.json <<'EOF'
 {
   "document":{
     "type":"PLAIN_TEXT",
@@ -162,14 +162,14 @@ cat > task.sh <<'EOF'
 #!/bin/bash
 export API_KEY=$(< ~/api_key.txt)
 echo -e "\n👉  Analysis request:"
-cat request.json
+cat request2.json
 echo -e "\n👉  Analysis result:"
 curl "https://language.googleapis.com/v1/documents:analyzeEntitySentiment?key=${API_KEY}" \
-  -s -X POST -H "Content-Type: application/json" --data-binary @request.json
-rm -f task.sh request.json
+  -s -X POST -H "Content-Type: application/json" --data-binary @request2.json
+rm -f task.sh request2.json
 EOF
 
-gcloud compute scp task.sh request.json linux-instance:~ \
+gcloud compute scp task.sh request2.json linux-instance:~ \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet
@@ -187,8 +187,8 @@ cat << 'EOF'
 
 EOF
 
-rm -f request.json
-cat > request.json <<'EOF'
+rm -f request2.json
+cat > request2.json <<'EOF'
 {
   "document":{
     "type":"PLAIN_TEXT",
@@ -203,11 +203,11 @@ cat > task.sh <<'EOF'
 #!/bin/bash
 export API_KEY=$(< ~/api_key.txt)
 echo -e "\n👉  Analysis request:"
-cat request.json
+cat request2.json
 echo -e "\n👉  Analysis result:"
 curl "https://language.googleapis.com/v1/documents:analyzeSyntax?key=${API_KEY}" \
-  -s -X POST -H "Content-Type: application/json" --data-binary @request.json
-rm -f task.sh request.json
+  -s -X POST -H "Content-Type: application/json" --data-binary @request2.json
+rm -f task.sh request2.json
 EOF
 
 gcloud compute scp task.sh request.json linux-instance:~ \
@@ -228,8 +228,8 @@ cat << 'EOF'
 
 EOF
 
-rm -f request.json
-cat > request.json <<'EOF'
+rm -f request2.json
+cat > request2.json <<'EOF'
 {
   "document":{
     "type":"PLAIN_TEXT",
@@ -243,15 +243,15 @@ cat > task.sh <<'EOF'
 #!/bin/bash
 export API_KEY=$(< ~/api_key.txt)
 echo -e "\n👉  Analysis request:"
-cat request.json
+cat request2.json
 echo -e "\n👉  Analysis result:"
 curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
-  -s -X POST -H "Content-Type: application/json" --data-binary @request.json
+  -s -X POST -H "Content-Type: application/json" --data-binary @request2.json
 ## Keep the files for lab checks
-# rm -f task.sh request.json
+# rm -f task.sh request2.json
 EOF
 
-gcloud compute scp task.sh request.json linux-instance:~ \
+gcloud compute scp task.sh request2.json linux-instance:~ \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet
