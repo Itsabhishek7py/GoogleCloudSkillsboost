@@ -152,7 +152,7 @@ done
 # -----------------------------
 # CI Trigger (app repo)
 # -----------------------------
-echo "👉  Creating CI trigger (1st-gen) hello-cloudbuild..."
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  Creating CI trigger (1st-gen) hello-cloudbuild...${RESET_FORMAT}"
 ## https://docs.cloud.google.com/sdk/gcloud/reference/builds/triggers/create/github
 gcloud builds triggers create github \
     --name="hello-cloudbuild" \
@@ -249,7 +249,7 @@ git push google candidate
 # -----------------------------
 # CD Trigger (env repo)
 # -----------------------------
-echo "👉  Creating CD trigger (1st-gen) hello-cloudbuild-deploy..."
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  Creating CD trigger (1st-gen) hello-cloudbuild-deploy...${RESET_FORMAT}"
 gcloud builds triggers create github \
     --name="hello-cloudbuild-deploy" \
     --service-account="projects/$PROJECT_ID/serviceAccounts/${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
