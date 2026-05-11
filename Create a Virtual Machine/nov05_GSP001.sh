@@ -29,11 +29,12 @@ gcloud compute instances create gcelab \
   --tags=http-server \
   --metadata=enable-oslogin=true
 
+## Wait until VM is running
 while true; do
   STATUS=$(gcloud compute instances describe gcelab \
     --zone "$ZONE" \
     --format='get(status)')
-  echo "VM gcelab Current status: $STATUS"
+  echo "🔹  VM gcelab Current status: $STATUS"
   if [ "$STATUS" = "RUNNING" ]; then
     break
   fi
@@ -45,7 +46,7 @@ until gcloud compute ssh gcelab \
   --zone "$ZONE" \
   --quiet \
   --command "echo ready" 2>/dev/null; do
-  echo "Waiting for gcelab SSH readiness..."
+  echo "🔹  Waiting for VM gcelab SSH readiness..."
   sleep 10
 done
 
@@ -61,6 +62,7 @@ gcloud compute instances create gcelab2 \
   --zone=$ZONE \
   --machine-type e2-medium
 
+## Get VM gcelab external IP
 EXTERNAL_IP=$(gcloud compute instances describe gcelab \
   --zone "$ZONE" \
   --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
@@ -70,5 +72,5 @@ echo "============================================"
 echo "Task 2. Install an NGINX web server"
 echo "============================================"
 echo
-echo "👉 Check http://$EXTERNAL_IP"
-echo "A default web page should open that says: Welcome to nginx!"
+echo "👉  Check http://$EXTERNAL_IP"
+echo "🔹  A default web page should open that says: Welcome to nginx!"
