@@ -1,5 +1,7 @@
 # 🟢 Google Skills Labs Automation  
 
+* [**Script templates**](https://github.com/nov05/gcp-skills-boost/tree/dev/templates)
+
 * **General example**  
   lab - [GSP330 Implement DevOps Workflows in Google Cloud](https://github.com/nov05/gcp-skills-boost/tree/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%3A%20Challenge%20Lab)    
   bash script - [nov05_GSP330.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%3A%20Challenge%20Lab/nov05_GSP330.sh)    
@@ -21,7 +23,7 @@
 
 <div align="center">
   
-# 👋 Welcome to Dr. Abhishek Cloud Tutorials!  
+## 👋 Welcome to Dr. Abhishek Cloud Tutorials!  
 
 <h3 style="font-family: 'Segoe UI', sans-serif;">🌟 Connect with fellow cloud enthusiasts, ask questions, and share your learning journey! 🌟</h3>
 
