@@ -16,17 +16,14 @@ In this lab, you will learn how to perform the following tasks:
 - Basic knowledge of Linux commands
 - Cloud SDK installed (for command line method)
 
-## Getting Started
-
-### Method 1: Quick Execution
-Run the following commands to download and execute the setup script:
+## 👉 Run the following commands to download and execute the setup script
 
 ```bash
-curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/main/Create%20a%20Virtual%20Machine/gsp001.sh
-sudo chmod +x gsp001.sh
-./gsp001.sh
-
-```````
+rm -f nov05_GSP001.sh
+curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/main/Create%20a%20Virtual%20Machine/nov05_GSP001.sh
+sudo chmod +x nov05_GSP001.sh
+./nov05_GSP001.sh
+```
 
 ## Join the Community
 [![Telegram](https://img.shields.io/badge/Join-Telegram_Group-blue?style=for-the-badge&logo=telegram)](https://t.me/+gBcgRTlZLyM4OGI1) - Connect with fellow cloud enthusiasts, ask questions, and share your learning journey.
