@@ -187,7 +187,7 @@ echo ""
 
 echo "${BG_RED}${BOLD}Congratulations For Completing The Lab${RESET}"
 
-echo "${CYAN}${BOLD}"
+echo "${CYAN}"
 echo "**********************************************************************"
 echo "* Don't forget to subscribe to Dr. Abhishek's YouTube channel:       *"
 echo "* https://www.youtube.com/@drabhishek.5460/videos                    *"
