@@ -25,22 +25,31 @@ echo
 gcloud services enable apikeys.googleapis.com
 gcloud alpha services api-keys create \
   --display-name="nlp-analysis-key"
-export KEY_STRING=$(gcloud alpha services api-keys list \
-  --format="value(name)" \
-  --filter="displayName=nlp-analysis-key")
-export API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_STRING \
-  --format="value(keyString)")
+# export KEY_STRING=$(gcloud alpha services api-keys list \
+#   --format="value(name)" \
+#   --filter="displayName=nlp-analysis-key")
+# export API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_STRING \
+#   --format="value(keyString)")
+export API_KEY=$(gcloud alpha services api-keys get-key-string \
+  $(gcloud alpha services api-keys list \
+      --filter="displayName=nlp-analysis-key" \
+      --format="value(name)") \
+      --format="value(keyString)")
+
+gcloud compute ssh linux-instance \
+  --project=$DEVSHELL_PROJECT_ID \
+  --zone=$ZONE 
 
 ## Prepare Analysis Script
 cat > nlp_analysis.sh <<'EOL'
 #!/bin/bash
 
 ## Retrieve API Key
-KEY_STRING=$(gcloud alpha services api-keys list \
-  --format="value(name)" \
-  --filter="displayName=nlp-analysis-key")
-API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_STRING \
-  --format="value(keyString)")
+export API_KEY=$(gcloud alpha services api-keys get-key-string \
+  $(gcloud alpha services api-keys list \
+      --filter="displayName=nlp-analysis-key" \
+      --format="value(name)") \
+      --format="value(keyString)")
 echo -e "🔹  API Key: $API_KEY"
 
 ###################################################################
