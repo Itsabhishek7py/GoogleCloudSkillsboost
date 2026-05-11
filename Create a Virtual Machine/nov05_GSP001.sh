@@ -34,22 +34,15 @@ export PROJECT_NUMBER=$(gcloud projects describe ${PROJECT_ID} \
     --format="value(projectNumber)")
 
 gcloud compute instances create gcelab \
-    --project=$DEVSHELL_PROJECT_ID \
-    --zone=$ZONE \
-    --machine-type=e2-medium \
-    --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default \
-    --metadata=enable-oslogin=true \
-    --maintenance-policy=MIGRATE \
-    --provisioning-model=STANDARD \
-    --service-account=$PROJECT_NUMBER-compute@developer.gserviceaccount.com \
-    --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/trace.append \
-    --tags=http-server \
-    --create-disk=auto-delete=yes,boot=yes,device-name=gcelab,image=projects/debian-cloud/global/images/debian-11-bullseye-v20241009,mode=rw,size=10,type=pd-balanced \
-    --no-shielded-secure-boot \
-    --shielded-vtpm \
-    --shielded-integrity-monitoring \
-    --labels=goog-ec-src=vm_add-gcloud \
-    --reservation-affinity=any
+  --project="$PROJECT_ID" \
+  --zone="$ZONE" \
+  --machine-type=e2-medium \
+  --image-family=debian-12 \
+  --image-project=debian-cloud \
+  --boot-disk-type=pd-balanced \
+  --boot-disk-size=10GB \
+  --tags=http-server \
+  --metadata=enable-oslogin=true
 
 gcloud compute instances create gcelab2 \
   --machine-type e2-medium \
@@ -57,7 +50,7 @@ gcloud compute instances create gcelab2 \
 
 gcloud compute ssh \
   --zone "$ZONE" "gcelab" \
-  --project "$DEVSHELL_PROJECT_ID" \
+  --project "$PROJECT_ID" \
   --quiet \
   --command "sudo apt-get update && sudo apt-get install -y nginx && ps auwx | grep nginx "
 
