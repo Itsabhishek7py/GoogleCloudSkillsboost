@@ -30,6 +30,7 @@ echo "🔹  Project ID: $PROJECT_ID"
 echo "🔹  Project number: $PROJECT_NUMBER"
 echo "🔹  Region: $REGION"
 echo "🔹  Zone: $ZONE"
+echo "🔹  User: $USER"
 echo
 
 #######################################################
