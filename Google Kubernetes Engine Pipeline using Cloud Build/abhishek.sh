@@ -399,9 +399,12 @@ BUILD_ID=$(gcloud builds list \
 echo "BUILD_ID: $BUILD_ID"  
 
 ## Get the commit SHA with build ID
+# COMMIT_SHA=$(gcloud builds describe $BUILD_ID \
+#   --region=$REGION \
+#   --format="value(sourceProvenance.resolvedRepoSource.commitSha)")
 COMMIT_SHA=$(gcloud builds describe $BUILD_ID \
   --region=$REGION \
-  --format="value(sourceProvenance.resolvedRepoSource.commitSha)")
+  --format="value(substitutions.COMMIT_SHA)")
 echo "COMMIT_SHA: $COMMIT_SHA"
 
 ## Retry the build
