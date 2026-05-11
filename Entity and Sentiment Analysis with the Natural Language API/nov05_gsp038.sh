@@ -39,21 +39,9 @@ cat << 'EOF'
 ###################################################################
 EOF
 
-## Prepare script for the task
-cat > task2.sh <<'EOL'
-#!/bin/bash
-
-## Retrieve and store API Key 
-export API_KEY=$(gcloud alpha services api-keys get-key-string \
-  $(gcloud alpha services api-keys list \
-      --filter="displayName=nlp-analysis-key" \
-      --format="value(name)") \
-      --format="value(keyString)")
-echo "$API_KEY" > ~/api_key.txt
-chmod 600 ~/api_key.txt
-
-## Create NLP Request
-cat > request.json <<EOF
+## Create NLP Request file
+rm -f request.json
+cat > request.json <<'EOF'
 {
   "document":{
     "type":"PLAIN_TEXT",
@@ -62,7 +50,22 @@ cat > request.json <<EOF
   "encodingType":"UTF8"
 }
 EOF
-echo -e "/n👉  Analysis request:"
+
+## Prepare script for the task
+rm -f task.sh
+cat > task.sh <<'EOF'
+#!/bin/bash
+
+## Retrieve and store API Key 
+export API_KEY=$(gcloud alpha services api-keys get-key-string \
+  $(gcloud alpha services api-keys list \
+      --filter="displayName=nlp-analysis-key" \
+      --format="value(name)") \
+  --format="value(keyString)")
+echo "$API_KEY" > ~/api_key.txt
+chmod 600 ~/api_key.txt
+
+echo -e "\n👉  Analysis request:"
 cat request.json
 
 ###################################################################
@@ -72,41 +75,33 @@ cat request.json
 curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
   -s -X POST -H "Content-Type: application/json" --data-binary @request.json > result.json
 
-## Display result
-echo -e "/n👉  Analysis result:"
+echo -e "\n👉  Analysis result:"
 cat result.json
 
 ## Clean up 
-rm -f task2.sh request.json result.json
-EOL
+rm -f task.sh request.json result.json
+EOF
 
 # Copy the script into $HOME dir
-gcloud compute scp task2.sh linux-instance:~ \
+gcloud compute scp $SCRIPT_NAME task.sh request.json linux-instance:~ \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet
-
 # Run the cript
 gcloud compute ssh linux-instance \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet \
-  --command="chmod +x task2.sh && task2.sh"
+  --command="chmod +x task.sh && task.sh"
 
 cat << 'EOF'
 ###################################################################
 ## Task 4. Sentiment analysis with the Natural Language API
 ###################################################################
-EOD
+EOF
 
-## Prepare script for the task
-cat > task4.sh <<'EOL'
-#!/bin/bash
-
-## Load API Key 
-export API_KEY=$(cat ~/api_key.txt)
-
-cat > request.json <<EOF
+rm -f request.json
+cat > request.json <<'EOF'
  {
   "document":{
     "type":"PLAIN_TEXT",
@@ -115,17 +110,21 @@ cat > request.json <<EOF
   "encodingType": "UTF8"
 }
 EOF
+
+rm -f task.sh
+cat > task.sh <<'EOF'
+#!/bin/bash
+export API_KEY=$(cat ~/api_key.txt)
 echo -e "/n👉  Analysis request:"
 cat request.json
-
 curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
   -s -X POST -H "Content-Type: application/json" --data-binary @request.json > result.json
 echo -e "👉  Analysis result:"
 cat result.json
-rm -f task4.sh request.json result.json
-EOL
+rm -f task.sh request.json result.json
+EOF
 
-gcloud compute scp task4.sh linux-instance:~ \
+gcloud compute scp task.sh request.json linux-instance:~ \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet
@@ -133,13 +132,22 @@ gcloud compute ssh linux-instance \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet \
-  --command="chmod +x task4.sh && task4.sh"
-  
+  --command="chmod +x task.sh && task.sh"
+
+cat << 'EOF'
 ###################################################################
 ## Task 5. Analyzing entity sentiment
 ###################################################################
+EOF
+
+cat << 'EOF'
 ###################################################################
 ## Task 6. Analyzing syntax and parts of speech
 ###################################################################
+EOF
+
+cat << 'EOF'
+###################################################################
 ## Task 7. Multilingual natural language processing
 ###################################################################
+EOF
