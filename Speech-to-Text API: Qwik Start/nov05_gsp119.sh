@@ -28,10 +28,13 @@ EOF
 gcloud services enable \
   speech.googleapis.com \
   apikeys.googleapis.com
-  
+
+## Tips: API keys in Google Cloud follow a pattern:
+##   1. Create key (identity only)
+##   2 Apply restrictions (security step)
+## This prevents accidentally locking yourself out during creation.
 gcloud alpha services api-keys create \
   --display-name="speech-to-text-key"
-  
 gcloud services api-keys update \
   $(gcloud services api-keys list \
       --filter="displayName=speech-to-text-key" \
