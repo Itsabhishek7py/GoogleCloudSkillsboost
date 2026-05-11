@@ -2,9 +2,10 @@
 
 https://www.skills.google/games/7174/labs/44444
 
-
-### Create an API key
-Use the Cloud Natural Language API to extract "entities" (e.g. people, places, and events) from a snippet of text
+```text
+Task 1. Create an API key
+Task 2. Make an entity analysis request
+```  
 
 ### 👉 Run the following Commands in CloudShell
 
