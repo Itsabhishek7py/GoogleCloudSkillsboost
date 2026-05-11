@@ -362,7 +362,7 @@ echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RES
 echo "${CYAN_TEXT}${BOLD_TEXT}           NOW MANUAL STEPS                  ${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
 echo
-echo "Waite a few minutes, reload the application in your browser. You should see \"Hello Cloud Build!\".
+echo "Waite a few minutes, reload the application in your browser. You should see \"Hello Cloud Build!\."
 echo "  http://$EXTERNAL_IP"
 echo
 
@@ -391,7 +391,7 @@ echo "  2. Click the View all link under Build History for the hello-cloudbuild-
 echo "  3. Click on the second most recent build available."
 echo "  4. Click Rebuild."
 echo
-echo "Waite a few minutes, reload the application in your browser. You should see \"Hello World!\".
+echo "Waite a few minutes, reload the application in your browser. You should see \"Hello World!\."
 echo "  http://$EXTERNAL_IP"
 echo
 
