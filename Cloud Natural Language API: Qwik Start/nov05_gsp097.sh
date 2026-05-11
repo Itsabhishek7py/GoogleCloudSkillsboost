@@ -40,7 +40,7 @@ echo "🔹  Service account $SA is ready!"
 gcloud iam service-accounts keys create ~/key.json \
   --iam-account="$SA"  
 
-export GOOGLE_APPLICATION_CREDENTIALS="/home/USER/key.json"
+export GOOGLE_APPLICATION_CREDENTIALS="$HOME/key.json"
 
 #######################################################
 ## Task 2. Make an entity analysis request
@@ -56,6 +56,7 @@ gcloud compute ssh \
   --zone "$ZONE" "linux-instance" \
   --project "$DEVSHELL_PROJECT_ID" \
   --quiet \
+  --tunnel-through-iap \
   --command "$REMOTE_CMD"
 
 echo "✅  ALL DONE"
