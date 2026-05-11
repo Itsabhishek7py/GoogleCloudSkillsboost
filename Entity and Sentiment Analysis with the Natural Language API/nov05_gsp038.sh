@@ -18,9 +18,11 @@ echo "🔹  Zone: $ZONE"
 echo "🔹  User: $USER"
 echo
 
+cat << 'EOF'
 ###################################################################
 ## Task 1. Create an API key
 ###################################################################
+EOF
 
 gcloud services enable apikeys.googleapis.com
 gcloud alpha services api-keys create \
@@ -31,9 +33,11 @@ gcloud alpha services api-keys create \
 # export API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_STRING \
 #   --format="value(keyString)")
 
+cat << 'EOF'
 ###################################################################
 ## Task 2. Make an entity analysis request
 ###################################################################
+EOF
 
 ## Prepare script for the task
 cat > task2.sh <<'EOL'
@@ -45,7 +49,6 @@ export API_KEY=$(gcloud alpha services api-keys get-key-string \
       --filter="displayName=nlp-analysis-key" \
       --format="value(name)") \
       --format="value(keyString)")
-echo -e "🔹  API Key: $API_KEY"
 echo "$API_KEY" > ~/api_key.txt
 chmod 600 ~/api_key.txt
 
@@ -90,9 +93,11 @@ gcloud compute ssh linux-instance \
   --quiet \
   --command="chmod +x task2.sh && task2.sh"
 
+cat << 'EOF'
 ###################################################################
 ## Task 4. Sentiment analysis with the Natural Language API
 ###################################################################
+EOD
 
 ## Prepare script for the task
 cat > task4.sh <<'EOL'
@@ -101,27 +106,23 @@ cat > task4.sh <<'EOL'
 ## Load API Key 
 export API_KEY=$(cat ~/api_key.txt)
 
-## Create NLP Request
 cat > request.json <<EOF
-{
+ {
   "document":{
     "type":"PLAIN_TEXT",
-    "content":"Joanne Rowling, who writes under the pen names J. K. Rowling and Robert Galbraith, is a British novelist and screenwriter who wrote the Harry Potter fantasy series."
+    "content":"Harry Potter is the best book. I think everyone should read it."
   },
-  "encodingType":"UTF8"
+  "encodingType": "UTF8"
 }
 EOF
+echo -e "/n👉  Analysis request:"
 cat request.json
 
 curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
   -s -X POST -H "Content-Type: application/json" --data-binary @request.json > result.json
-
-## Display result
 echo -e "👉  Analysis result:"
 cat result.json
-
-## Clean up
-rm -f task4.sh result.json
+rm -f task4.sh request.json result.json
 EOL
 
 gcloud compute scp task4.sh linux-instance:~ \
