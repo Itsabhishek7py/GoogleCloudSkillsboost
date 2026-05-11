@@ -362,7 +362,7 @@ echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RES
 echo "${CYAN_TEXT}${BOLD_TEXT}           NOW MANUAL STEPS                  ${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
 echo
-echo "Waite a few minutes, reload the application in your browser. You should see \"Hello Cloud Build!\."
+echo "Waite a few minutes, reload the application in your browser. You should see \"Hello Cloud Build!\"."
 echo "  http://$EXTERNAL_IP"
 echo
 
@@ -421,7 +421,7 @@ echo "  4. Click Rebuild."
 echo
 echo "Instead, the script has just done the rollback for you."
 echo
-echo "Waite a few minutes, reload the application in your browser. You should see \"Hello World!\."
+echo "Waite a few minutes, reload the application in your browser. You should see \"Hello World!\"."
 echo "  http://$EXTERNAL_IP"
 echo
 
