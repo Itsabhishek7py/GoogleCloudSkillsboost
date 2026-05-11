@@ -19,9 +19,11 @@ echo "🔹  User: $USER"
 echo
 
 cat << 'EOF'
+
 ###################################################################
 ## Task 1. Create an API key
 ###################################################################
+
 EOF
 
 gcloud services enable apikeys.googleapis.com
@@ -34,9 +36,11 @@ gcloud alpha services api-keys create \
 #   --format="value(keyString)")
 
 cat << 'EOF'
+
 ###################################################################
 ## Task 2. Make an entity analysis request
 ###################################################################
+
 EOF
 
 ## Create NLP Request file
@@ -90,12 +94,14 @@ gcloud compute ssh linux-instance \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet \
-  --command="chmod +x task.sh && task.sh"
+  --command="chmod +x task.sh && ./task.sh"
 
 cat << 'EOF'
+
 ###################################################################
 ## Task 4. Sentiment analysis with the Natural Language API
 ###################################################################
+
 EOF
 
 rm -f request.json
@@ -113,9 +119,9 @@ rm -f task.sh
 cat > task.sh <<'EOF'
 #!/bin/bash
 export API_KEY=$(< ~/api_key.txt)
-echo -e "/n👉  Analysis request:"
+echo -e "\n👉  Analysis request:"
 cat request.json
-echo -e "👉  Analysis result:"
+echo -e "\n👉  Analysis result:"
 curl "https://language.googleapis.com/v1/documents:analyzeSentiment?key=${API_KEY}" \
   -s -X POST -H "Content-Type: application/json" --data-binary @request.json
 rm -f task.sh request.json
@@ -129,12 +135,14 @@ gcloud compute ssh linux-instance \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet \
-  --command="chmod +x task.sh && task.sh"
+  --command="chmod +x task.sh && .\task.sh"
 
 cat << 'EOF'
+
 ###################################################################
 ## Task 5. Analyzing entity sentiment
 ###################################################################
+
 EOF
 
 rm -f request.json
@@ -152,9 +160,9 @@ rm -f task.sh
 cat > task.sh <<'EOF'
 #!/bin/bash
 export API_KEY=$(< ~/api_key.txt)
-echo -e "/n👉  Analysis request:"
+echo -e "\n👉  Analysis request:"
 cat request.json
-echo -e "👉  Analysis result:"
+echo -e "\n👉  Analysis result:"
 curl "https://language.googleapis.com/v1/documents:analyzeEntitySentiment?key=${API_KEY}" \
   -s -X POST -H "Content-Type: application/json" --data-binary @request.json
 cat result.json
@@ -169,12 +177,14 @@ gcloud compute ssh linux-instance \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet \
-  --command="chmod +x task.sh && task.sh"
+  --command="chmod +x task.sh && ./task.sh"
   
 cat << 'EOF'
+
 ###################################################################
 ## Task 6. Analyzing syntax and parts of speech
 ###################################################################
+
 EOF
 
 rm -f request.json
@@ -192,9 +202,9 @@ rm -f task.sh
 cat > task.sh <<'EOF'
 #!/bin/bash
 export API_KEY=$(< ~/api_key.txt)
-echo -e "/n👉  Analysis request:"
+echo -e "\n👉  Analysis request:"
 cat request.json
-echo -e "👉  Analysis result:"
+echo -e "\n👉  Analysis result:"
 curl "https://language.googleapis.com/v1/documents:analyzeSyntax?key=${API_KEY}" \
   -s -X POST -H "Content-Type: application/json" --data-binary @request.json
 cat result.json
@@ -209,12 +219,14 @@ gcloud compute ssh linux-instance \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet \
-  --command="chmod +x task.sh && task.sh"
+  --command="chmod +x task.sh && ./task.sh"
   
 cat << 'EOF'
+
 ###################################################################
 ## Task 7. Multilingual natural language processing
 ###################################################################
+
 EOF
 
 rm -f request.json
@@ -231,9 +243,9 @@ rm -f task.sh
 cat > task.sh <<'EOF'
 #!/bin/bash
 export API_KEY=$(< ~/api_key.txt)
-echo -e "/n👉  Analysis request:"
+echo -e "\n👉  Analysis request:"
 cat request.json
-echo -e "👉  Analysis result:"
+echo -e "\n👉  Analysis result:"
 curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
   -s -X POST -H "Content-Type: application/json" --data-binary @request.json
 cat result.json
@@ -248,4 +260,4 @@ gcloud compute ssh linux-instance \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet \
-  --command="chmod +x task.sh && task.sh"
+  --command="chmod +x task.sh && ./task.sh"
