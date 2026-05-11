@@ -1,4 +1,6 @@
-# Google Cloud VM Creation Lab
+# 🟢 Create a Virtual Machine (GSP001)
+
+https://www.skills.google/games/7174/labs/44439
 
 This lab demonstrates how to create Virtual Machines in Google Cloud Platform using different methods and deploy a web server.
 
