@@ -72,6 +72,3 @@ gcloud compute ssh gcelab \
   --zone=$ZONE \
   --quiet \
   --command="bash /tmp/prepare_disk.sh"
-echo
-echo -e "${RED_TEXT}${BOLD_TEXT}Subscribe to Dr. Abhishek Cloud Tutorials:${RESET_FORMAT} ${BLUE_TEXT}${BOLD_TEXT}https://www.youtube.com/@drabhishek.5460/videos${RESET_FORMAT}"
-echo
