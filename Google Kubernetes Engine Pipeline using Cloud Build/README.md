@@ -28,6 +28,11 @@ gh repo create hello-cloudbuild-env --private
 ```
 <br>  
 
+<img src="https://raw.githubusercontent.com/nov05/pictures/refs/heads/master/gcp-skills-boost%20/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/2026-05-10%2019_43_08-Settings.jpg" width=800>  
+
+<img src="https://raw.githubusercontent.com/nov05/pictures/refs/heads/master/gcp-skills-boost%20/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/2026-05-10%2019_41_26-Settings.jpg" width=800>   
+
+
 ### Congratulations !!!!
 
 Connect with fellow cloud enthusiasts, ask questions, and share your learning journey.  
