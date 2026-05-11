@@ -5,6 +5,7 @@ echo
 echo "============================================"
 echo "           Starting Execution"
 echo "============================================"
+echo
 
 export ZONE=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
