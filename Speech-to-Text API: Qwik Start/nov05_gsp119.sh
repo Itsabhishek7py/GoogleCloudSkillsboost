@@ -40,12 +40,12 @@ gcloud services api-keys update \
   --location=global \
   --api-target=service=speech.googleapis.com
   
-export API_KEY=$(gcloud alpha services api-keys get-key-string \
-  $(gcloud alpha services api-keys list \
-      --filter="displayName=speech-to-text-key" \
-      --format="value(name)" \
-      --limit=1) \
-  --format="value(keyString)")
+# export API_KEY=$(gcloud alpha services api-keys get-key-string \
+#   $(gcloud alpha services api-keys list \
+#       --filter="displayName=speech-to-text-key" \
+#       --format="value(name)" \
+#       --limit=1) \
+#   --format="value(keyString)")
   
 cat << 'EOF'
 
@@ -84,7 +84,7 @@ cat > task.sh <<'EOF'
 ## Retrieve API Key 
 export API_KEY=$(gcloud alpha services api-keys get-key-string \
   $(gcloud alpha services api-keys list \
-      --filter="displayName=nlp-analysis-key" \
+      --filter="displayName=speech-to-text-key" \
       --format="value(name)" \
       --limit=1) \
   --format="value(keyString)")
@@ -113,4 +113,4 @@ gcloud compute ssh linux-instance \
   --command="chmod +x task.sh && ./task.sh"
   
 echo
-echo "✅ All done"
+echo "✅  All done"
