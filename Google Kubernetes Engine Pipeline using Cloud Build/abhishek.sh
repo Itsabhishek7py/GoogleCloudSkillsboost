@@ -1,11 +1,25 @@
 #!/bin/bash
+## Changed by nov05, 2026-05-09  
+
+set +H
 
 # Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-CYAN='\033[1;36m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+# RED='\033[0;31m'
+# GREEN='\033[0;32m'
+# CYAN='\033[1;36m'
+# YELLOW='\033[1;33m'
+# NC='\033[0m' # No Color
+BLACK_TEXT=$'\033[0;90m'
+RED_TEXT=$'\033[0;91m'
+GREEN_TEXT=$'\033[0;92m'
+YELLOW_TEXT=$'\033[0;93m'
+BLUE_TEXT=$'\033[0;94m'
+MAGENTA_TEXT=$'\033[0;95m'
+CYAN_TEXT=$'\033[0;96m'
+WHITE_TEXT=$'\033[0;97m'
+RESET_FORMAT=$'\033[0m'
+BOLD_TEXT=$'\033[1m'
+UNDERLINE_TEXT=$'\033[4m'
 
 ## Changed by nov05, 2026-05-09
 # spinner() {
@@ -30,23 +44,17 @@ spinner() {
     local i=0
     while kill -0 "$pid" 2>/dev/null; do
         i=$(( (i+1) % 4 ))
-        printf "\r${CYAN}Loading...${NC} [%c]   " "${spin:$i:1}"
+        printf "\r${CYAN_TEXT}Loading...${RESET_FORMAT} [%c]   " "${spin:$i:1}"
         sleep 0.1
     done
-    printf "\r${GREEN}Done!         ${NC}\n\n"  
+    printf "\r${GREEN_TEXT}Done!         ${RESET_FORMAT}\n\n"  
 }
-
-echo
-echo -e "${YELLOW}--------------------------------------------------------"
-echo -e "${GREEN}🎓  Welcome to Dr Abhishek's Cloud Tutorials! ☁️"
-echo -e "${CYAN}Subscribe to the channel: https://www.youtube.com/@drabhishek.5460/videos"
-echo -e "${YELLOW}--------------------------------------------------------${NC}"
-
 (sleep 3) & spinner
 
 #######################################################
 ## Task 1. Initialize your lab
 #######################################################
+## Objective: Enable services, create an artifact registry and the GKE cluster   
 
 ## Get project id, project number, region
 export PROJECT_ID=$(gcloud config get-value project)
@@ -70,6 +78,10 @@ gcloud artifacts repositories create my-repository \
 
 gcloud container clusters create hello-cloudbuild --num-nodes 1 --region $REGION
 
+#######################################################
+## Task 2. Create the Git repositories in GitHub repositories
+#######################################################
+
 curl -sS https://webi.sh/gh | sh 
 gh auth login 
 gh api user -q ".login"
@@ -77,9 +89,8 @@ GITHUB_USERNAME=$(gh api user -q ".login")
 git config --global user.name "${GITHUB_USERNAME}"
 # git config --global user.email "you@example.com" 
 git config --global user.email "${USER_EMAIL}"  # e.g. student-03-758816dbe52c@qwiklabs.net
-echo "GitHub username: $GITHUB_USERNAME"
-echo "User email: $USER_EMAIL"
-
+echo "🔹  GitHub username: $GITHUB_USERNAME"
+echo "🔹  User email: $USER_EMAIL"
 
 ## Create 2 GitHub repos as the lab requires
 gh repo create hello-cloudbuild-app --private 
@@ -102,7 +113,7 @@ git branch -m master
 git add . && git commit -m "initial commit"
 
 #######################################################
-## Task 3
+## Task 3 Create a container image with Cloud Build
 #######################################################
 
 cd ~/hello-cloudbuild-app
@@ -112,19 +123,46 @@ gcloud builds submit --tag="${REGION}-docker.pkg.dev/${PROJECT_ID}/my-repository
 #######################################################
 ## Task 4 Create the Continuous Integration (CI) pipeline
 #######################################################
+## Gen 1 GitHub App repository binding:
+##   1. On GitHub: selecting repositories in GitHub App connection
+##   2. On GCP: registering repos into “Cloud Build GitHub App” UI list
+
+echo
+echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}           NOW MANUAL STEPS                  ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}Click the url to connect GitHub repos hello-cloudbuild-app and hello-cloudbuild-env:${RESET_FORMAT}"
+echo "  Using region $REGION"
+echo "  https://console.cloud.google.com/cloud-build/triggers?project=$PROJECT_ID"
+echo
+
+answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
 
 # -----------------------------
 # CI Trigger (app repo)
 # -----------------------------
-echo "👉  Creating CI trigger..."
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  Creating CI trigger (1st-gen) hello-cloudbuild...${RESET_FORMAT}"
+## https://docs.cloud.google.com/sdk/gcloud/reference/builds/triggers/create/github
 gcloud builds triggers create github \
-  --name="hello-cloudbuild" \
-  --repo-name="hello-cloudbuild-app" \
-  --repo-owner="$GITHUB_USERNAME" \
-  --branch-pattern=".*" \
-  --build-config="cloudbuild.yaml" \
-  --included-files="**" \
-  --region="$REGION"
+    --name="hello-cloudbuild" \
+    --service-account="projects/$PROJECT_ID/serviceAccounts/${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
+    --repo-owner="$GITHUB_USERNAME" \
+    --repo-name="hello-cloudbuild-app" \
+    --branch-pattern=".*" \
+    --build-config="cloudbuild.yaml" \
+    --region="$REGION" \
+    --description="GSP1077 Continuous integration (CI) pipeline"
 gcloud builds triggers list --region=$REGION 
 
 cd ~/hello-cloudbuild-app
@@ -135,12 +173,14 @@ git push google master
 #######################################################
 ## Task 5 Accessing GitHub from a build via SSH keys
 #######################################################
+## In this step use the Secret Manager with Cloud Build to access private GitHub repositories.
 
 cd ~
 mkdir workingdir
 cd workingdir
 
 ## Create a new GitHub SSH key
+## This step creates two files, id_github and id_github.pub
 ssh-keygen -t rsa -b 4096 -N '' -f id_github -C "${USER_EMAIL}"
 
 gcloud secrets create ssh_key_secret --replication-policy="automatic"
@@ -157,6 +197,7 @@ gh api --method POST -H "Accept: application/vnd.github.v3+json" \
 
 rm id_github*
 
+## Grant the service account permission to access Secret Manager
 gcloud projects add-iam-policy-binding ${PROJECT_NUMBER} \
 --member=serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com \
 --role=roles/secretmanager.secretAccessor
@@ -187,20 +228,20 @@ git init
 git config credential.helper gcloud.sh
 git remote add google https://github.com/${GITHUB_USERNAME}/hello-cloudbuild-env
 git branch -m master
-git add . && git commit -m "initial commit"
+git add . && git commit -m "GSP1077 Initial commit"
 git push google master
 
 git checkout -b production
 rm cloudbuild.yaml
-
-curl -LO raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/env-cloudbuild.yaml
-mv env-cloudbuild.yaml cloudbuild.yaml
+curl -L \
+  -o cloudbuild.yaml \
+  https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/env-cloudbuild.yaml
 
 sed -i "s/REGION-/$REGION/g" cloudbuild.yaml
 sed -i "s/GITHUB-USERNAME/${GITHUB_USERNAME}/g" cloudbuild.yaml
 
 git add .
-git commit -m "Create cloudbuild.yaml for deployment"
+git commit -m "GSP1077 Create cloudbuild.yaml for deployment"
 git checkout -b candidate
 git push google production
 git push google candidate
@@ -208,38 +249,196 @@ git push google candidate
 # -----------------------------
 # CD Trigger (env repo)
 # -----------------------------
-echo "👉  Creating CD trigger..."
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  Creating CD trigger (1st-gen) hello-cloudbuild-deploy...${RESET_FORMAT}"
 gcloud builds triggers create github \
-  --name="hello-cloudbuild-deploy" \
-  --repo-name="hello-cloudbuild-env" \
-  --repo-owner="$GITHUB_USERNAME" \
-  --branch-pattern="^candidate$" \
-  --build-config="cloudbuild.yaml" \
-  --included-files="**" \
-  --region="$REGION"
+    --name="hello-cloudbuild-deploy" \
+    --service-account="projects/$PROJECT_ID/serviceAccounts/${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
+    --repo-owner="$GITHUB_USERNAME" \
+    --repo-name="hello-cloudbuild-env" \
+    --branch-pattern="^candidate$" \
+    --build-config="cloudbuild.yaml" \
+    --region="$REGION" \
+    --description="GSP1077 Test environment and CD pipeline"
 gcloud builds triggers list --region=$REGION 
 
+## Task 6.12 In your hello-cloudbuild-app directory, create a file named known_hosts.github, 
+##   add the public SSH key to this file and provide the necessary permission to the file
 cd ~/hello-cloudbuild-app
 ssh-keyscan -t rsa github.com > known_hosts.github
 chmod +x known_hosts.github
 git add .
-git commit -m "Adding known_host file."
+git commit -m "GSP1077 Adding known_host file"
 git push google master
 
+## Download and modify ./Google Kubernetes Engine Pipeline using Cloud Build/app-cloudbuild.yaml
 rm cloudbuild.yaml
-
-curl -LO raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/app-cloudbuild.yaml
-mv app-cloudbuild.yaml cloudbuild.yaml
-
+curl -L \
+  -o cloudbuild.yaml \
+  https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/app-cloudbuild.yaml
 sed -i "s/REGION/$REGION/g" cloudbuild.yaml
 sed -i "s/GITHUB-USERNAME/${GITHUB_USERNAME}/g" cloudbuild.yaml
 
 git add cloudbuild.yaml
-git commit -m "Trigger CD pipeline"
+git commit -m "GSP1077 Trigger CD pipeline"
 git push google master
-# --- End Original Script ---
 
-# Final Message
-echo -e "${GREEN}✅  Lab is now Completed!"
-echo -e "${CYAN}🙏  Thanks for using Dr Abhishek's Cloud Tutorials!"
-echo -e "${YELLOW}👉  Subscribe here: ${NC}https://www.youtube.com/@drabhishek.5460/videos"
+#######################################################
+## Task 7. Review Cloud Build pipeline
+#######################################################
+
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  Task 7. Review Cloud Build pipeline${RESET_FORMAT}"
+echo
+echo "In this task, you review the Cloud Build pipeline in the console. You can click on the build to follow its execution and examine its logs."
+echo "  1. In the console, still in the Cloud Build page, click Dashboard in the left pane."
+echo "  2. Click the hello-cloudbuild-app trigger to follow its execution and examine its logs. The last step of this pipeline pushes the new manifest to the hello-cloudbuild-env repository, which triggers the continuous delivery pipeline."
+echo "  3. Return to the main Dashboard."
+echo "  4. You should see a build either running or recently finished for the hello-cloudbuild-env repository."
+echo
+
+answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
+
+#######################################################
+## Task 8. Test the complete pipeline
+#######################################################
+
+EXTERNAL_IP=""
+while [ -z "$EXTERNAL_IP" ]; do
+  EXTERNAL_IP=$(kubectl get service hello-cloudbuild \
+    -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null)
+  if [ -z "$EXTERNAL_IP" ]; then
+    echo "Waiting for service hello-cloudbuild external IP..."
+    sleep 5
+  fi
+done
+
+echo
+echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}           NOW MANUAL STEPS                  ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
+echo
+echo "Click on the endpoint for the hello-cloudbuild service. You should see \"Hello World!\"."
+echo "  http://$EXTERNAL_IP"
+echo
+
+answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
+
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  Task 8. Test the complete pipeline${RESET_FORMAT}"
+echo
+
+## Task 8.3, Replace "Hello World" with "Hello Cloud Build", both in the application and in the unit test
+cd ~/hello-cloudbuild-app
+sed -i 's/Hello World/Hello Cloud Build/g' app.py
+sed -i 's/Hello World/Hello Cloud Build/g' test_app.py
+
+## Task 8.4, Commit and push the change to GitHub repositories
+git add app.py test_app.py
+git commit -m "GCP1077 Task 8.4, Hello Cloud Build"
+git push google master
+
+echo
+echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}           NOW MANUAL STEPS                  ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
+echo
+echo "Waite a few minutes, reload the application in your browser. You should see \"Hello Cloud Build!\"."
+echo "  http://$EXTERNAL_IP"
+echo
+
+answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
+
+#######################################################
+## Task 9. Test the rollback
+#######################################################
+
+## Get trigger id with trigger name
+TRIGGER_ID=$(gcloud builds triggers list \
+  --region=$REGION \
+  --filter="name=hello-cloudbuild-deploy" \
+  --format="value(id)")
+echo "TRIGGER_ID: $TRIGGER_ID"
+
+## Get the last but one successful build ID
+BUILD_ID=$(gcloud builds list \
+  --region=$REGION \
+  --filter="buildTriggerId=$TRIGGER_ID AND status=SUCCESS" \
+  --sort-by="~createTime" \
+  --limit=2 \
+  --format="value(id)" | tail -n1)
+echo "BUILD_ID: $BUILD_ID"  
+
+## Get the commit SHA with build ID
+# COMMIT_SHA=$(gcloud builds describe $BUILD_ID \
+#   --region=$REGION \
+#   --format="value(sourceProvenance.resolvedRepoSource.commitSha)")
+COMMIT_SHA=$(gcloud builds describe $BUILD_ID \
+  --region=$REGION \
+  --format="value(substitutions.COMMIT_SHA)")
+echo "COMMIT_SHA: $COMMIT_SHA"
+
+## Retry the build
+gcloud builds triggers run $TRIGGER_ID \
+  --region=$REGION \
+  --sha="$COMMIT_SHA"
+  
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  Task 9. Test the rollback${RESET_FORMAT}"
+echo
+echo "In this task, you are supposed to rollback to the version of the application that said \"Hello World!\"."
+echo "  1. In the console title bar, type Cloud Build Dashboard in the Search field, and then click Cloud Build in the search results. Be sure Dashboard is selected in the left pane."
+echo "  2. Click the View all link under Build History for the hello-cloudbuild-env repository."
+echo "  3. Click on the second most recent build available."
+echo "  4. Click Rebuild."
+echo
+echo "Instead, the script has just done the rollback for you."
+echo
+echo "Waite a few minutes, reload the application in your browser. You should see \"Hello World!\"."
+echo "  http://$EXTERNAL_IP"
+echo
+
+answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
+
+echo "${GREEN_TEXT}${BOLD_TEXT}ALL DONE!${RESET_FORMAT}"
+
+# --- End of script ---

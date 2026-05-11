@@ -30,9 +30,9 @@ https://www.skills.google/course_templates/716/labs/598755
  
 ```bash
 rm -f nov05_GSP330.sh && rm -rf sample-app
-curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%3A%20Challenge%20Lab/abhishek.sh
-sudo chmod +x abhishek.sh
-./abhishek.sh
+curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%3A%20Challenge%20Lab/nov05_GSP330.sh
+sudo chmod +x nov05_GSP330.sh
+./nov05_GSP330.sh
 ```
 
 </div>
