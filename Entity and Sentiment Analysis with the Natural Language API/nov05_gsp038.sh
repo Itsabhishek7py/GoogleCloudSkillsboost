@@ -135,7 +135,7 @@ gcloud compute ssh linux-instance \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet \
-  --command="chmod +x task.sh && .\task.sh"
+  --command="chmod +x task.sh && ./task.sh"
 
 cat << 'EOF'
 
@@ -248,7 +248,6 @@ cat request.json
 echo -e "\n👉  Analysis result:"
 curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
   -s -X POST -H "Content-Type: application/json" --data-binary @request.json
-cat result.json
 rm -f task.sh request.json
 EOF
 
