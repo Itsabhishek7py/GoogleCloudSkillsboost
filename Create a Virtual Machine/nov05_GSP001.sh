@@ -15,7 +15,7 @@ export PROJECT_NUMBER=$(gcloud projects describe ${PROJECT_ID} \
 gcloud compute firewall-rules create allow-http \
   --network=default \
   --allow=tcp:80 \
-  --target-tags=allow-http
+  --target-tags=http-server
   
 gcloud compute instances create gcelab \
   --project="$PROJECT_ID" \
@@ -35,5 +35,6 @@ gcloud compute ssh \
   --command "sudo apt-get update && sudo apt-get install -y nginx && ps auwx | grep nginx"
 
 gcloud compute instances create gcelab2 \
-  --machine-type e2-medium \
-  --zone=$ZONE
+  --project="$PROJECT_ID" \
+  --zone=$ZONE \
+  --machine-type e2-medium
