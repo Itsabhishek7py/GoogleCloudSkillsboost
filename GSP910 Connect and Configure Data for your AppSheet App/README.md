@@ -14,7 +14,7 @@ Task 5. Create relationships between tables
 
 ```bash
 rm -f nov05_gsp910.sh
-curl -LO
+curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/main/GSP910%20Connect%20and%20Configure%20Data%20for%20your%20AppSheet%20App/nov05_gsp910.sh
 chmod +x nov05_gsp910.sh
 ./nov05_gsp910.sh
 ```
