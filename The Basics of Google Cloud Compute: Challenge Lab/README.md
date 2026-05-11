@@ -1,5 +1,9 @@
 # 🟢 The Basics of Google Cloud Compute: Challenge Lab (ARC120)
 
+https://www.skills.google/games/7174/labs/44441   
+
+<br>  
+
 ### Your job is to build infrastructure for the web application using Google Cloud. Here are the requirements:
 
 Create a new Cloud Storage bucket to store files.
