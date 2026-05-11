@@ -4,11 +4,11 @@ https://www.skills.google/games/7174/labs/44441
 
 <br>  
 
-### Your job is to build infrastructure for the web application using Google Cloud. Here are the requirements:
+**Your job is to build infrastructure for the web application using Google Cloud. Here are the requirements:**  
 
-Create a new Cloud Storage bucket to store files.
-Create and attach a persistent disk to a Compute Engine virtual machine (VM) instance.
-Use Compute Engine to host a web application using a NGINX web server.
+* Create a new Cloud Storage bucket to store files.
+* Create and attach a persistent disk to a Compute Engine virtual machine (VM) instance.
+* Use Compute Engine to host a web application using a NGINX web server.
 
 ### ⚠️ Disclaimer
 - This script and guide are provided for  the educational purposes to help you understand the lab services and boost your career. Before using the script, please open and review it to familiarize yourself with Google Cloud services. Ensure that you follow 'Qwiklabs' terms of service and YouTube’s community guidelines. The goal is to enhance your learning experience, not to bypass it.
