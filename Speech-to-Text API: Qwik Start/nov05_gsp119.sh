@@ -39,6 +39,7 @@ export KEY_STRING=$(gcloud alpha services api-keys list \
   --format="value(name)" \
   --filter="displayName=nlp-analysis-key")
 export API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_STRING \
+  --location=global \
   --format="value(keyString)")
 gcloud services api-keys update $KEY_NAME \
   --location=global \
