@@ -383,7 +383,6 @@ done
 #######################################################
 
 ## Get trigger id with trigger name
-REGION=us-west1
 TRIGGER_ID=$(gcloud builds triggers list \
   --region=$REGION \
   --filter="name=hello-cloudbuild-deploy" \
