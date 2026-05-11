@@ -17,32 +17,15 @@ Use Compute Engine to host a web application using a NGINX web server.
 
 ### 👉 Run the following Commands in CloudShell
 
-```
-export ZONE=
-```
-```
+```bash
 curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/The%20Basics%20of%20Google%20Cloud%20Compute%3A%20Challenge%20Lab/abhishekARC120.sh
 sudo chmod +x abhishekARC120.sh
 ./abhishekARC120.sh
-
-```
-
-```
-sudo apt update
-sudo apt install nginx -y
-sudo systemctl start nginx
-sudo systemctl enable nginx
-EOF_END
-
-# Copy the script to the instance
-gcloud compute scp prepare_disk.sh my-instance:/tmp --zone=$ZONE --quiet
-
-# Execute the script on the instance
-gcloud compute ssh my-instance --zone=$ZONE --quiet --command="sudo bash /tmp/prepare_disk.sh"
 ```
 
 [![Watch on YouTube](https://img.shields.io/badge/Watch_on_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/Mo65EMa8r00)
 
+<br><br><br>   
 
 <div align="center">
 
