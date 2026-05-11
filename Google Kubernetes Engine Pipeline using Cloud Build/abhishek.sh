@@ -274,6 +274,28 @@ git push google master
 ## Task 7. Review Cloud Build pipeline
 #######################################################
 
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}👉  Task 7. Review Cloud Build pipeline${RESET_FORMAT}"
+echo
+echo "In this task, you review the Cloud Build pipeline in the console. You can click on the build to follow its execution and examine its logs."
+echo "  1. In the console, still in the Cloud Build page, click Dashboard in the left pane."
+echo "  2. Click the hello-cloudbuild-app trigger to follow its execution and examine its logs. The last step of this pipeline pushes the new manifest to the hello-cloudbuild-env repository, which triggers the continuous delivery pipeline."
+echo "  3. Return to the main Dashboard."
+echo "  4. You should see a build either running or recently finished for the hello-cloudbuild-env repository."
+echo
+
+answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
+
 #######################################################
 ## Task 8. Test the complete pipeline
 #######################################################
@@ -309,7 +331,9 @@ while true; do
   echo -ne "\033[1A\033[2K"
 done
 
+echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}👉  Task 8. Test the complete pipeline${RESET_FORMAT}"
+echo
 
 ## Task 8.3, Replace "Hello World" with "Hello Cloud Build", both in the application and in the unit test
 cd ~/hello-cloudbuild-app
