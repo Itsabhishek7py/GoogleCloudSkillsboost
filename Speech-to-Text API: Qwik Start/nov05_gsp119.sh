@@ -28,23 +28,24 @@ EOF
 gcloud services enable \
   speech.googleapis.com \
   apikeys.googleapis.com
+  
 gcloud alpha services api-keys create \
   --display-name="speech-to-text-key"
-# export API_KEY=$(gcloud alpha services api-keys get-key-string \
-#   $(gcloud alpha services api-keys list \
-#       --filter="displayName=speech-to-text-key" \
-#       --format="value(name)") \
-#   --format="value(keyString)")
-export KEY_STRING=$(gcloud alpha services api-keys list \
-  --format="value(name)" \
-  --filter="displayName=nlp-analysis-key")
-export API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_STRING \
-  --location=global \
-  --format="value(keyString)")
-gcloud services api-keys update $KEY_NAME \
+  
+gcloud services api-keys update \
+$(gcloud services api-keys list \
+    --filter="displayName=speech-to-text-key" \
+    --format="value(name)" \
+    --limit=1) \
   --location=global \
   --api-target=service=speech.googleapis.com
-
+  
+export API_KEY=$(gcloud alpha services api-keys get-key-string \
+  $(gcloud alpha services api-keys list \
+      --filter="displayName=speech-to-text-key" \
+      --format="value(name)" \
+      --limit=1) \
+  --format="value(keyString)")
   
 cat << 'EOF'
 
