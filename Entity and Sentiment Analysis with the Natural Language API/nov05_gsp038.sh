@@ -210,7 +210,7 @@ curl "https://language.googleapis.com/v1/documents:analyzeSyntax?key=${API_KEY}"
 rm -f task.sh request2.json
 EOF
 
-gcloud compute scp task.sh request.json linux-instance:~ \
+gcloud compute scp task.sh request2.json linux-instance:~ \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet
