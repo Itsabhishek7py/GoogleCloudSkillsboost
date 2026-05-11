@@ -35,12 +35,21 @@ while true; do
     --format='get(status)')
   echo "VM gcelab Current status: $STATUS"
   if [ "$STATUS" = "RUNNING" ]; then
-    echo "VM gcelab is running!"
     break
   fi
   sleep 5
 done
 
+## Wait for SSH readiness
+until gcloud compute ssh gcelab \
+  --zone "$ZONE" \
+  --quiet \
+  --command "echo ready" 2>/dev/null; do
+  echo "Waiting for gcelab SSH readiness..."
+  sleep 10
+done
+
+## # Run actual workload
 gcloud compute ssh \
   --zone "$ZONE" "gcelab" \
   --project "$PROJECT_ID" \
@@ -59,6 +68,7 @@ EXTERNAL_IP=$(gcloud compute instances describe gcelab \
 echo
 echo "============================================"
 echo "Task 2. Install an NGINX web server"
-echo "  Check http://$EXTERNAL_IP"
-echo "  A default web page should open that says: Welcome to nginx!"
 echo "============================================"
+echo
+echo "👉 Check http://$EXTERNAL_IP"
+echo "A default web page should open that says: Welcome to nginx!"
