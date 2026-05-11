@@ -66,6 +66,8 @@ cat > request.json << 'EOL'
   }
 }
 EOL
+echo -e "\n👉  Check request.json:"
+cat request.json
 
 cat << 'EOF'
 
@@ -89,17 +91,26 @@ export API_KEY=$(gcloud alpha services api-keys get-key-string \
 # echo "$API_KEY" > ~/api_key.txt
 # chmod 600 ~/api_key.txt
 
-echo -e "\n👉  Check request.json:"
-cat request.json
-
-echo -e "\n👉  Check result.json:"
 curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json \
   "https://speech.googleapis.com/v1/speech:recognize?key=${API_KEY}" > result.json
+echo -e "\n👉  Check result.json:"
 cat result.json
 
 ## Clean up. Keep request.json, result.json for the lab checks.
 rm -f task.sh 
 EOF
 
+# Copy the script into $HOME dir
+gcloud compute scp $SCRIPT_NAME task.sh request.json linux-instance:~ \
+  --project=$DEVSHELL_PROJECT_ID \
+  --zone=$ZONE \
+  --quiet
+# Run the cript
+gcloud compute ssh linux-instance \
+  --project=$DEVSHELL_PROJECT_ID \
+  --zone=$ZONE \
+  --quiet \
+  --command="chmod +x task.sh && ./task.sh"
+  
 echo
 echo "✅ All done"
