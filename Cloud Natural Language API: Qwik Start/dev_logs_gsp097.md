@@ -10,5 +10,6 @@ sudo chmod +x nov05_gsp097.sh
 
 ## 👉 Logs
 
-* 2026-05-11 ⚠️ [Test result](https://gist.github.com/nov05/ab50bb6c73befdc363f66e30b6de075e): The original script didn't pass any check of the lab.  
+* 2026-05-11 ⚠️ [Test result](https://gist.github.com/nov05/ab50bb6c73befdc363f66e30b6de075e): The original script didn't pass any check of the lab.
+    ✅ [Test result](https://gist.github.com/nov05/ab50bb6c73befdc363f66e30b6de075e?permalink_comment_id=6144630#gistcomment-6144630): The new script passed all checks.    
 
