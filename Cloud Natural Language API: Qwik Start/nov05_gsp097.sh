@@ -25,9 +25,20 @@ export GOOGLE_CLOUD_PROJECT=$(gcloud config get-value core/project)
 
 gcloud iam service-accounts create my-natlang-sa \
   --display-name "my natural language service account"
-  
+
+## ⚠️ Even though the service account was created, IAM sometimes has a short propagation delay 
+##   before it becomes visible for key creation in tightly controlled lab environments (like Qwiklabs).
+SA="my-natlang-sa@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com"
+echo "🔹  Waiting for service account to be ready..."
+until gcloud iam service-accounts describe "$SA" >/dev/null 2>&1
+do
+  echo "🔹  Service account is not ready yet... retrying in 5s"
+  sleep 5
+done
+echo "🔹  Service account $SA is ready!"
+
 gcloud iam service-accounts keys create ~/key.json \
-  --iam-account my-natlang-sa@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com
+  --iam-account="$SA"  
 
 export GOOGLE_APPLICATION_CREDENTIALS="/home/USER/key.json"
 
