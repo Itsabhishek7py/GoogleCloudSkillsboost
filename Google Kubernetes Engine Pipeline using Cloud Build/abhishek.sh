@@ -1,6 +1,8 @@
 #!/bin/bash
 ## Changed by nov05, 2026-05-09  
 
+set +H
+
 # Colors
 # RED='\033[0;31m'
 # GREEN='\033[0;32m'
@@ -321,11 +323,11 @@ while [ -z "$EXTERNAL_IP" ]; do
 done
 
 echo
-echo "${BLUE}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
 echo "${CYAN_TEXT}${BOLD_TEXT}           NOW MANUAL STEPS                  ${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${RESET_FORMAT}"
 echo
-echo "Click on the endpoint for the hello-cloudbuild service. You should see \"Hello World!\".
+echo "Click on the endpoint for the hello-cloudbuild service. You should see \"Hello World!\"."
 echo "  http://$EXTERNAL_IP"
 echo
 
