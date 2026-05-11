@@ -257,7 +257,6 @@ gcloud builds triggers create github \
     --build-config="cloudbuild.yaml" \
     --region="$REGION" \
     --description="GSP1077 Test environment and CD pipeline"
-gcloud builds repositories list --region="$REGION"
 gcloud builds triggers list --region=$REGION 
 
 ## Task 6.12 In your hello-cloudbuild-app directory, create a file named known_hosts.github, 
