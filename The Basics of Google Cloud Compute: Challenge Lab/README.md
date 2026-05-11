@@ -18,7 +18,8 @@ Use Compute Engine to host a web application using a NGINX web server.
 ### 👉 Run the following Commands in CloudShell
 
 ```bash
-curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/The%20Basics%20of%20Google%20Cloud%20Compute%3A%20Challenge%20Lab/abhishekARC120.sh
+rm -f abhishekARC120.sh
+curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/main/The%20Basics%20of%20Google%20Cloud%20Compute%3A%20Challenge%20Lab/abhishekARC120.sh
 sudo chmod +x abhishekARC120.sh
 ./abhishekARC120.sh
 ```
