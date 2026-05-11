@@ -17,7 +17,7 @@ sudo chmod +x abhishek.sh
   
   ✅ [Test result](https://gist.github.com/nov05/6be835acbcf1af1918fa225af739bcdb?permalink_comment_id=6143190#gistcomment-6143190): Passed all checks.
 
-  ✅ Added commands to retry build of the last but one successful build of a trigger. [code snippet](https://gist.github.com/nov05/6be835acbcf1af1918fa225af739bcdb?permalink_comment_id=6143224#gistcomment-6143224)  
+  ✅ [Test result](https://gist.github.com/nov05/6be835acbcf1af1918fa225af739bcdb?permalink_comment_id=6143315#gistcomment-6143315): Added commands to retry build of the last but one successful build of a trigger. [code snippet](https://gist.github.com/nov05/6be835acbcf1af1918fa225af739bcdb?permalink_comment_id=6143224#gistcomment-6143224)  
 
 * 2026-05-09 [Test result](https://gist.github.com/nov05/6be835acbcf1af1918fa225af739bcdb) for [Commit dd53be2](https://github.com/nov05/gcp-skills-boost/commit/dd53be229d8746520b842107ada7fd1b0355a6af)
   
