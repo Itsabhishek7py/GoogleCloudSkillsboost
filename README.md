@@ -11,6 +11,9 @@
 
 * Example of ensuring VM running status and its SSH readiness   
   bash script - [nov05_GSP004.sh](https://github.com/nov05/gcp-skills-boost/blob/dev/Creating%20a%20Persistent%20Disk/nov05_GSP004.sh)
+
+* Example of ensuring service account readiness   
+  bash script - [nov05_gsp097.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Cloud%20Natural%20Language%20API%3A%20Qwik%20Start/nov05_gsp097.sh)       
   
 <br><br><br>
 
