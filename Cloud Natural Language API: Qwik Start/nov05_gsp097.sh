@@ -60,10 +60,10 @@ gcloud compute ssh \
 
 ## Pretty print JSON
 gcloud compute ssh \
-
-echo 
-echo "✅  ALL DONE"
   --zone "$ZONE" "linux-instance" \
   --project "$DEVSHELL_PROJECT_ID" \
   --quiet \
   --command "jq . result.json"
+
+echo 
+echo "✅  ALL DONE"
