@@ -33,10 +33,10 @@ gcloud alpha services api-keys create \
   --display-name="speech-to-text-key"
   
 gcloud services api-keys update \
-$(gcloud services api-keys list \
-    --filter="displayName=speech-to-text-key" \
-    --format="value(name)" \
-    --limit=1) \
+  $(gcloud services api-keys list \
+      --filter="displayName=speech-to-text-key" \
+      --format="value(name)" \
+      --limit=1) \
   --location=global \
   --api-target=service=speech.googleapis.com
   
@@ -66,9 +66,6 @@ cat > request.json << 'EOL'
   }
 }
 EOL
-echo 
-echo "👉 Check request.json:"
-cat request.json
 
 cat << 'EOF'
 
@@ -77,11 +74,32 @@ cat << 'EOF'
 ###################################################################
 
 EOF
-echo "👉 Check result.json:"
-curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json \
-"https://speech.googleapis.com/v1/speech:recognize?key=${API_KEY}"
+## Prepare script for the task
+rm -f task.sh
+cat > task.sh <<'EOF'
+#!/bin/bash
 
+## Retrieve API Key 
+export API_KEY=$(gcloud alpha services api-keys get-key-string \
+  $(gcloud alpha services api-keys list \
+      --filter="displayName=nlp-analysis-key" \
+      --format="value(name)" \
+      --limit=1) \
+  --format="value(keyString)")
+# echo "$API_KEY" > ~/api_key.txt
+# chmod 600 ~/api_key.txt
+
+echo -e "\n👉  Check request.json:"
+cat request.json
+
+echo -e "\n👉  Check result.json:"
 curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json \
   "https://speech.googleapis.com/v1/speech:recognize?key=${API_KEY}" > result.json
-echo 
 cat result.json
+
+## Clean up. Keep request.json, result.json for the lab checks.
+rm -f task.sh 
+EOF
+
+echo
+echo "✅ All done"
