@@ -1,8 +1,14 @@
 # 🟢 Google Skills Labs Automation  
 
-* Example lab - [GSP330 Implement DevOps Workflows in Google Cloud](https://github.com/nov05/gcp-skills-boost/tree/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%3A%20Challenge%20Lab)  
-* Example bash script - [nov05_GSP330.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%3A%20Challenge%20Lab/nov05_GSP330.sh)
+* **General example**  
+  lab - [GSP330 Implement DevOps Workflows in Google Cloud](https://github.com/nov05/gcp-skills-boost/tree/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%3A%20Challenge%20Lab)    
+  bash script - [nov05_GSP330.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%3A%20Challenge%20Lab/nov05_GSP330.sh)    
 
+* **Example of creating 1st-gen Cloud Build triggers via the CLI**    
+  In this example, the script waits for the user to connect the GitHub repositories before creating two triggers.    
+  lab - [GSP1077 Google Kubernetes Engine Pipeline using Cloud Build](https://github.com/nov05/gcp-skills-boost/tree/dev/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build)     
+  bash script - [abhishek.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/abhishek.sh)   
+  
 <br><br><br>
 
 ---
