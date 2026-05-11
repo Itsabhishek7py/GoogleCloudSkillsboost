@@ -28,6 +28,9 @@ gh repo create hello-cloudbuild-env --private
 ```
 <br>  
 
+**Task 4.7**: Authenticate to your source repository with your username and password. This step has to be done manually.      
+<img src="https://raw.githubusercontent.com/nov05/pictures/refs/heads/master/gcp-skills-boost%20/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/2026-05-11%2000_16_29-Settings.jpg" width=800>  
+
 **Task 7.2**: Click the hello-cloudbuild-app trigger to follow its execution and examine its logs. The last step of this pipeline pushes the new manifest to the hello-cloudbuild-env repository, which triggers the continuous delivery pipeline.     
 <img src="https://raw.githubusercontent.com/nov05/pictures/refs/heads/master/gcp-skills-boost%20/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/2026-05-10%2019_43_08-Settings.jpg" width=800>  
 
