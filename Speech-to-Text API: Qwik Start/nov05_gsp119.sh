@@ -54,6 +54,9 @@ cat > request.json << 'EOL'
   }
 }
 EOL
+echo 
+echo "👉 Check request.json:"
+cat request.json
 
 cat << 'EOF'
 
@@ -65,4 +68,6 @@ EOF
 # Make the API call and display response
 curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json \
   "https://speech.googleapis.com/v1/speech:recognize?key=${API_KEY}" > result.json
+echo 
+echo "👉 Check result.json:"
 cat result.json
