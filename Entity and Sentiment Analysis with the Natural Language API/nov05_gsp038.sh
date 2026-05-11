@@ -64,13 +64,15 @@ export API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_STRING \
 cat > nlp_analysis.sh <<'EOL'
 #!/bin/bash
 
-# Retrieve API Key
-KEY_NAME=$(gcloud alpha services api-keys list --format="value(name)" --filter="displayName=nlp-analysis-key")
-API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_NAME --format="value(keyString)")
+## Retrieve API Key
+KEY_STRING=$(gcloud alpha services api-keys list \
+  --format="value(name)" \
+  --filter="displayName=nlp-analysis-key")
+API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_STRING \
+  --format="value(keyString)")
+echo -e "🔹  API Key: $API_KEY"
 
-echo -e "\n${GREEN}ℹ️ Using API Key: ${WHITE}$API_KEY${NC}"
-
-# Create NLP Request
+## Create NLP Request
 cat > request.json <<EOF
 {
   "document":{
@@ -80,39 +82,28 @@ cat > request.json <<EOF
   "encodingType":"UTF8"
 }
 EOF
+echo -e "🔹  Sample text prepared for analysis"
 
-echo -e "${YELLOW}📄 Sample Text Prepared for Analysis${NC}"
-
-# Make API Request
-echo -e "${YELLOW}🔍 Analyzing Text with Natural Language API...${NC}"
+## Make API Request
+echo -e "🔹  Analyzing text with NLP API..."
 curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
   -s -X POST -H "Content-Type: application/json" --data-binary @request.json > result.json
 
-# Display Results
-echo -e "\n${GREEN}📊 Analysis Results:${NC}"
+## Display result
+echo -e "👉  Analysis result:"
 cat result.json
 EOL
 
-# Step 7: Transfer Script
-echo -e "${YELLOW}📤 Step 7: Transferring Script to Instance${NC}"
+# Copy the script into /tmp dir
 gcloud compute scp nlp_analysis.sh linux-instance:/tmp \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet
-echo -e "${GREEN}✅ Script transferred successfully${NC}"
-echo
 
-# Step 8: Execute Script
-echo -e "${YELLOW}🚀 Step 8: Running NLP Analysis${NC}"
+# Run the cript
 gcloud compute ssh linux-instance \
   --project=$DEVSHELL_PROJECT_ID \
   --zone=$ZONE \
   --quiet \
   --command="chmod +x /tmp/nlp_analysis.sh && /tmp/nlp_analysis.sh"
 
-# Completion Message
-echo -e "\n${GREEN}${BOLD}╔════════════════════════════════════════════╗"
-echo -e "║          🎉 Analysis Completed! 🎉          ║"
-echo -e "╚════════════════════════════════════════════╝${NC}"
-echo -e "${WHITE}Thank you for using Dr. Abhishek's Cloud Lab!${NC}"
-echo -e "${CYAN}For more tutorials: ${WHITE}https://youtube.com/@drabhishek.5460${NC}"
