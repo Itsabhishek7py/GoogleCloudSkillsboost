@@ -41,6 +41,7 @@ export KEY_STRING=$(gcloud alpha services api-keys list \
 export API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_STRING \
   --format="value(keyString)")
 gcloud services api-keys update $KEY_NAME \
+  --location=global \
   --api-target=service=speech.googleapis.com
 
   
