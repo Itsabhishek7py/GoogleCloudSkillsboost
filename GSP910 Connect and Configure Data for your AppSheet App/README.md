@@ -9,3 +9,5 @@ Task 3. Configure your app's data structure
 Task 4. Regenerate your app's data structure
 Task 5. Create relationships between tables
 ```
+
+* This lab uses Google AppSheet.
