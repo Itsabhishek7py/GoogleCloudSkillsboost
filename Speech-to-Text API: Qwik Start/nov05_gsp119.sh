@@ -1,14 +1,48 @@
 #!/bin/bash
+## Created by nov05, 2026-05-11 
 
+## Get project id, project number, region, zone
+export PROJECT_ID=$(gcloud config get-value project)
+export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID \
+  --format='value(projectNumber)')
+export REGION=$(gcloud compute project-info describe \
+  --format="value(commonInstanceMetadata.items[google-compute-default-region])")
+export ZONE=$(gcloud compute project-info describe \
+  --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+gcloud config set compute/region $REGION
+echo
+echo "🔹  Project ID: $PROJECT_ID"
+echo "🔹  Project number: $PROJECT_NUMBER"
+echo "🔹  Region: $REGION"
+echo "🔹  Zone: $ZONE"
+echo "🔹  User: $USER"
+echo
 
-# Export API key as environment variable
-export API_KEY=$API_KEY
-success "API key set as environment variable"
+cat << 'EOF'
 
-# Task 2: Create Speech-to-Text API request
-display_task "TASK 2" "Create your Speech-to-Text API request"
+###################################################################
+## Task 1. Create an API key
+###################################################################
 
+EOF
+gcloud services enable apikeys.googleapis.com
+gcloud alpha services api-keys create \
+  --display-name="speech-to-text-key"
+export API_KEY=$(gcloud alpha services api-keys get-key-string \
+  $(gcloud alpha services api-keys list \
+      --filter="displayName=speech-to-text-key" \
+      --format="value(name)") \
+  --format="value(keyString)")
+  
+cat << 'EOF'
+
+###################################################################
+## Task 2. Create your Speech-to-Text API request
+###################################################################
+
+EOF
 # Create request.json file
+rm -f request.json
 cat > request.json << 'EOL'
 {
   "config": {
@@ -21,22 +55,14 @@ cat > request.json << 'EOL'
 }
 EOL
 
+cat << 'EOF'
+
+###################################################################
+## Task 3. Call the Speech-to-Text API
+###################################################################
+
+EOF
 # Make the API call and display response
-echo "${YELLOW_TEXT}${BOLD_TEXT}API Response:${RESET_FORMAT}"
 curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json \
-"https://speech.googleapis.com/v1/speech:recognize?key=${API_KEY}"
-echo ""
-
-# Save response to result.json
-echo "${CYAN_TEXT}${BOLD_TEXT}Saving response to result.json...${RESET_FORMAT}"
-curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json \
-"https://speech.googleapis.com/v1/speech:recognize?key=${API_KEY}" > result.json
-
-# Verify result.json creation
-if [ ! -f "result.json" ]; then
-    error_handler "Failed to save response to result.json"
-else
-    success "Response saved to result.json successfully"
-    echo "${GREEN_TEXT}${BOLD_TEXT}Content of result.json:${RESET_FORMAT}"
-    cat result.json
-fi
+  "https://speech.googleapis.com/v1/speech:recognize?key=${API_KEY}" > result.json
+cat result.json
