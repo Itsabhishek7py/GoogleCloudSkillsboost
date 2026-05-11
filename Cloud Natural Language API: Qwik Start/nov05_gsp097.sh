@@ -56,7 +56,6 @@ gcloud compute ssh \
   --zone "$ZONE" "linux-instance" \
   --project "$DEVSHELL_PROJECT_ID" \
   --quiet \
-  --tunnel-through-iap \
   --command "$REMOTE_CMD"
 
 echo "✅  ALL DONE"
