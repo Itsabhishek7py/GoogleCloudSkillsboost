@@ -57,10 +57,13 @@ gcloud dataplex assets create customer-details-dataset \
   --display-name="Customer Details Dataset" \
   --resource-type=BIGQUERY_DATASET \
   --resource-name="projects/$PROJECT_ID/datasets/customers"
-## --resource-name="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers" ❌
-## --resource-name="/projects/$PROJECT_ID/datasets/customers" ❌ 
-## If the asset is created with wrong configuration, the lab check will say:
-## "Knowledge Catalog task is in running state; please wait until the creation completes."
+  
+: <<'COMMENT'
+  If the asset is created with wrong configuration, the lab check will say:
+  "Knowledge Catalog task is in running state; please wait until the creation completes."
+  --resource-name="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers" ❌
+  --resource-name="/projects/$PROJECT_ID/datasets/customers" ❌ 
+COMMENT
 
 ## Verify
 echo
@@ -137,49 +140,17 @@ Task 3. Add an aspect to assets
 https://docs.cloud.google.com/sdk/gcloud/reference/dataplex/entries/update-aspects
 
 EOF
-export TABLE="projects/$PROJECT_ID/datasets/customers/tables/customer_details"
+# export TABLE_NAME="projects/$PROJECT_ID/datasets/customers/tables/customer_details"
 export ENTRY_ID="protected-data-aspect_aspectType"
 
 cat > aspect-patch.json <<EOF
 {
-  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@zip": {
-    "data": { "protected_data_flag": "Yes" }
-  },
-  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@state": {
-    "data": { "protected_data_flag": "Yes" }
-  },
-  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@last_name": {
-    "data": { "protected_data_flag": "Yes" }
-  },
-  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@country": {
-    "data": { "protected_data_flag": "Yes" }
-  },
-  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@email": {
-    "data": { "protected_data_flag": "Yes" }
-  },
-  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@latitude": {
-    "data": { "protected_data_flag": "Yes" }
-  },
-  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@first_name": {
-    "data": { "protected_data_flag": "Yes" }
-  },
-  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@city": {
-    "data": { "protected_data_flag": "Yes" }
-  },
-  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@longitude": {
-    "data": { "protected_data_flag": "Yes" }
+  "$PROJECT_ID/$REGION/protected-data-aspect@customer_details.zip": {
+    "data": { "protected_data_flag": "Yes" },
   }
 }
 EOF
 
-: <<'COMMENT'
-COMMENT
-
-# curl -X PATCH \
-#   -H "Authorization: Bearer $(gcloud auth print-access-token)" \
-#   -H "Content-Type: application/json" \
-#   https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION/entryGroups/YOUR_GROUP/entries/customer_details/aspects/protected_data_aspect \
-#   -d @aspect-patch.json
 gcloud dataplex entries update-aspects "$ENTRY_ID" \
   --project="$PROJECT_ID" \
   --location="$REGION" \
