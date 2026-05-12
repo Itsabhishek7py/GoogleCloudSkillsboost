@@ -93,7 +93,7 @@ cat << EOF
 👉  Click the link to run the query in BigQuery:
 https://console.cloud.google.com/bigquery?project=$PROJECT_ID
 
-  SELECT * FROM `qwiklabs-gcp-02-95c3e9ec9850.customers.contact_info`
+  SELECT * FROM \`qwiklabs-gcp-02-95c3e9ec9850.customers.contact_info\`
   ORDER BY id
   LIMIT 50
 
