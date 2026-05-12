@@ -138,6 +138,7 @@ while true; do
     --location=$REGION \
     --format="value(state)")
   echo "🔹  Job status: $STATUS"
+  ## Don't stop for RUNNING, PENDING, CREATING, INITIALIZING
   if [[ "$STATUS" == "SUCCEEDED" || "$STATUS" == "FAILED" ]]; then
     break
   fi
@@ -158,3 +159,24 @@ Task 5. Review data quality results in BigQuery
 ========================================================
 
 EOF
+echo "👉  List datasets:"  
+bq ls $PROJECT_ID
+echo
+echo "👉  List tables in dataset customers_dq_dataset:" 
+bq ls $PROJECT_ID:customers_dq_dataset
+echo
+echo "👉  Preview dq_results table"
+bq head -n 20 $PROJECT_ID:customers_dq_dataset.dq_results
+
+EMAIL_QUERY=$(bq query --use_legacy_sql=false --format=prettyjson "
+SELECT rule_failed_records_query
+FROM \`$PROJECT_ID.customers_dq_dataset.dq_results\`
+LIMIT 1
+" | jq -r '.[0].rule_failed_records_query')
+bq query --use_legacy_sql=false "$EMAIL_QUERY"
+
+ID_QUERY=$(bq query --use_legacy_sql=false --format=prettyjson "
+SELECT rule_failed_records_query
+FROM \`$PROJECT_ID.customers_dq_dataset.dq_results\`
+LIMIT 2
+" | jq -r '.[1].rule_failed_records_query')
