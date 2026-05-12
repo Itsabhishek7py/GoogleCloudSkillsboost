@@ -56,8 +56,11 @@ gcloud dataplex assets create customer-details-dataset \
   --zone=customer-curated-zone \
   --display-name="Customer Details Dataset" \
   --resource-type=BIGQUERY_DATASET \
-  # --resource-name="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers" ❌
-  --resource-name="/projects/$PROJECT_ID/datasets/customers"
+  --resource-name="projects/$PROJECT_ID/datasets/customers"
+## --resource-name="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers" ❌
+## --resource-name="/projects/$PROJECT_ID/datasets/customers" ❌ 
+## If the asset is created with wrong configuration, the lab check will say:
+## "Knowledge Catalog task is in running state; please wait until the creation completes."
 
 ## Verify
 echo
