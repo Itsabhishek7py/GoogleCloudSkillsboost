@@ -18,7 +18,6 @@ echo "🔹  Region: $REGION"
 echo "🔹  Zone: $ZONE"
 echo "🔹  User: $USER"
 echo "🔹  Bukect: $BUCKET"
-echo
 
 cat << 'EOF'
 
