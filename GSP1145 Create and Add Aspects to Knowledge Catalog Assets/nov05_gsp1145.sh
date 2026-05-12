@@ -87,11 +87,11 @@ cat > aspect-type.json <<EOF
       },
       "enumValues": [
         {
-          "name": "YES",
+          "name": "Yes",
           "index": 1
         },
         {
-          "name": "NO",
+          "name": "No",
           "index": 2
         }
       ]
@@ -123,10 +123,6 @@ export ENTRY_NAME=$(curl -s -X GET \
   "https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION/entries:lookup?linkedResource=//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/customer_details" \
   | jq -r '.name')
 echo "👉  Entry name: $ENTRY_NAME"
-if [ -z "$ENTRY_NAME" ]; then
-  echo "⚠️  Failed to resolve Dataplex entry"
-  exit 1
-fi
 
 cat > aspect-patch.json <<EOF
 {
