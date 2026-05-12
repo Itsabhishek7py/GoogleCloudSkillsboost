@@ -74,16 +74,29 @@ EOF
 cat > aspect-type.json <<EOF
 {
   "displayName": "Protected Data Aspect",
+  "description": "Protected data marker",
   "metadataTemplate": {
-    "fields": [
+    "name": "protected_data_template",
+    "type": "record",
+    "recordFields": [
       {
-        "fieldId": "protected_data_flag",
-        "displayName": "Protected Data Flag",
+        "name": "protected_data_flag",
         "type": "enum",
-        "isRequired": true,
+        "annotations": {
+          "displayName": "Protected Data Flag"
+        },
+        "constraints": {
+          "required": true
+        },
         "enumValues": [
-          { "displayName": "Yes" },
-          { "displayName": "No" }
+          {
+            "name": "YES",
+            "index": 1
+          },
+          {
+            "name": "NO",
+            "index": 2
+          }
         ]
       }
     ]
