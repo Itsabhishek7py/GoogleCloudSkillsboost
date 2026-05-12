@@ -123,7 +123,12 @@ gcloud dataplex aspect-types create protected-data-aspect \
   --location=$REGION \
   --display-name="Protected Data Aspect" \
   --metadata-template-file-name=aspect-type.json
-  
+
+echo "👉  Check entry list:"
+gcloud dataplex entries list \
+  --location=$REGION \
+  --entry-group=@dataplex
+
 cat << 'EOF'
 
 ========================================================
@@ -132,7 +137,7 @@ Task 3. Add an aspect to assets
 https://docs.cloud.google.com/sdk/gcloud/reference/dataplex/entries/update-aspects
 
 EOF
-export BQ_RESOURCE="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/customer_details"
+export TABLE="projects/$PROJECT_ID/datasets/customers/tables/customer_details"
 export ENTRY_ID="protected-data-aspect_aspectType"
 
 cat > aspect-patch.json <<EOF
@@ -167,10 +172,6 @@ cat > aspect-patch.json <<EOF
 }
 EOF
 
-echo "👉  Check entry list:"
-gcloud dataplex entries list \
-  --location=$REGION \
-  --entry-group=@dataplex
 : <<'COMMENT'
 COMMENT
 
