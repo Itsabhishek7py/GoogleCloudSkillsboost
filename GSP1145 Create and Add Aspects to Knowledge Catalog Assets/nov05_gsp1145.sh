@@ -56,7 +56,8 @@ gcloud dataplex assets create customer-details-dataset \
   --zone=customer-curated-zone \
   --display-name="Customer Details Dataset" \
   --resource-type=BIGQUERY_DATASET \
-  --resource-name="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers"
+  # --resource-name="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers" ❌
+  --resource-name="/projects/$PROJECT_ID/datasets/customers"
 
 ## Verify
 echo
