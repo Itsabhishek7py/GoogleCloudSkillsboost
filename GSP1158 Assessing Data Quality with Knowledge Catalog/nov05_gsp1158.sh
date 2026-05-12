@@ -86,29 +86,30 @@ FROM \`$PROJECT_ID.customers.contact_info\`
 WHERE id IS NULL
 "
 
-# ## Unfortunately this step has to be done mnually on the console to pass the check.
-# cat << EOF
+## Unfortunately this step has to be done mnually on the console to pass the check.
+## Shell query job IDs starts with "bqjob_"
+## Console query job IDs start with "bquxjob_"
+cat << EOF
 
-# 👉  Click the link to run the query in BigQuery:
-# https://console.cloud.google.com/bigquery?project=$PROJECT_ID
+👉  Click the link to run the query in BigQuery:
+https://console.cloud.google.com/bigquery?project=$PROJECT_ID
 
-# SELECT *
-# FROM \`$PROJECT_ID.customers.contact_info\`
-# ORDER BY id
-# LIMIT 50
+  SELECT * FROM `qwiklabs-gcp-02-95c3e9ec9850.customers.contact_info`
+  ORDER BY id
+  LIMIT 50
 
-# EOF
-# answer=""
-# echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
-# while true; do
-#   printf " (y/n): "
-#   read answer
-#   if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
-#     break
-#   fi
-#   ## move cursor up one line and clear it
-#   echo -ne "\033[1A\033[2K"
-# done
+EOF
+answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
 
 cat << 'EOF'
 
