@@ -73,42 +73,43 @@ Task 2. Create an aspect type
 EOF
 cat > aspect-type.json <<EOF
 {
-  "displayName": "Protected Data Aspect",
-  "description": "Protected data marker",
-  "metadataTemplate": {
-    "name": "protected_data_template",
-    "type": "record",
-    "recordFields": [
-      {
-        "name": "protected_data_flag",
-        "type": "enum",
-        "annotations": {
-          "displayName": "Protected Data Flag"
+  "name": "protected_data_template",
+  "type": "record",
+  "recordFields": [
+    {
+      "name": "protected_data_flag",
+      "type": "enum",
+      "index": 1,
+      "annotations": {
+        "displayName": "Protected Data Flag"
+      },
+      "constraints": {
+        "required": true
+      },
+      "enumValues": [
+        {
+          "name": "YES",
+          "index": 1
         },
-        "constraints": {
-          "required": true
-        },
-        "enumValues": [
-          {
-            "name": "YES",
-            "index": 1
-          },
-          {
-            "name": "NO",
-            "index": 2
-          }
-        ]
-      }
-    ]
-  }
+        {
+          "name": "NO",
+          "index": 2
+        }
+      ]
+    }
+  ]
 }
 EOF
 
-curl -X POST \
-  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
-  -H "Content-Type: application/json" \
-  "https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION/aspectTypes?aspectTypeId=protected_data_aspect" \
-  -d @aspect-type.json
+# curl -X POST \
+#   -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+#   -H "Content-Type: application/json" \
+#   "https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION/aspectTypes?aspectTypeId=protected_data_aspect" \
+#   -d @aspect-type.json
+gcloud dataplex aspect-types create protected-data-aspect \
+  --location=$REGION \
+  --display-name="Protected Data Aspect" \
+  --metadata-template-file-name=aspect-type.json
   
 cat << 'EOF'
 
