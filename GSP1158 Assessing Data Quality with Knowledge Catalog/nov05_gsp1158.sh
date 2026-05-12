@@ -88,6 +88,30 @@ FROM \`$PROJECT_ID.customers.contact_info\`
 WHERE id IS NULL
 "
 
+## Unfortunately this step has to be done mnually on the console to pass the check.
+cat << EOF
+
+👉  Click the link to run the query in BigQuery:
+https://console.cloud.google.com/bigquery?project=$PROJECT_ID
+
+SELECT *
+FROM \`$PROJECT_ID.customers.contact_info\`
+ORDER BY id
+LIMIT 50
+
+EOF
+answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
+
 cat << 'EOF'
 
 ========================================================
@@ -184,6 +208,27 @@ LIMIT 1
 " | jq -r '.[0].rule_failed_records_query')
 bq query --use_legacy_sql=false "$EMAIL_QUERY"
 
+## Unfortunately this step has to be done mnually on the console to pass the check.
+cat << EOF
+
+👉  Click the link to run the query in BigQuery:
+https://console.cloud.google.com/bigquery?project=$PROJECT_ID
+
+$EMAIL_QUERY
+
+EOF
+answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
+
 echo
 echo "👉  Query the ID values in the contact_info table that are not valid."
 ID_QUERY=$(bq query --use_legacy_sql=false --format=prettyjson "\
@@ -192,6 +237,27 @@ FROM \`$PROJECT_ID.customers_dq_dataset.dq_results\`
 LIMIT 2
 " | jq -r '.[1].rule_failed_records_query')
 bq query --use_legacy_sql=false "$ID_QUERY"
+
+## Unfortunately this step has to be done mnually on the console to pass the check.
+cat << EOF
+
+👉  Click the link to run the query in BigQuery:
+https://console.cloud.google.com/bigquery?project=$PROJECT_ID
+
+$ID_QUERY
+
+EOF
+answer=""
+echo "${YELLOW_TEXT}${BOLD_TEXT}Ready to proceed?${RESET_FORMAT}"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
 
 echo
 echo "✅  All done"
