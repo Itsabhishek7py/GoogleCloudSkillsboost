@@ -160,17 +160,62 @@ cat > aspect-patch.json <<EOF
     "data": {
       "protected_data_flag": "Yes",
     }
-  }
+  },
+  "$PROJECT_ID.$REGION.protected-data-aspect@Schema.zip": {
+    "data": {
+      "protected_data_flag": "Yes",
+    }
+  },
+  "$PROJECT_ID.$REGION.protected-data-aspect@Schema.state": {
+    "data": {
+      "protected_data_flag": "Yes",
+    }
+  },
+  "$PROJECT_ID.$REGION.protected-data-aspect@Schema.last_name": {
+    "data": {
+      "protected_data_flag": "Yes",
+    }
+  },
+  "$PROJECT_ID.$REGION.protected-data-aspect@Schema.country": {
+    "data": {
+      "protected_data_flag": "Yes",
+    }
+  },
+  "$PROJECT_ID.$REGION.protected-data-aspect@Schema.email": {
+    "data": {
+      "protected_data_flag": "Yes",
+    }
+  },
+  "$PROJECT_ID.$REGION.protected-data-aspect@Schema.latitude": {
+    "data": {
+      "protected_data_flag": "Yes",
+    }
+  },
+  "$PROJECT_ID.$REGION.protected-data-aspect@Schema.first_name": {
+    "data": {
+      "protected_data_flag": "Yes",
+    }
+  },
+  "$PROJECT_ID.$REGION.protected-data-aspect@Schema.city": {
+    "data": {
+      "protected_data_flag": "Yes",
+    }
+  },
+  "$PROJECT_ID.$REGION.protected-data-aspect@Schema.longitude": {
+    "data": {
+      "protected_data_flag": "Yes",
+    }
+  },
 }
 EOF
 echo -e "👉  Check aspect-patch.json:"
 cat aspect-patch.json
+
 gcloud dataplex entries update \
   "bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/customer_details" \
   --location="$REGION" \
   --entry-group="@bigquery" \
   --update-aspects=aspect-patch.json
-  
   
 cat << 'EOF'
 
