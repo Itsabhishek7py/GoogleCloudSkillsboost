@@ -166,13 +166,20 @@ echo "👉  Check entry list:"
 gcloud dataplex entries list \
   --location=$REGION \
   --entry-group=@dataplex
+: <<'COMMENT'
+COMMENT
 
+# curl -X PATCH \
+#   -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+#   -H "Content-Type: application/json" \
+#   https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION/entryGroups/YOUR_GROUP/entries/customer_details/aspects/protected_data_aspect \
+#   -d @aspect-patch.json
 gcloud dataplex entries update-aspects "$ENTRY_ID" \
   --project="$PROJECT_ID" \
   --location="$REGION" \
   --entry-group=@dataplex \
   --aspects=aspect-patch.json
-echo "✅  Aspect updated"
+echo "✅  Aspect $ENTRY_ID updated"
   
 cat << 'EOF'
 
