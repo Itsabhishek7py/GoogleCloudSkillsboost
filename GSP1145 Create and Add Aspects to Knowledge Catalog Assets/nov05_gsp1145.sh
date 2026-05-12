@@ -225,10 +225,11 @@ Task 4. Search for assets using aspects
 
 EOF
 
-curl -X POST \
-  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
-  -H "Content-Type: application/json" \
-  "https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION:searchEntries" \
-  -d '{
-    "query": "protected_data_aspect"
-  }'
+# ## https://docs.cloud.google.com/dataplex/docs/reference/rest/v1/projects.locations/searchEntries
+# curl -X POST \
+#   -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+#   -H "Content-Type: application/json" \
+#   "https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION:searchEntries" \
+#   -d '{
+#     "query": "Protected Data Aspect"
+#   }'
