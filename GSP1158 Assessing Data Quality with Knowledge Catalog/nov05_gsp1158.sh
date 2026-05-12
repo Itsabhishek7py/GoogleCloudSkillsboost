@@ -76,7 +76,8 @@ bq query \
   --use_legacy_sql=false "\
   SELECT * FROM \`qwiklabs-gcp-02-95c3e9ec9850.customers.contact_info\`
   ORDER BY id
-  LIMIT 50"
+  LIMIT 50
+"
 
 bq query \
   --use_legacy_sql=false "\
