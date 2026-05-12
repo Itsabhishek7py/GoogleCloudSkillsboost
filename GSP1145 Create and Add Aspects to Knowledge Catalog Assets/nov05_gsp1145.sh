@@ -155,21 +155,22 @@ https://docs.cloud.google.com/sdk/gcloud/reference/dataplex/entries/update
 EOF
 cat > aspect-patch.json <<EOF
 {
-  "resource": "projects/'"$PROJECT_NUMBER"'/locations/'"$REGION"'/aspectTypes/protected_data_aspect@customer_details": {
+  "$PROJECT_NUMBER.$REGION.protected_data_aspect": {
+    "path": "projects/$PROJECT_ID/datasets/customers/tables/customer_details",
     "data": {
-      "protected_data_flag": "Yes"
+      "protected_data_flag": "Yes",
     }
   }
 }
 EOF
 echo -e "👉  Check aspect-patch.json:"
-
+cat aspect-patch.json
 # export TABLE_NAME="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/customer_details"
 # export TABLE_NAME="projects/$PROJECT_ID/locations/$REGION/entryGroups/@bigquery/entries/customer_details"
 # export TABLE_NAME="projects/$PROJECT_ID/datasets/customers/tables/customer_details"
 gcloud dataplex entries update $ASPECT_ENTRY_ID \
     --location=$REGION \
-    --entry-group=@dataplex \ 
+    --entry-group=@dataplex \
     --update-aspects=aspect-patch.json
   
 cat << 'EOF'
@@ -179,24 +180,11 @@ Task 4. Search for assets using aspects
 ========================================================
 
 EOF
-curl -X POST \
-  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
-  -H "Content-Type: application/json" \
-  "https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION/entries:search" \
-  -d '{
-    "query": "customer_details",
-    "scope": {
-      "aspectTypes": [
-        "projects/'"$PROJECT_NUMBER"'/locations/'"$REGION"'/aspectTypes/protected_data_aspect"
-      ]
-    }
-  }'
-
 
 curl -X POST \
   -H "Authorization: Bearer $(gcloud auth print-access-token)" \
   -H "Content-Type: application/json" \
   "https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION:searchEntries" \
   -d '{
-    "query": "customer_details"
+    "query": "protected_data_aspect"
   }'
