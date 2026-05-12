@@ -9,7 +9,7 @@
 * **Example of creating 1st-gen Cloud Build triggers via the CLI**    
   In this example, the script waits for the user to connect the GitHub repositories manually in `Cloud Build` before creating two triggers. It can also find the last but one successful build of a trigger and retry the build, which equals to a rollback.      
   lab - [GSP1077 Google Kubernetes Engine Pipeline using Cloud Build](https://github.com/nov05/gcp-skills-boost/tree/dev/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build)     
-  bash script - [abhishek.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/abhishek.sh)
+  bash script - [nov05_gsp1077.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/nov05_gsp1077.sh)
 
 * Example of BigQuery and Data Quality operations    
   bash script - [nov05_gsp1158.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP1158%20Assessing%20Data%20Quality%20with%20Knowledge%20Catalog/nov05_gsp1158.sh)
