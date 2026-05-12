@@ -162,12 +162,12 @@ cat > aspect-patch.json <<EOF
   }
 }
 EOF
+echo -e "👉  Check aspect-patch.json:"
 
 # export TABLE_NAME="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/customer_details"
 # export TABLE_NAME="projects/$PROJECT_ID/locations/$REGION/entryGroups/@bigquery/entries/customer_details"
 # export TABLE_NAME="projects/$PROJECT_ID/datasets/customers/tables/customer_details"
 gcloud dataplex entries update $ASPECT_ENTRY_ID \
-    --project=$PROJECT_ID \
     --location=$REGION \
     --entry-group=@dataplex \ 
     --update-aspects=aspect-patch.json
