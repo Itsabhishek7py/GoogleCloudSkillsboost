@@ -1,13 +1,18 @@
 # 🟢 **Google Kubernetes Engine Pipeline using Cloud Build (GSP1077)**  
 
-https://www.skills.google/games/7173/labs/44433    
-https://www.skills.google/games/7173   
+https://www.skills.google/games/7173/labs/44433      
 
-### ⚠️ Disclaimer
-- This script and guide are provided for  the educational purposes to help you understand the lab services and boost your career. Before using the script, please open and review it to familiarize yourself with Google Cloud services. Ensure that you follow 'Qwiklabs' terms of service and YouTube’s community guidelines. The goal is to enhance your learning experience, not to bypass it.
-
-### ©Credit
-- DM for credit or removal request (no copyright intended) ©All rights and credits for the original content belong to Google Cloud [Google Cloud Skill Boost website](https://www.cloudskillsboost.google/) 🙏
+```text
+Task 1. Initialize your lab
+Task 2. Create the Git repositories in GitHub repositories
+Task 3. Create a container image with Cloud Build
+Task 4. Create the Continuous Integration (CI) pipeline
+Task 5. Accessing GitHub from a build via SSH keys
+Task 6. Create the test environment and CD pipeline
+Task 7. Review Cloud Build pipeline
+Task 8. Test the complete pipeline
+Task 9. Test the rollback
+```
 
 <br>  
 
@@ -21,11 +26,10 @@ sudo chmod +x abhishek.sh
 ```
 
 ⚠️ Remember to delete the GitHub repositories that were created for this lab after completing it.
-  
-```bash
-gh repo create hello-cloudbuild-app --private 
-gh repo create hello-cloudbuild-env --private
-```
+  E.g.: 
+  https://github.com/nov05/hello-cloudbuild-app  
+  https://github.com/nov05/hello-cloudbuild-env   
+
 <br>  
 
 **Task 4.7**: Authenticate to your source repository with your username and password. This step has to be done manually.      
@@ -36,12 +40,3 @@ gh repo create hello-cloudbuild-env --private
 
 **Task 9.2**: Click the View all link under Build History for the hello-cloudbuild-env repository.
 <img src="https://raw.githubusercontent.com/nov05/pictures/refs/heads/master/gcp-skills-boost%20/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/2026-05-10%2019_41_26-Settings.jpg" width=800>   
-
-
-### Congratulations !!!!
-
-Connect with fellow cloud enthusiasts, ask questions, and share your learning journey.  
-
-[![Telegram](https://img.shields.io/badge/Telegram_Group-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/+gBcgRTlZLyM4OGI1)  
-[![YouTube](https://img.shields.io/badge/Subscribe-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@drabhishek.5460?sub_confirmation=1)  
-[![Instagram](https://img.shields.io/badge/Follow-%23E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/drabhishek.5460/) 
