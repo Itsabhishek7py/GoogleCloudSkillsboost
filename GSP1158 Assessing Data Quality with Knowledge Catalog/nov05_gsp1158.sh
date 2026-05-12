@@ -132,15 +132,20 @@ gcloud dataplex datascans create data-quality customer-orders-data-quality-job \
 ## Run the job
 gcloud dataplex datascans run customer-orders-data-quality-job \
   --location=$REGION
+echo
 echo "👉  Running customer-orders-data-quality-job..."
 
-## Check status
+## Check job status
 while true; do
-  STATUS=$(gcloud dataplex datascans describe customer-orders-data-quality-job \
+  JOB=$(gcloud dataplex datascans jobs list \
     --location=$REGION \
+    --datascan=customer-orders-data-quality-job \
+    --format="value(name)" | head -n 1)
+  STATUS=$(gcloud dataplex datascans jobs describe $JOB \
+    --location=$REGION \
+    --datascan=customer-orders-data-quality-job \
     --format="value(state)")
-  echo "🔹  Job status: $STATUS"
-  ## Don't stop for RUNNING, PENDING, CREATING, INITIALIZING
+  echo "Job status: $STATUS"
   if [[ "$STATUS" == "SUCCEEDED" || "$STATUS" == "FAILED" ]]; then
     break
   fi
