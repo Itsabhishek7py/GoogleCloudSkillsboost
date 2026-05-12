@@ -29,7 +29,7 @@ sudo chmod +x abhishek.sh
   * https://github.com/nov05/hello-cloudbuild-app    
   * https://github.com/nov05/hello-cloudbuild-env     
 
-<br>  
+<br><br><br>      
 
 **Task 4.7**: Authenticate to your source repository with your username and password. This step has to be done manually.      
 <img src="https://raw.githubusercontent.com/nov05/pictures/refs/heads/master/gcp-skills-boost%20/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/2026-05-11%2000_16_29-Settings.jpg" width=800>  
