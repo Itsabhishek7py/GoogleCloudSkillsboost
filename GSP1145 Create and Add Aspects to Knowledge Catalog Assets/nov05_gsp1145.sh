@@ -96,6 +96,19 @@ curl -X POST \
   -H "Content-Type: application/json" \
   "https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION/aspectTypes?aspectTypeId=protected_data_aspect" \
   -d @aspect-type.json
+  
+cat << 'EOF'
+
+========================================================
+Task 3. Add an aspect to assets
+========================================================
+
+EOF
+export ENTRY_NAME=$(curl -s -X GET \
+  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+  "https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION/entries:lookup?linkedResource=//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/customer_details" \
+  | jq -r '.name')
+echo "👉  Entry name: $ENTRY_NAME"
 
 cat > aspect-patch.json <<EOF
 {
@@ -114,14 +127,8 @@ curl -X PATCH \
   -H "Content-Type: application/json" \
   "https://dataplex.googleapis.com/v1/$ENTRY_NAME?updateMask=aspects" \
   -d @aspect-patch.json
+
   
-cat << 'EOF'
-
-========================================================
-Task 3. Add an aspect to assets
-========================================================
-
-EOF
 cat << 'EOF'
 
 ========================================================
@@ -129,3 +136,15 @@ Task 4. Search for assets using aspects
 ========================================================
 
 EOF
+curl -X POST \
+  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+  -H "Content-Type: application/json" \
+  "https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION/entries:search" \
+  -d '{
+    "query": "customer_details",
+    "scope": {
+      "aspectTypes": [
+        "projects/'"$PROJECT_ID"'/locations/'"$REGION"'/aspectTypes/protected_data_aspect"
+      ]
+    }
+  }'
