@@ -73,14 +73,16 @@ EOF
 ## Confirm dataset + table existence (optional but useful)
 bq ls $PROJECT_ID:customers
 
-bq query --use_legacy_sql=false "
+bq query \
+  --use_legacy_sql=false "\
 SELECT *
 FROM \`$PROJECT_ID.customers.contact_info\`
 ORDER BY id
 LIMIT 50
 "
 
-bq query --use_legacy_sql=false "
+bq query \
+  --use_legacy_sql=false "\
 SELECT COUNT(*) AS missing_ids
 FROM \`$PROJECT_ID.customers.contact_info\`
 WHERE id IS NULL
