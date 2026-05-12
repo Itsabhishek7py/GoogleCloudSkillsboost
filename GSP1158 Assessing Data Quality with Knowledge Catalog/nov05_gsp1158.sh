@@ -49,7 +49,18 @@ gcloud dataplex assets create contact-info \
   --display-name="Contact Info" \
   --resource-type=BIGQUERY_DATASET \
   --resource-name="projects/$PROJECT_ID/datasets/customers"
-  
+
+## Verify
+# gcloud dataplex lakes list --location=$REGION
+# gcloud dataplex zones list \
+#   --lake=ecommerce-lake \
+#   --location=$REGION
+# gcloud dataplex assets list \
+#   --lake=ecommerce-lake \
+#   --zone=customer-contact-raw-zone \
+#   --location=$REGION
+
+
 cat << 'EOF'
 
 ========================================================
@@ -57,6 +68,17 @@ Task 2. Query a BigQuery table to review data quality
 ========================================================
 
 EOF
+## Confirm dataset + table existence (optional but useful)
+bq ls $PROJECT_ID:customers
+
+bq query --use_legacy_sql=false "
+SELECT *
+FROM \`$PROJECT_ID.customers.contact_info\`
+ORDER BY id
+LIMIT 50
+" > task2_query_result.json
+echo "👉  Check task2_query_result.json:"  
+
 cat << 'EOF'
 
 ========================================================
