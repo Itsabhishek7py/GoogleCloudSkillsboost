@@ -1,6 +1,7 @@
 #!/bin/bash
 ## Created by nov05, 2026-05-11  
 
+cat >> ~/.bashrc <<'EOF'
 ## Get project id, project number, region, zone
 export PROJECT_ID=$(gcloud config get-value project)
 export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID \
@@ -18,6 +19,8 @@ echo "🔹  Region: $REGION"
 echo "🔹  Zone: $ZONE"
 echo "🔹  User: $USER"
 # echo "🔹  Bukect: $BUCKET"
+EOF
+source ~/.bashrc
 
 cat << 'EOF'
 
@@ -44,6 +47,8 @@ gcloud dataplex zones create customer-curated-zone \
   --resource-location-type=SINGLE_REGION
 
 ## Attach BigQuery Dataset as an Asset
+## https://docs.cloud.google.com/sdk/gcloud/reference/dataplex/assets/create
+## https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dataplex_asset
 gcloud dataplex assets create customer-details-dataset \
   --location=$REGION \
   --lake=orders-lake \
@@ -53,14 +58,22 @@ gcloud dataplex assets create customer-details-dataset \
   --resource-name="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers"
 
 ## Verify
-# gcloud dataplex lakes list --location=$REGION
-# gcloud dataplex zones list \
-#   --lake=orders-lake \
-#   --location=$REGION
-# gcloud dataplex assets list \
-#   --lake=orders-lake \
-#   --zone=customer-curated-zone \
-#   --location=$REGION
+echo
+echo "👉  Data lake list:"
+gcloud dataplex lakes list --location=$REGION
+
+echo
+echo "👉  Data zone list:"
+gcloud dataplex zones list \
+  --lake=orders-lake \
+  --location=$REGION
+
+echo
+echo "👉  Data asset list:"
+gcloud dataplex assets list \
+  --lake=orders-lake \
+  --zone=customer-curated-zone \
+  --location=$REGION
 
 
 cat << 'EOF'
@@ -68,6 +81,7 @@ cat << 'EOF'
 ========================================================
 Task 2. Create an aspect type
 ========================================================
+https://docs.cloud.google.com/dataplex/docs/enrich-entries-metadata#gcloud
 
 EOF
 cat > aspect-type.json <<EOF
@@ -110,37 +124,54 @@ cat << 'EOF'
 ========================================================
 Task 3. Add an aspect to assets
 ========================================================
+https://docs.cloud.google.com/sdk/gcloud/reference/dataplex/entries/update-aspects
 
 EOF
 export BQ_RESOURCE="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/customer_details"
-export ENTRY_NAME=$(curl -s -X GET \
-  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
-  "https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION/entries:lookup?linkedResource=//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/customer_details" \
-  | jq -r '.name')
-echo "👉  Entry name: $ENTRY_NAME"
+export ENTRY_ID="protected-data-aspect_aspectType"
 
 cat > aspect-patch.json <<EOF
 {
-  "aspects": {
-    "protected_data_aspect": {
-      "data": {
-        "protected_data_flag": "Yes"
-      }
-    }
+  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@zip": {
+    "data": { "protected_data_flag": "Yes" }
+  },
+  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@state": {
+    "data": { "protected_data_flag": "Yes" }
+  },
+  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@last_name": {
+    "data": { "protected_data_flag": "Yes" }
+  },
+  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@country": {
+    "data": { "protected_data_flag": "Yes" }
+  },
+  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@email": {
+    "data": { "protected_data_flag": "Yes" }
+  },
+  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@latitude": {
+    "data": { "protected_data_flag": "Yes" }
+  },
+  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@first_name": {
+    "data": { "protected_data_flag": "Yes" }
+  },
+  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@city": {
+    "data": { "protected_data_flag": "Yes" }
+  },
+  "projects/$PROJECT_NUMBER/locations/$REGION/aspectTypes/protected-data-aspect@longitude": {
+    "data": { "protected_data_flag": "Yes" }
   }
 }
 EOF
 
-# curl -X PATCH \
-#   -H "Authorization: Bearer $(gcloud auth print-access-token)" \
-#   -H "Content-Type: application/json" \
-#   "https://dataplex.googleapis.com/v1/$ENTRY_NAME?updateMask=aspects" \
-#   -d @aspect-patch.json
-gcloud dataplex entries update-aspects "$ENTRY_NAME" \
+echo "👉  Check entry list:"
+gcloud dataplex entries list \
+  --location=$REGION \
+  --entry-group=@dataplex
+
+gcloud dataplex entries update-aspects "$ENTRY_ID" \
   --project="$PROJECT_ID" \
   --location="$REGION" \
-  --entry-group="$ENTRY_GROUP" \
-  --aspects-file=aspect-patch.json
+  --entry-group=@dataplex \
+  --aspects=aspect-patch.json
 echo "✅  Aspect updated"
   
 cat << 'EOF'
