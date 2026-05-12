@@ -74,7 +74,7 @@ bq ls $PROJECT_ID:customers
 
 bq query \
   --use_legacy_sql=false "\
-  SELECT * FROM `qwiklabs-gcp-02-95c3e9ec9850.customers.contact_info`
+  SELECT * FROM \`qwiklabs-gcp-02-95c3e9ec9850.customers.contact_info\`
   ORDER BY id
   LIMIT 50"
 
