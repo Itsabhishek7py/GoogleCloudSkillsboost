@@ -50,6 +50,7 @@ gcloud dataplex zones create customer-curated-zone \
 ## https://docs.cloud.google.com/sdk/gcloud/reference/dataplex/assets/create
 ## https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dataplex_asset
 gcloud dataplex assets create customer-details-dataset \
+  --project=$PROJECT_ID \
   --location=$REGION \
   --lake=orders-lake \
   --zone=customer-curated-zone \
