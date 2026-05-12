@@ -1,6 +1,8 @@
 # 🟢 The Basics of Google Cloud Compute: Challenge Lab (ARC120)
 
 https://www.skills.google/games/7174/labs/44441   
+https://www.skills.google/course_templates/754/labs/597890  
+
 
 ```text
 Task 1. Create a Cloud Storage bucket
