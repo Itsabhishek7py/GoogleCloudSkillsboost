@@ -186,7 +186,7 @@ SELECT rule_failed_records_query
 FROM \`$PROJECT_ID.customers_dq_dataset.dq_results\`
 LIMIT 2
 " | jq -r '.[1].rule_failed_records_query')
+bq query --use_legacy_sql=false "$ID_QUERY"
 
 echo
 echo "✅  All done"
-bq query --use_legacy_sql=false "$ID_QUERY"
