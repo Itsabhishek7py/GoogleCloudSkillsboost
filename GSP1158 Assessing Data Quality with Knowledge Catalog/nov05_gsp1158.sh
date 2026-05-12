@@ -111,6 +111,7 @@ postScanActions:
 EOF
 # sed -i "s/PROJECT_ID/$(gcloud config get-value project)/g" dq-customer-raw-data.yaml
 sed -i "s|PROJECT_ID|$PROJECT_ID|g" dq-customer-raw-data.yaml
+gsutil cp dq-customer-raw-data.yaml gs://$BUCKET/
 
 cat << 'EOF'
 
@@ -119,6 +120,37 @@ Task 4. Define and run an auto data quality job in Knowledge Catalog
 ========================================================
 
 EOF
+## Create the Data Quality Scan (CLI equivalent of the UI job)
+gcloud dataplex datascans create data-quality customer-orders-data-quality-job \
+  --project=$PROJECT_ID \
+  --location=$REGION \
+  --data-source-resource="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/contact_info" \
+  --data-quality-spec-file="gs://$BUCKET/dq-customer-raw-data.yaml"
+
+## Run the job
+gcloud dataplex datascans run customer-orders-data-quality-job \
+  --location=$REGION
+echo "👉  Running customer-orders-data-quality-job..."
+
+## Check status
+while true; do
+  STATUS=$(gcloud dataplex datascans describe customer-orders-data-quality-job \
+    --location=$REGION \
+    --format="value(state)")
+  echo "🔹  Job status: $STATUS"
+  if [[ "$STATUS" == "SUCCEEDED" || "$STATUS" == "FAILED" ]]; then
+    break
+  fi
+  sleep 10
+done
+  
+## View result
+bq query --use_legacy_sql=false "
+SELECT *
+FROM \`$PROJECT_ID.customers_dq_dataset.dq_results\`
+"
+
+
 cat << 'EOF'
 
 ========================================================
