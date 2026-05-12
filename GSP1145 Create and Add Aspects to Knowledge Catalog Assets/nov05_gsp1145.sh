@@ -131,32 +131,40 @@ echo "👉  Check entry list:"
 gcloud dataplex entries list \
   --location=$REGION \
   --entry-group=@dataplex
+export ASPECT_ENTRY_ID="protected-data-aspect_aspectType"
 
+## Update aspect
+# gcloud dataplex catalog entries update $ASPECT_ENTRY_ID \
+#     --project=$PROJECT_ID \
+#     --location=$REGION \
+#     --aspect-keys="protected-data-aspect" \
+#     --aspect-data-file=aspect-type.json
+    
 cat << 'EOF'
 
 ========================================================
 Task 3. Add an aspect to assets
 ========================================================
-https://docs.cloud.google.com/sdk/gcloud/reference/dataplex/entries/update-aspects
+https://docs.cloud.google.com/dataplex/docs/enrich-entries-metadata#gcloud
+https://docs.cloud.google.com/sdk/gcloud/reference/dataplex/entries/update
 
 EOF
-# export TABLE_NAME="projects/$PROJECT_ID/datasets/customers/tables/customer_details"
-export ENTRY_ID="protected-data-aspect_aspectType"
-
 cat > aspect-patch.json <<EOF
 {
-  "$PROJECT_ID/$REGION/protected-data-aspect@customer_details.zip": {
-    "data": { "protected_data_flag": "Yes" },
-  }
+  "protected_data_flag": "Yes" 
 }
 EOF
-
-gcloud dataplex entries update-aspects "$ENTRY_ID" \
-  --project="$PROJECT_ID" \
-  --location="$REGION" \
-  --entry-group=@dataplex \
-  --aspects=aspect-patch.json
-echo "✅  Aspect $ENTRY_ID updated"
+# export TABLE_NAME="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/customer_details"
+# export TABLE_NAME="projects/$PROJECT_ID/locations/$REGION/entryGroups/@bigquery/entries/customer_details"
+export TABLE_NAME="projects/$PROJECT_ID/datasets/customers/tables/customer_details"
+gcloud dataplex entries update "$TABLE_NAME" \
+    --aspect-keys="protected-data-aspect" \
+    --aspect-data-file=aspect-patch.json
+gcloud dataplex entries update ASPECT_ENTRY_ID \
+    --project=$PROJECT_ID \
+    --location=$REGION \
+    --entry-group entry-group1 
+    --update-aspects=aspect-patch.json
   
 cat << 'EOF'
 
