@@ -11,6 +11,9 @@
   lab - [GSP1077 Google Kubernetes Engine Pipeline using Cloud Build](https://github.com/nov05/gcp-skills-boost/tree/dev/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build)     
   bash script - [abhishek.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/abhishek.sh)
 
+* Example of BigQuery and Data Quality operations
+  bash script - [nov05_gsp1158.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP1158%20Assessing%20Data%20Quality%20with%20Knowledge%20Catalog/nov05_gsp1158.sh)
+  
 * Example of ensuring VM running status and its SSH readiness   
   bash script - [nov05_GSP004.sh](https://github.com/nov05/gcp-skills-boost/blob/dev/Creating%20a%20Persistent%20Disk/nov05_GSP004.sh)
 
