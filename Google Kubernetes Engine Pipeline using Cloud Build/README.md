@@ -25,10 +25,9 @@ sudo chmod +x abhishek.sh
 ./abhishek.sh
 ```
 
-⚠️ Remember to delete the GitHub repositories that were created for this lab after completing it.     
-  E.g.:    
-  https://github.com/nov05/hello-cloudbuild-app    
-  https://github.com/nov05/hello-cloudbuild-env     
+⚠️ Remember to delete the GitHub repositories that were created for this lab after completing it. E.g.:      
+  * https://github.com/nov05/hello-cloudbuild-app    
+  * https://github.com/nov05/hello-cloudbuild-env     
 
 <br>  
 
