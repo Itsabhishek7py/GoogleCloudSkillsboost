@@ -153,10 +153,10 @@ https://docs.cloud.google.com/dataplex/docs/enrich-entries-metadata#gcloud
 https://docs.cloud.google.com/sdk/gcloud/reference/dataplex/entries/update
 
 EOF
+## The proper format is "project.location.aspectType"
 cat > aspect-patch.json <<EOF
 {
-  "$PROJECT_NUMBER.$REGION.protected_data_aspect": {
-    "path": "projects/$PROJECT_ID/datasets/customers/tables/customer_details",
+  "$PROJECT_ID.$REGION.protected-data-aspect": {
     "data": {
       "protected_data_flag": "Yes",
     }
@@ -165,13 +165,12 @@ cat > aspect-patch.json <<EOF
 EOF
 echo -e "👉  Check aspect-patch.json:"
 cat aspect-patch.json
-# export TABLE_NAME="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/customer_details"
-# export TABLE_NAME="projects/$PROJECT_ID/locations/$REGION/entryGroups/@bigquery/entries/customer_details"
-# export TABLE_NAME="projects/$PROJECT_ID/datasets/customers/tables/customer_details"
-gcloud dataplex entries update $ASPECT_ENTRY_ID \
-    --location=$REGION \
-    --entry-group=@dataplex \
-    --update-aspects=aspect-patch.json
+gcloud dataplex entries update \
+  "bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/customer_details" \
+  --location="$REGION" \
+  --entry-group="@bigquery" \
+  --update-aspects=aspect-patch.json
+  
   
 cat << 'EOF'
 
