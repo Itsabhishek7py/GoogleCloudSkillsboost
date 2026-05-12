@@ -9,6 +9,7 @@ export REGION=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-region])")
 export ZONE=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+export BUCKET=$(gcloud config get-value project)-bucket  
 gcloud config set compute/region $REGION
 echo
 echo "🔹  Project ID: $PROJECT_ID"
@@ -16,6 +17,7 @@ echo "🔹  Project number: $PROJECT_NUMBER"
 echo "🔹  Region: $REGION"
 echo "🔹  Zone: $ZONE"
 echo "🔹  User: $USER"
+echo "🔹  Bukect: $BUCKET"
 echo
 
 cat << 'EOF'
@@ -76,8 +78,13 @@ SELECT *
 FROM \`$PROJECT_ID.customers.contact_info\`
 ORDER BY id
 LIMIT 50
-" > task2_query_result.json
-echo "👉  Check task2_query_result.json:"  
+"
+
+bq query --use_legacy_sql=false "
+SELECT COUNT(*) AS missing_ids
+FROM \`$PROJECT_ID.customers.contact_info\`
+WHERE id IS NULL
+"
 
 cat << 'EOF'
 
@@ -86,6 +93,25 @@ Task 3. Create and upload a data quality specification file
 ========================================================
 
 EOF
+cat > dq-customer-raw-data.yaml << EOF
+rules:
+- nonNullExpectation: {}
+  column: id
+  dimension: COMPLETENESS
+  threshold: 1
+- regexExpectation:
+    regex: '^[^@]+[@]{1}[^@]+$'
+  column: email
+  dimension: CONFORMANCE
+  ignoreNull: true
+  threshold: .85
+postScanActions:
+  bigqueryExport:
+    resultsTable: projects/PROJECT_ID/datasets/customers_dq_dataset/tables/dq_results
+EOF
+# sed -i "s/PROJECT_ID/$(gcloud config get-value project)/g" dq-customer-raw-data.yaml
+sed -i "s|PROJECT_ID|$PROJECT_ID|g" dq-customer-raw-data.yaml
+
 cat << 'EOF'
 
 ========================================================
