@@ -44,14 +44,13 @@ gcloud dataplex zones create customer-curated-zone \
   --resource-location-type=SINGLE_REGION
 
 ## Attach BigQuery Dataset as an Asset
-gcloud dataplex assets create customer-details-dateset \
-  --project=$PROJECT_ID \
+gcloud dataplex assets create customer-details-dataset \
   --location=$REGION \
   --lake=orders-lake \
-  --zone=customer-curated-zonee \
+  --zone=customer-curated-zone \
   --display-name="Customer Details Dataset" \
   --resource-type=BIGQUERY_DATASET \
-  --resource-name="projects/$PROJECT_ID/datasets/customers"
+  --resource-name="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers"
 
 ## Verify
 # gcloud dataplex lakes list --location=$REGION
