@@ -17,7 +17,7 @@ echo "🔹  Project number: $PROJECT_NUMBER"
 echo "🔹  Region: $REGION"
 echo "🔹  Zone: $ZONE"
 echo "🔹  User: $USER"
-echo "🔹  Bukect: $BUCKET"
+# echo "🔹  Bukect: $BUCKET"
 
 cat << 'EOF'
 
@@ -44,7 +44,7 @@ gcloud dataplex zones create customer-curated-zone \
   --resource-location-type=SINGLE_REGION
 
 ## Attach BigQuery Dataset as an Asset
-gcloud dataplex assets create contact-info \
+gcloud dataplex assets create customer-details-dateset \
   --project=$PROJECT_ID \
   --location=$REGION \
   --lake=orders-lake \
@@ -71,6 +71,50 @@ Task 2. Create an aspect type
 ========================================================
 
 EOF
+cat > aspect-type.json <<EOF
+{
+  "displayName": "Protected Data Aspect",
+  "metadataTemplate": {
+    "fields": [
+      {
+        "fieldId": "protected_data_flag",
+        "displayName": "Protected Data Flag",
+        "type": "enum",
+        "isRequired": true,
+        "enumValues": [
+          { "displayName": "Yes" },
+          { "displayName": "No" }
+        ]
+      }
+    ]
+  }
+}
+EOF
+
+curl -X POST \
+  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+  -H "Content-Type: application/json" \
+  "https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION/aspectTypes?aspectTypeId=protected_data_aspect" \
+  -d @aspect-type.json
+
+cat > aspect-patch.json <<EOF
+{
+  "aspects": {
+    "protected_data_aspect": {
+      "data": {
+        "protected_data_flag": "Yes"
+      }
+    }
+  }
+}
+EOF
+
+curl -X PATCH \
+  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+  -H "Content-Type: application/json" \
+  "https://dataplex.googleapis.com/v1/$ENTRY_NAME?updateMask=aspects" \
+  -d @aspect-patch.json
+  
 cat << 'EOF'
 
 ========================================================
