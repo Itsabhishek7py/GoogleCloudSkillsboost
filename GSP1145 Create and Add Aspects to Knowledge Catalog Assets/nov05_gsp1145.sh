@@ -233,3 +233,5 @@ EOF
 #   -d '{
 #     "query": "Protected Data Aspect"
 #   }'
+
+# gcloud dataplex entries search 'protected-data-aspect' --project=$PROJECT_ID
