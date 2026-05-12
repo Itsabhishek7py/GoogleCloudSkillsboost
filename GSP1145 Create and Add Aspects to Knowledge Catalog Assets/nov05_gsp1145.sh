@@ -117,11 +117,16 @@ Task 3. Add an aspect to assets
 ========================================================
 
 EOF
+export BQ_RESOURCE="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/customer_details"
 export ENTRY_NAME=$(curl -s -X GET \
   -H "Authorization: Bearer $(gcloud auth print-access-token)" \
   "https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION/entries:lookup?linkedResource=//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/customer_details" \
   | jq -r '.name')
 echo "👉  Entry name: $ENTRY_NAME"
+if [ -z "$ENTRY_NAME" ]; then
+  echo "⚠️  Failed to resolve Dataplex entry"
+  exit 1
+fi
 
 cat > aspect-patch.json <<EOF
 {
@@ -135,12 +140,17 @@ cat > aspect-patch.json <<EOF
 }
 EOF
 
-curl -X PATCH \
-  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
-  -H "Content-Type: application/json" \
-  "https://dataplex.googleapis.com/v1/$ENTRY_NAME?updateMask=aspects" \
-  -d @aspect-patch.json
-
+# curl -X PATCH \
+#   -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+#   -H "Content-Type: application/json" \
+#   "https://dataplex.googleapis.com/v1/$ENTRY_NAME?updateMask=aspects" \
+#   -d @aspect-patch.json
+gcloud dataplex entries update-aspects "$ENTRY_NAME" \
+  --project="$PROJECT_ID" \
+  --location="$REGION" \
+  --entry-group="$ENTRY_GROUP" \
+  --aspects-file=aspect-patch.json
+echo "✅  Aspect updated"
   
 cat << 'EOF'
 
