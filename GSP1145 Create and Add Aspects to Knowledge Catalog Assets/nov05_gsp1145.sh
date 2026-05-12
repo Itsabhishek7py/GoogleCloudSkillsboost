@@ -100,11 +100,6 @@ cat > aspect-type.json <<EOF
 }
 EOF
 
-# curl -X POST \
-#   -H "Authorization: Bearer $(gcloud auth print-access-token)" \
-#   -H "Content-Type: application/json" \
-#   "https://dataplex.googleapis.com/v1/projects/$PROJECT_ID/locations/$REGION/aspectTypes?aspectTypeId=protected_data_aspect" \
-#   -d @aspect-type.json
 gcloud dataplex aspect-types create protected-data-aspect \
   --location=$REGION \
   --display-name="Protected Data Aspect" \
