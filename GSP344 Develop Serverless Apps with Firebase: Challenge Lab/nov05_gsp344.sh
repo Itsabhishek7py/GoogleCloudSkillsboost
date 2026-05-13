@@ -73,10 +73,11 @@ gcloud run deploy netflix-dataset-service \
   --region $REGION \
   --allow-unauthenticated \
   --max-instances 1
-$SERVICE_URL=$(gcloud run services describe netflix-dataset-service \
+SERVICE_URL=$(gcloud run services describe netflix-dataset-service \
   --region $REGION \
   --format="value(status.url)")
 echo -e "\n👉  Check netflix-dataset-service v0.1."
+echo "  curl -X GET $SERVICE_URL"
 echo -e "  It should respond with: {\"status\":\"Netflix Dataset! Make a query.\"}\n"
 curl -X GET $SERVICE_URL
 
