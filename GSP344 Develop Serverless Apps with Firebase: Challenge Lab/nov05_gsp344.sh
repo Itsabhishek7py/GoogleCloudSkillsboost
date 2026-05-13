@@ -114,9 +114,11 @@ export SERVICE_URL=$(gcloud run services describe netflix-dataset-service \
   --region $REGION \
   --format="value(status.url)")
 echo -e "\n👉  Check netflix-dataset-service v0.2."
-echo "  curl -X GET $SERVICE_URL/2019"
+# echo "  curl -X GET $SERVICE_URL/2019"
+echo "  curl -s $SERVICE_URL/2019 | jq '.' | head -n 3"
 echo -e "  It should respond with json dataset\n"
-curl -X GET $SERVICE_URL/2019
+# curl -X GET $SERVICE_URL/2019
+curl -s $SERVICE_URL/2019 | jq '.' | head -n 3
 
 answer=""
 echo -e "\nReady to proceed?"
@@ -147,7 +149,7 @@ gcloud run deploy frontend-staging-service \
   --region $REGION \
   --allow-unauthenticated \
   --max-instances 1 \
-  --set-env-vars REST_API_SERVICE=$SERVICE_URL
+  # --set-env-vars REST_API_SERVICE=$SERVICE_URL
 export URL=$(gcloud run services describe frontend-staging-service \
   --region $REGION \
   --format="value(status.url)")
@@ -176,13 +178,15 @@ EOF
 
 cd ~/pet-theory/lab06/firebase-frontend/public
 sed -i "s|data/netflix.json|$SERVICE_URL/2020|g" app.js
+gcloud builds submit \
+  --tag $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-production:0.1
 gcloud run deploy frontend-production-service \
-  --image $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-staging:0.1 \
+  --image $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-production:0.1 \
   --platform managed \
   --region $REGION \
   --allow-unauthenticated \
   --max-instances 1 \
-  --set-env-vars REST_API_SERVICE=$SERVICE_URL
+  # --set-env-vars REST_API_SERVICE=$SERVICE_URL
 export URL=$(gcloud run services describe frontend-production-service \
   --region $REGION \
   --format="value(status.url)")
