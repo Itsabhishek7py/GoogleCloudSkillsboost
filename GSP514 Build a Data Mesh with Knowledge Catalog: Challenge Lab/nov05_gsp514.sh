@@ -129,6 +129,7 @@ Task 2. Create an aspect type and add an aspect to a zone
 https://docs.cloud.google.com/dataplex/docs/enrich-entries-metadata#gcloud
 
 EOF
+rm -f aspect-type.json
 cat > aspect-type.json <<EOF
 {
   "name": "protected_customer_data_template",
@@ -158,7 +159,7 @@ cat > aspect-type.json <<EOF
     {
       "name": "protected_contact_information_flag",
       "type": "enum",
-      "index": 1,
+      "index": 2,
       "annotations": {
         "displayName": "Protected Contact Information Flag"
       },
