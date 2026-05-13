@@ -7,6 +7,8 @@ chmod +x nov05_gsp344.sh
 ./nov05_gsp344.sh
 ```
 
+* Code folder - https://github.com/rosera/pet-theory/tree/main/lab06
+  
 ## 👉 Logs   
 
 * 2026-05-13 Created script `nov05_gsp344.sh`.    
