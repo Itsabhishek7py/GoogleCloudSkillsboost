@@ -28,6 +28,9 @@
 
 * Example of calling APIs from a VM   
   bash script - [nov05_gsp038.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Entity%20and%20Sentiment%20Analysis%20with%20the%20Natural%20Language%20API/nov05_gsp038.sh)
+
+* Example of creating a Firebase app, writing and reading a Firestore document    
+  bash script - [nov05_gs1136.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP1136%20Getting%20Started%20with%20Firebase%20Cloud%20Firestore/nov05_gsp1136.sh)
   
 <br><br><br>
 
