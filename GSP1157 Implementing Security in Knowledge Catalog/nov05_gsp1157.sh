@@ -80,7 +80,7 @@ gcloud dataplex assets create customer-online-sessions-bucket \
   --zone=customer-raw-zone \
   --display-name="Customer Online Sessions" \
   --resource-type=STORAGE_BUCKET \
-  --resource-name="projects/$PROJECT_ID/buckets/$BUCKET"
+  --resource-name="projects/_/buckets/$BUCKET"
 
   
 cat << 'EOF'
