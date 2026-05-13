@@ -23,6 +23,7 @@ echo "🔹  User: $USER"
 echo
 # EOF
 # source ~/.bashrc
+cd ~
 git clone https://github.com/rosera/pet-theory.git
   
 cat << 'EOF'
@@ -46,7 +47,7 @@ Task 2. Import the database
 
 EOF
 
-cd pet-theory/lab06/firebase-import-csv/solution
+cd ~/pet-theory/lab06/firebase-import-csv/solution
 npm install
 node index.js netflix_titles_original.csv
 
@@ -63,7 +64,7 @@ gcloud artifacts repositories create rest-api-repo \
   --location=$REGION \
   --description="GSP344 REST API container repository"
   
-cd pet-theory/lab06/firebase-rest-api/solution-01
+cd ~/pet-theory/lab06/firebase-rest-api/solution-01
 gcloud builds submit \
   --tag $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/rest-api:0.1
 gcloud run deploy netflix-dataset-service \
@@ -87,7 +88,7 @@ Task 4. Configure Firestore API access
 
 EOF
 
-cd pet-theory/lab06/firebase-rest-api/solution-02
+cd ~/pet-theory/lab06/firebase-rest-api/solution-02
 gcloud builds submit \
   --tag $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/rest-api:0.2
 gcloud run deploy netflix-dataset-service \
@@ -111,7 +112,7 @@ Task 5. Deploy the staging frontend
 
 EOF
 
-cd pet-theory/lab06/firebase-frontend
+cd ~/pet-theory/lab06/firebase-frontend
 gcloud builds submit \
   --tag $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-staging:0.1
 gcloud run deploy frontend-staging-service \
@@ -133,7 +134,7 @@ Task 6. Deploy the production frontend
 
 EOF
 
-cd pet-theory/lab06/firebase-frontend/public
+cd ~/pet-theory/lab06/firebase-frontend/public
 gcloud builds submit \
   --tag $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-production:0.1
 gcloud run deploy frontend-production-service \
@@ -148,4 +149,5 @@ sed -i "s|data/netflix.json|$SERVICE_URL/2020|g" app.js
 echo -e "\n👉  Check frontend-production-service v0.1."
 echo -e "  https://$SERVICE_URL/2020\n"
 
+cd ~
 echo -e "\n✅  All done\n"
