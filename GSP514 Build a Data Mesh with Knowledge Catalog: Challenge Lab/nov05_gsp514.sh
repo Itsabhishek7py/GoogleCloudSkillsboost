@@ -40,7 +40,8 @@ echo "🔹  Region: $REGION"
 echo "🔹  Zone: $ZONE"
 echo "🔹  User: $USER"
 echo "🔹  Username 2: $USERNAME2"
-echo "🔹  Bukect: $BUCKET"
+echo "🔹  Bucket: $BUCKET"
+echo "🔹  Bucket for data quality: $BUCKET_DQ"
 echo
 # EOF
 # source ~/.bashrc
