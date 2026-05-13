@@ -17,7 +17,7 @@ BOLD_TEXT=$'\033[1m'
 UNDERLINE_TEXT=$'\033[4m'
 
 echo
-read -p "👉  Enter user 2: " USER2
+read -p "👉  Enter username 2: " USERNAME2
 export USER2=$USER2  
 
 # cat >> ~/.bashrc <<'EOF'
@@ -37,8 +37,8 @@ echo "🔹  Project number: $PROJECT_NUMBER"
 echo "🔹  Region: $REGION"
 echo "🔹  Zone: $ZONE"
 echo "🔹  User: $USER"
+echo "🔹  Username 2: $USERNAME2"
 echo "🔹  Bukect: $BUCKET"
-echo "🔹  User 2: $USER2"
 echo
 # EOF
 # source ~/.bashrc
@@ -92,7 +92,7 @@ gcloud dataplex assets add-iam-policy-binding customer-online-sessions-bucket \
     --location=REGION \
     --lake=customer-info-lake \
     --zone=customer-raw-zone \
-    --member="user:$USER2" \
+    --member="user:$USERNAME2" \
     --role="roles/dataplex.dataReader"
   
 
@@ -104,7 +104,7 @@ Task 3. Test access to Knowledge Catalog resources as a Dataplex Data Reader
 
 EOF
 cat << EOF
-👉  Log in a new tab as $USER2. Run the following commands. 
+👉  Log in a new tab as $USERNAME2. Run the following commands. 
     You will receive an error, and no files are uploaded to the bucket.
 
 export BUCKET="$PROJECT_ID-bucket"
@@ -136,7 +136,7 @@ gcloud dataplex assets add-iam-policy-binding customer-online-sessions-bucket \
     --location=REGION \
     --lake=customer-info-lake \
     --zone=customer-raw-zone \
-    --member="user:$USER2" \
+    --member="user:$USERNAME2" \
     --role="roles/dataplex.dataWriter"
 cat << EOF
 
