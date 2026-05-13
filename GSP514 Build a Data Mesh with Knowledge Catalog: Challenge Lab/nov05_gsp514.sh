@@ -196,6 +196,7 @@ gcloud dataplex entries describe $ASPECT_ENTRY_ID \
   --location=$REGION \
   --entry-group=@dataplex
 
+rm -f aspect-patch.json
 cat > aspect-patch.json <<EOF
 {
   "$PROJECT_ID.$REGION.protected-customer-data-aspect": {
@@ -210,9 +211,9 @@ echo -e "👉  Check aspect-patch.json:"
 cat aspect-patch.json
 
 gcloud dataplex entries update \
-  "bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/customer_details" \
+  "dataplex.googleapis.com/projects/$PROJECT_ID/lakes/sales-lake/zones/raw-customer-zone" \
   --location="$REGION" \
-  --entry-group="@bigquery" \
+  --entry-group="@dataplex" \
   --update-aspects=aspect-patch.json
   
 cat << 'EOF'
