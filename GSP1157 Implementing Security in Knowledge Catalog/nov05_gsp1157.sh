@@ -61,7 +61,7 @@ gcloud dataplex lakes create customer-info-lake \
   --display-name="Customer Info Lake"
 
 ## Create the Zone (Curated Zone)
-gcloud dataplex zones create customer-row-zone \
+gcloud dataplex zones create customer-raw-zone \
   --project=$PROJECT_ID \
   --location=$REGION \
   --lake=customer-info-lake \
