@@ -73,7 +73,7 @@ gcloud run deploy netflix-dataset-service \
   --region $REGION \
   --allow-unauthenticated \
   --max-instances 1
-SERVICE_URL=$(gcloud run services describe netflix-dataset-service \
+export SERVICE_URL=$(gcloud run services describe netflix-dataset-service \
   --region $REGION \
   --format="value(status.url)")
 echo -e "\n👉  Check netflix-dataset-service v0.1."
@@ -114,6 +114,7 @@ export SERVICE_URL=$(gcloud run services describe netflix-dataset-service \
   --region $REGION \
   --format="value(status.url)")
 echo -e "\n👉  Check netflix-dataset-service v0.2."
+echo "  curl -X GET $SERVICE_URL/2019"
 echo -e "  It should respond with json dataset\n"
 curl -X GET $SERVICE_URL/2019
 
@@ -144,6 +145,7 @@ gcloud run deploy frontend-staging-service \
   --image $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-staging:0.1 \
   --platform managed \
   --region $REGION \
+  --allow-unauthenticated \
   --max-instances 1 \
   --set-env-vars REST_API_SERVICE=$SERVICE_URL
 export URL=$(gcloud run services describe frontend-staging-service \
@@ -177,6 +179,7 @@ gcloud run deploy frontend-production-service \
   --image $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-staging:0.1 \
   --platform managed \
   --region $REGION \
+  --allow-unauthenticated \
   --max-instances 1 \
   --set-env-vars REST_API_SERVICE=$SERVICE_URL
 export URL=$(gcloud run services describe frontend-production-service \
