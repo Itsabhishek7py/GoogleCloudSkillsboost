@@ -109,7 +109,7 @@ gcloud run deploy netflix-dataset-service \
   --region $REGION \
   --allow-unauthenticated \
   --max-instances 1
-$SERVICE_URL=$(gcloud run services describe netflix-dataset-service \
+export SERVICE_URL=$(gcloud run services describe netflix-dataset-service \
   --region $REGION \
   --format="value(status.url)")
 echo -e "\n👉  Check netflix-dataset-service v0.2."
@@ -143,12 +143,13 @@ gcloud run deploy frontend-staging-service \
   --image $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-staging:0.1 \
   --platform managed \
   --region $REGION \
-  --max-instances 1
-$SERVICE_URL=$(gcloud run services describe frontend-staging-service \
+  --max-instances 1 \
+  --set-env-vars REST_API_SERVICE=$SERVICE_URL
+export URL=$(gcloud run services describe frontend-staging-service \
   --region $REGION \
   --format="value(status.url)")
 echo -e "\n👉  Check frontend-staging-service v0.1."
-echo -e "  https://$SERVICE_URL\n"
+echo -e "  $URL\n"
 
 answer=""
 echo -e "\nReady to proceed?"
@@ -171,10 +172,8 @@ Task 6. Deploy the production frontend
 EOF
 
 cd ~/pet-theory/lab06/firebase-frontend/public
-gcloud builds submit \
-  --tag $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-production:0.1
 gcloud run deploy frontend-production-service \
-  --image $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-production:0.1 \
+  --image $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-staging:0.1 \
   --platform managed \
   --region $REGION \
   --max-instances 1
