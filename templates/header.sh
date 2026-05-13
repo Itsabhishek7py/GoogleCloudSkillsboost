@@ -47,6 +47,7 @@ Task 1. Create a lake, zone, and asset in Knowledge Catalog
 EOF
 cat << 'EOF'
 
+echo -e "\n✅  All done\n"
 ========================================================
 Task 2. Query a BigQuery table to review data quality
 ========================================================
