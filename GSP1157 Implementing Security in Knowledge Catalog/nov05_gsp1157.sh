@@ -18,6 +18,7 @@ UNDERLINE_TEXT=$'\033[4m'
 
 echo
 read -p "👉  Enter username 2: " USERNAME2
+echo
 export USER2=$USER2  
 
 # cat >> ~/.bashrc <<'EOF'
