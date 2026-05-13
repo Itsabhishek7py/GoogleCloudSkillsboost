@@ -11,6 +11,9 @@
   lab - [GSP1077 Google Kubernetes Engine Pipeline using Cloud Build](https://github.com/nov05/gcp-skills-boost/tree/dev/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build)     
   bash script - [nov05_gsp1077.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/nov05_gsp1077.sh)
 
+* **Example of building data mesh, creating and adding Dataplex aspect to zone**    
+  bash script - [nov05_gsp514.sh](https://github.com/nov05/gcp-skills-boost/blob/dev/GSP514%20Build%20a%20Data%20Mesh%20with%20Knowledge%20Catalog:%20Challenge%20Lab/nov05_gsp514.sh)
+  
 * Example of BigQuery and Data Quality operations    
   bash script - [nov05_gsp1158.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP1158%20Assessing%20Data%20Quality%20with%20Knowledge%20Catalog/nov05_gsp1158.sh)
 

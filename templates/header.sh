@@ -52,3 +52,5 @@ Task 2. Query a BigQuery table to review data quality
 ========================================================
 
 EOF
+
+echo -e "\n✅  All done\n"
