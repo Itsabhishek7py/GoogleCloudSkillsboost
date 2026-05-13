@@ -176,13 +176,14 @@ gcloud run deploy frontend-production-service \
   --image $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-staging:0.1 \
   --platform managed \
   --region $REGION \
-  --max-instances 1
-$SERVICE_URL=$(gcloud run services describe frontend-production-service \
+  --max-instances 1 \
+  --set-env-vars REST_API_SERVICE=$SERVICE_URL
+export URL=$(gcloud run services describe frontend-production-service \
   --region $REGION \
   --format="value(status.url)")
-sed -i "s|data/netflix.json|$SERVICE_URL/2020|g" app.js
+sed -i "s|data/netflix.json|$URL/2020|g" app.js
 echo -e "\n👉  Check frontend-production-service v0.1."
-echo -e "  https://$SERVICE_URL/2020\n"
+echo -e "  $URL/2020\n"
 
 answer=""
 echo -e "\nReady to proceed?"
