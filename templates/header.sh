@@ -25,6 +25,7 @@ export REGION=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-region])")
 export ZONE=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+# export BUCKET="$PROJECT_ID-bucket"
 gcloud config set compute/region $REGION
 echo
 echo "🔹  Project ID: $PROJECT_ID"
