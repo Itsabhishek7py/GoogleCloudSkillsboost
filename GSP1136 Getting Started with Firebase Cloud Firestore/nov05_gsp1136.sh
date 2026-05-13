@@ -30,7 +30,8 @@ Task 1. Setting Database Security Rules
 ========================================================
 
 EOF
-# gcloud config set project $PROJECT_ID
+
+gcloud config set project $PROJECT_ID
 mkdir firebase-project && cd $_
 
 cat << EOF > firebase.json
@@ -80,6 +81,7 @@ Task 3. Creating a Firebase Application
 ========================================================
 
 EOF
+
 mkdir src
 
 # cat << 'EOF' > src/index.js
@@ -100,7 +102,7 @@ mkdir src
 # EOF
 
 ## E.g. APP_ID=1:968940460326:web:ddf1c4cecc56725e33c9e7
-export APP_ID=$(firebase apps:list --json | node -e '
+export APP_ID=$(firebase apps:list --project $PROJECT_ID --json | node -e '
 let d="";
 process.stdin.on("data",c=>d+=c);
 process.stdin.on("end",()=>{
@@ -109,6 +111,7 @@ process.stdin.on("end",()=>{
   console.log(app.appId);
 });
 ')
+echo -e "\n🔹  APP_ID: $APP_ID\n"
 
 firebase apps:sdkconfig WEB "$APP_ID" \
   | node -e '
@@ -196,8 +199,7 @@ npm install --save-dev html-webpack-plugin
 sed -i 's/"main": "index.js"/"private": "true"/' package.json
 sed -i '/"type": "commonjs"/d' package.json
 sed -i 's/"test": "echo \\"Error: no test specified\\" \&\& exit 1"/"test": "echo \\"Error: no test specified\\" \&\& exit 1",\
-    "build": "webpack"\
-  },/' package.json
+    "build": "webpack"\/' package.json
 echo -e "\n👉  Check package.json:\n"
 cat package.json
 
