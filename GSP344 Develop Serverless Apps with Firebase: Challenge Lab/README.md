@@ -10,6 +10,8 @@ Task 5. Deploy the staging frontend
 Task 6. Deploy the production frontend
 ```
 
+* Examples: https://github.com/rosera/pet-theory
+
 ## 👉 Run the commands in Google Cloud shell
 
 ```bash
