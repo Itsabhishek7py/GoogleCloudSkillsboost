@@ -233,44 +233,52 @@ Task 5. Writing to a Firestore Document
 ========================================================
 
 EOF
-cat << EOF > src/index.js
-import { initializeApp } from 'firebase/app'
-import { getFirestore, doc, setDoc } from 'firebase/firestore'
 
-// Add your web app's Firebase configuration
+firebase apps:sdkconfig WEB "$APP_ID" \
+| node -e '
+let d = "";
+process.stdin.on("data", c => d += c);
+process.stdin.on("end", () => {
+  const cfg = JSON.parse(d);
+
+  console.log(`import { initializeApp } from "firebase/app";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAe2zNeabcFgHE1_BPGdCmvRFADEdp261U",
-  authDomain: "qwiklabs-gcp-01-bd8482040cf9.firebaseapp.com",
-  projectId: "qwiklabs-gcp-01-bd8482040cf9",
-  storageBucket: "qwiklabs-gcp-01-bd8482040cf9.firebasestorage.app",
-  messagingSenderId: "536431248107",
-  appId: "1:536431248107:web:c6b814ed58a7090baeb4ae",
-  measurementId: ""
+  apiKey: "${cfg.apiKey}",
+  authDomain: "${cfg.authDomain}",
+  projectId: "${cfg.projectId}",
+  storageBucket: "${cfg.storageBucket}",
+  messagingSenderId: "${cfg.messagingSenderId}",
+  appId: "${cfg.appId}",
+  measurementId: "${cfg.measurementId || ""}"
 };
-// Initialize Firebase
+
 const firebaseApp = initializeApp(firebaseConfig);
-const firestore = getFirestore()
-const firestoreIntroDb = doc(firestore, 'firestoreDemo/lab-demo-0001')
+const firestore = getFirestore(firebaseApp);
+const firestoreIntroDb = doc(firestore, "firestoreDemo/lab-demo-0001");
 
 function writeFirestoreDemo() {
- const docData = {
-   title: 'Firebase Fundamentals Demo',
-   description: 'Getting started with Cloud Firestore',
- }
- setDoc(firestoreIntroDb, docData)
+  const docData = {
+    title: "Firebase Fundamentals Demo",
+    description: "Getting started with Cloud Firestore"
+  };
+  setDoc(firestoreIntroDb, docData);
 }
-writeFirestoreDemo()
 
-console.log('Hello, Firestore!')
-EOF
+writeFirestoreDemo();
+
+console.log("Hello, Firestore!");`);
+});
+' > src/index.js
 
 npm run build
 
 # Start server in background
 python3 -m http.server 8080 --directory dist > server.log 2>&1 &
 echo $! > server.pid
-echo "👉  Server started with PID $(cat server.pid)"
-echo "👉  Open the Cloud Shell web preview on port 8080"
+echo -e "\n👉  Server started with PID $(cat server.pid)"
+echo -e "👉  Open the Cloud Shell web preview on port 8080\n"
 
 echo -e "\nReady to proceed?"
 while true; do
@@ -294,67 +302,71 @@ Task 6. Reading a Firestore Document
 ========================================================
 
 EOF
-cat << 'EOF' > src/index.js
-import { initializeApp } from 'firebase/app'
-import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore'
-const titleControl = document.querySelector('#dbTitle') 
-const descriptionControl = document.querySelector('#dbDescription') 
 
-// Initialize html elements
-titleControl.textContent = ''
-descriptionControl.textContent = ''
+firebase apps:sdkconfig WEB "$APP_ID" \
+| node -e '
+let d="";
+process.stdin.on("data",c=>d+=c);
+process.stdin.on("end",()=>{
+  const cfg = JSON.parse(d);
 
-// Add your web app's Firebase configuration
+  const file = `import { initializeApp } from "firebase/app"
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore"
+
+const titleControl = document.querySelector("#dbTitle") 
+const descriptionControl = document.querySelector("#dbDescription") 
+
+titleControl.textContent = ""
+descriptionControl.textContent = ""
+
+// Firebase config (generated)
 const firebaseConfig = {
-  apiKey: "AIzaSyAe2zNeabcFgHE1_BPGdCmvRFADEdp261U",
-  authDomain: "qwiklabs-gcp-01-bd8482040cf9.firebaseapp.com",
-  projectId: "qwiklabs-gcp-01-bd8482040cf9",
-  storageBucket: "qwiklabs-gcp-01-bd8482040cf9.firebasestorage.app",
-  messagingSenderId: "536431248107",
-  appId: "1:536431248107:web:c6b814ed58a7090baeb4ae",
-  measurementId: ""
+  apiKey: "${cfg.apiKey}",
+  authDomain: "${cfg.authDomain}",
+  projectId: "${cfg.projectId}",
+  storageBucket: "${cfg.storageBucket}",
+  messagingSenderId: "${cfg.messagingSenderId}",
+  appId: "${cfg.appId}",
+  measurementId: "${cfg.measurementId || ""}"
 };
 
-// Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
-const firestore = getFirestore()
-const firestoreIntroDb = doc(firestore, 'firestoreDemo/lab-demo-0001')
+const firestore = getFirestore(firebaseApp)
+const firestoreIntroDb = doc(firestore, "firestoreDemo/lab-demo-0001")
 
-// Write to Firestore Database
 function writeFirestoreDemo() {
- const docData = {
-   title: 'Firebase Fundamentals Demo',
-   description: 'Getting started with Cloud Firestore',
- }
- setDoc(firestoreIntroDb, docData)
+  const docData = {
+    title: "Firebase Fundamentals Demo",
+    description: "Getting started with Cloud Firestore",
+  }
+  setDoc(firestoreIntroDb, docData)
 }
 
-// Read from Firestore Database
 async function readASingleDocument() {
   const mySnapshot = await getDoc(firestoreIntroDb)
   if (mySnapshot.exists()) {
     const docData = mySnapshot.data()
-    const dbJSON = await JSON.stringify(docData)
-    console.log(`Data: ${dbJSON}`)
-    const dbOBJ = await JSON.parse(dbJSON)
-    console.log(`Title: ${dbOBJ.title}`)
-    titleControl.textContent = "Title: " + dbOBJ.title 
-    descriptionControl.textContent = "Description: " + dbOBJ.description
+    console.log("Data:", JSON.stringify(docData))
+    titleControl.textContent = "Title: " + docData.title 
+    descriptionControl.textContent = "Description: " + docData.description
   }
 }
 
-// writeFirestoreDemo()
 readASingleDocument()
-console.log('Hello, Firestore!')
-EOF
+console.log("Hello, Firestore!")
+`;
+
+  require("fs").writeFileSync("src/index.js", file);
+});
+'
 
 npm run build
 
 # Start server in background
 python3 -m http.server 8080 --directory dist > server.log 2>&1 &
 echo $! > server.pid
-echo "👉  Server started with PID $(cat server.pid)"
-echo "👉  Open the Cloud Shell web preview on port 8080"
+echo -e "\n👉  Server started with PID $(cat server.pid)"
+echo -e "👉  Open the Cloud Shell web preview on port 8080\n"
 
 echo -e "\nReady to proceed?"
 while true; do
