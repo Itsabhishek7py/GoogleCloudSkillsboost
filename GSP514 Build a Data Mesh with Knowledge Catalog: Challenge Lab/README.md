@@ -8,3 +8,12 @@ Task 3. Assign a Knowledge Catalog IAM role to another user
 Task 4. Create and upload a data quality specification file to Cloud Storage
 Task 5. Define and run an auto data quality job in Knowledge Catalog
 ```
+
+## 👉 Run the commands in Google Cloud Shell
+
+```bash
+rm -f nov05_gsp514.sh
+curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/mail/GSP514%20Build%20a%20Data%20Mesh%20with%20Knowledge%20Catalog%3A%20Challenge%20Lab/nov05_gsp514.sh
+chmod +x nov05_gsp514.sh
+./nov05_gsp514.sh
+```
