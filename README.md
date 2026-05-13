@@ -13,9 +13,12 @@
 
 * Example of BigQuery and Data Quality operations    
   bash script - [nov05_gsp1158.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP1158%20Assessing%20Data%20Quality%20with%20Knowledge%20Catalog/nov05_gsp1158.sh)
-  
+
+* Example of creating aspect and adding to BigQuery table    
+  bash script - [nov05_gsp1145.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP1145%20Create%20and%20Add%20Aspects%20to%20Knowledge%20Catalog%20Assets/nov05_gsp1145.sh)   
+    
 * Example of ensuring VM running status and its SSH readiness   
-  bash script - [nov05_GSP004.sh](https://github.com/nov05/gcp-skills-boost/blob/dev/Creating%20a%20Persistent%20Disk/nov05_GSP004.sh)
+  bash script - [nov05_GSP004.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Creating%20a%20Persistent%20Disk/nov05_GSP004.sh)
 
 * Example of ensuring service account readiness   
   bash script - [nov05_gsp097.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Cloud%20Natural%20Language%20API%3A%20Qwik%20Start/nov05_gsp097.sh)       
