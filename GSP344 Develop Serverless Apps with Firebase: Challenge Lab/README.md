@@ -15,4 +15,8 @@ Task 6. Deploy the production frontend
 ## 👉 Run the commands in Google Cloud shell
 
 ```bash
+rm -f nov05_gsp344.sh
+curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/main/GSP344%20Develop%20Serverless%20Apps%20with%20Firebase%3A%20Challenge%20Lab/nov05_gsp344.sh
+chmod +x nov05_gsp344.sh
+./nov05_gsp344.sh
 ```
