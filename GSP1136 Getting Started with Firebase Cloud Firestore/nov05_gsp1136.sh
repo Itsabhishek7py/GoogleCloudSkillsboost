@@ -30,7 +30,7 @@ Task 1. Setting Database Security Rules
 ========================================================
 
 EOF
-gcloud config set project qwiklabs-gcp-00-8418d4eb8bd8
+# gcloud config set project $PROJECT_ID
 mkdir firebase-project && cd $_
 
 cat << EOF > firebase.json
@@ -60,7 +60,7 @@ cat << EOF > firestore.indexes.json
 }
 EOF
 
-firebase deploy --only firestore:rules --project qwiklabs-gcp-00-8418d4eb8bd8
+firebase deploy --only firestore:rules --project $PROJECT_ID
 
 cat << 'EOF'
 
@@ -69,6 +69,7 @@ Task 2. Configuring the Firebase Environment
 ========================================================
 
 EOF
+
 npm init -y
 npm i firebase
 
@@ -81,25 +82,73 @@ Task 3. Creating a Firebase Application
 EOF
 mkdir src
 
-cat << 'EOF' > src/index.js
-import { initializeApp } from 'firebase/app'
+cat << 'EOF'
 
-// Add your web app's Firebase configuration
+👉  Check Firebase environment values:
+
+  apiKey: "$API_KEY",
+  authDomain: "$AUTH_DOMAIN",
+  projectId: "$PROJECT_ID",
+  storageBucket: "$STORAGE_BUCKET",
+  messagingSenderId: "$MESSAGING_SENDER_ID",
+  appId: "$APP_ID",
+  measurementId: "$MEASUREMENT_ID"
+  
+EOF
+
+# cat << 'EOF' > src/index.js
+# import { initializeApp } from 'firebase/app'
+# // Add your web app's Firebase configuration
+# const firebaseConfig = {
+#   apiKey: "AIzaSyDi3G_w06a-sky-C6UplmQtV5VMBWsHyxI",
+#   authDomain: "qwiklabs-gcp-00-8418d4eb8bd8.firebaseapp.com",
+#   projectId: "qwiklabs-gcp-00-8418d4eb8bd8",
+#   storageBucket: "qwiklabs-gcp-00-8418d4eb8bd8.firebasestorage.app",
+#   messagingSenderId: "861383021586",
+#   appId: "1:861383021586:web:a5330da807b0fb620874cb",
+#   measurementId: ""
+# };
+# // Initialize Firebase
+# const firebaseApp = initializeApp(firebaseConfig);
+# console.log('Hello, Firestore!')
+# EOF
+
+## E.g. 1:968940460326:web:ddf1c4cecc56725e33c9e7
+export APP_ID=$(firebase apps:list --json | node -e '
+let d="";
+process.stdin.on("data",c=>d+=c);
+process.stdin.on("end",()=>{
+  const j=JSON.parse(d);
+  const app = j.result.find(a=>a.platform==="WEB");
+  console.log(app.appId);
+});
+')
+
+firebase apps:sdkconfig WEB "$APP_ID" \
+| node -e '
+let d = "";
+
+process.stdin.on("data", c => d += c);
+process.stdin.on("end", () => {
+  const cfg = JSON.parse(d);
+
+  console.log(`import { initializeApp } from "firebase/app"
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDi3G_w06a-sky-C6UplmQtV5VMBWsHyxI",
-  authDomain: "qwiklabs-gcp-00-8418d4eb8bd8.firebaseapp.com",
-  projectId: "qwiklabs-gcp-00-8418d4eb8bd8",
-  storageBucket: "qwiklabs-gcp-00-8418d4eb8bd8.firebasestorage.app",
-  messagingSenderId: "861383021586",
-  appId: "1:861383021586:web:a5330da807b0fb620874cb",
-  measurementId: ""
+  apiKey: "${cfg.apiKey}",
+  authDomain: "${cfg.authDomain}",
+  projectId: "${cfg.projectId}",
+  storageBucket: "${cfg.storageBucket}",
+  messagingSenderId: "${cfg.messagingSenderId}",
+  appId: "${cfg.appId}",
+  measurementId: "${cfg.measurementId || ""}"
 };
 
-// Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
-console.log('Hello, Firestore!')
-EOF
+console.log("Hello, Firestore!")`);
+});
+' > src/index.js
 
 cat << 'EOF' > src/index.html 
 <!DOCTYPE html>
