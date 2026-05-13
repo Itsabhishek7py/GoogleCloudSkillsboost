@@ -11,4 +11,4 @@ chmod +x nov05_gsp1157.sh
 
 ## 👉 Logs
 
-* 2026-05-13 Created `nov05_gsp1157.sh`.   
+* 2026-05-13 Created `nov05_gsp1157.sh`. Check [the test result](https://gist.github.com/nov05/1ecea17182ea45c6c947542a946b1a2d).   
