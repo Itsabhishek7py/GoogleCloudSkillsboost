@@ -80,7 +80,7 @@ gcloud dataplex assets create customer-online-sessions-bucket \
   --zone=customer-raw-zone \
   --display-name="Customer Online Sessions" \
   --resource-type=STORAGE_BUCKET \
-  --resource-name=gs://"$BUCKET"
+  --resource-name=$BUCKET
 
   
 cat << 'EOF'
@@ -96,7 +96,7 @@ gcloud dataplex assets add-iam-policy-binding customer-online-sessions-bucket \
     --zone=customer-raw-zone \
     --member="user:$USERNAME2" \
     --role="roles/dataplex.dataReader"
-echo "✅ Role assigned" 
+echo "✅  Role assigned" 
 
 cat << 'EOF'
 
@@ -140,7 +140,7 @@ gcloud dataplex assets add-iam-policy-binding customer-online-sessions-bucket \
     --zone=customer-raw-zone \
     --member="user:$USERNAME2" \
     --role="roles/dataplex.dataWriter"
-echo "✅ Role assigned"
+echo "✅  Role assigned"
 
 cat << 'EOF'
 
