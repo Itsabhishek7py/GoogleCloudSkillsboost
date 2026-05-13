@@ -26,6 +26,8 @@ export REGION=$(gcloud compute project-info describe \
 export ZONE=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
 # export BUCKET="$PROJECT_ID-bucket"
+# gcloud config set project $(gcloud projects list --format='value(PROJECT_ID)' --filter='qwiklabs-gcp')
+gcloud config set project $PROJECT_ID  
 gcloud config set compute/region $REGION
 echo
 echo "🔹  Project ID: $PROJECT_ID"
