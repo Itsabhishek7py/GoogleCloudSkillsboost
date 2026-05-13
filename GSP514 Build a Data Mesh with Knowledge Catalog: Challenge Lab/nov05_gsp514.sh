@@ -208,7 +208,7 @@ cat > aspect-patch.json <<EOF
   },
 }
 EOF
-echo -e "👉  Check aspect-patch.json:"
+echo -e "\n👉  Check aspect-patch.json:"
 cat aspect-patch.json
 
 ## ⚠️ Tip: On te console -> Knowledge Catalog -> Search "raw-customer-zone" 
