@@ -64,7 +64,7 @@ gcloud dataplex lakes create customer-info-lake \
 gcloud dataplex zones create customer-row-zone \
   --project=$PROJECT_ID \
   --location=$REGION \
-  --lake=orders-lake \
+  --lake=customer-info-lake \
   --type=RAW \
   --display-name="Customer Raw Zone"
 
@@ -94,7 +94,7 @@ gcloud dataplex assets add-iam-policy-binding customer-online-sessions-bucket \
     --zone=customer-raw-zone \
     --member="user:$USERNAME2" \
     --role="roles/dataplex.dataReader"
-  
+echo "✅ Role assigned" 
 
 cat << 'EOF'
 
@@ -138,8 +138,7 @@ gcloud dataplex assets add-iam-policy-binding customer-online-sessions-bucket \
     --zone=customer-raw-zone \
     --member="user:$USERNAME2" \
     --role="roles/dataplex.dataWriter"
-cat << EOF
-
+echo "✅ Role assigned"
 
 cat << 'EOF'
 
@@ -148,6 +147,7 @@ Task 5. Upload new file to Cloud Storage bucket as a Dataplex Data Writer
 ========================================================
 
 EOF
+cat << EOF
 👉  Log in a new tab as $USER2. Run the following commands. 
     User 2 can successfully upload a new file to the Cloud Storage bucket as a Dataplex Data Writer.
 
@@ -169,4 +169,4 @@ while true; do
   echo -ne "\033[1A\033[2K"
 done
 
-echo "👉  All done"
+echo -e "\n👉  All done"
