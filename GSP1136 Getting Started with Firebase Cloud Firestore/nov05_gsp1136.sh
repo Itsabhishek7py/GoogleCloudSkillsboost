@@ -199,7 +199,7 @@ npm install --save-dev html-webpack-plugin
 sed -i 's/"main": "index.js"/"private": "true"/' package.json
 sed -i '/"type": "commonjs"/d' package.json
 sed -i 's/"test": "echo \\"Error: no test specified\\" \&\& exit 1"/"test": "echo \\"Error: no test specified\\" \&\& exit 1",\
-    "build": "webpack"\/' package.json
+    "build": "webpack"/' package.json
 echo -e "\n👉  Check package.json:\n"
 cat package.json
 
