@@ -70,7 +70,7 @@ gcloud dataplex zones create customer-raw-zone \
   --display-name="Customer Raw Zone" \
   --resource-location-type=SINGLE_REGION
 
-## Attach BigQuery Dataset as an Asset
+## Attach bucket as an asset
 ## https://docs.cloud.google.com/sdk/gcloud/reference/dataplex/assets/create
 ## https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dataplex_asset
 gcloud dataplex assets create customer-online-sessions \
