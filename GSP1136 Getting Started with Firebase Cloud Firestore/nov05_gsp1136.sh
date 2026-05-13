@@ -82,20 +82,6 @@ Task 3. Creating a Firebase Application
 EOF
 mkdir src
 
-cat << 'EOF'
-
-👉  Check Firebase environment values:
-
-  apiKey: "$API_KEY",
-  authDomain: "$AUTH_DOMAIN",
-  projectId: "$PROJECT_ID",
-  storageBucket: "$STORAGE_BUCKET",
-  messagingSenderId: "$MESSAGING_SENDER_ID",
-  appId: "$APP_ID",
-  measurementId: "$MEASUREMENT_ID"
-  
-EOF
-
 # cat << 'EOF' > src/index.js
 # import { initializeApp } from 'firebase/app'
 # // Add your web app's Firebase configuration
@@ -113,7 +99,7 @@ EOF
 # console.log('Hello, Firestore!')
 # EOF
 
-## E.g. 1:968940460326:web:ddf1c4cecc56725e33c9e7
+## E.g. APP_ID=1:968940460326:web:ddf1c4cecc56725e33c9e7
 export APP_ID=$(firebase apps:list --json | node -e '
 let d="";
 process.stdin.on("data",c=>d+=c);
