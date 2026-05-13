@@ -225,6 +225,9 @@ Task 4. Search for assets using aspects
 
 EOF
 
+echo "👉  Check the search results"
+echo "https://console.cloud.google.com/dataplex/dp-search-nl?referrer=search&project=$PROJECT_ID&filtersPanelOpen=true&qSystems=&qAspectTypes=%257B%2522name%2522%253A%2522$PROJECT_ID.$REGION.protected-data-aspect%2522%252C%2522displayName%2522%253A%2522Protected%2520Data%2520Aspect%2522%257D"
+
 # ## https://docs.cloud.google.com/dataplex/docs/reference/rest/v1/projects.locations/searchEntries
 # curl -X POST \
 #   -H "Authorization: Bearer $(gcloud auth print-access-token)" \
