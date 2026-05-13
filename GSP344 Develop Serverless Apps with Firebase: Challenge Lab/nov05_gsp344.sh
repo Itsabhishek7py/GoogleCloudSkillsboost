@@ -175,6 +175,7 @@ Task 6. Deploy the production frontend
 EOF
 
 cd ~/pet-theory/lab06/firebase-frontend/public
+sed -i "s|data/netflix.json|$SERVICE_URL/2020|g" app.js
 gcloud run deploy frontend-production-service \
   --image $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-staging:0.1 \
   --platform managed \
@@ -185,7 +186,6 @@ gcloud run deploy frontend-production-service \
 export URL=$(gcloud run services describe frontend-production-service \
   --region $REGION \
   --format="value(status.url)")
-sed -i "s|data/netflix.json|$URL/2020|g" app.js
 echo -e "\n👉  Check frontend-production-service v0.1."
 echo -e "  $URL/2020\n"
 
