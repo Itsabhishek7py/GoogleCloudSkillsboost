@@ -19,7 +19,7 @@ UNDERLINE_TEXT=$'\033[4m'
 echo
 read -p "👉  Enter username 2: " USERNAME2
 echo
-export USER2=$USER2  
+export USERNAME2=$USERNAME2  
 
 # cat >> ~/.bashrc <<'EOF'
 ## Get project id, project number, region, zone
@@ -96,11 +96,11 @@ gcloud dataplex assets create customer-engagements \
 gcloud dataplex assets create customer-orders \
   --project=$PROJECT_ID \
   --location=$REGION \
-  --lake=orders-lake \
+  --lake=sales-lake \
   --zone=curated-customer-zone \
   --display-name="Customer Orders" \
   --resource-type=BIGQUERY_DATASET \
-  --resource-name="projects/$PROJECT_ID/datasets/customers"
+  --resource-name="projects/$PROJECT_ID/datasets/customer_orders"
 
 ## Verify
 # echo -e "\n👉  Data lake list:"
