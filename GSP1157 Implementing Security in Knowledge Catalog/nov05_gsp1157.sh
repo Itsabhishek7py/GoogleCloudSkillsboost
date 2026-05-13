@@ -171,4 +171,4 @@ while true; do
   echo -ne "\033[1A\033[2K"
 done
 
-echo -e "\n✅  All done"
+echo -e "\n✅  All done\n"
