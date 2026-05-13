@@ -32,7 +32,7 @@ echo "🔹  Project number: $PROJECT_NUMBER"
 echo "🔹  Region: $REGION"
 echo "🔹  Zone: $ZONE"
 echo "🔹  User: $USER"
-# echo "🔹  Bukect: $BUCKET"
+echo "🔹  Bukect: $BUCKET"
 echo
 # EOF
 # source ~/.bashrc
@@ -46,6 +46,35 @@ Task 1. Create a lake, zone, and asset in Knowledge Catalog
 ========================================================
 
 EOF
+gcloud services enable dataplex.googleapis.com
+
+## Create the Lake
+gcloud dataplex lakes create customer-info-lake \
+  --project=$PROJECT_ID \
+  --location=$REGION \
+  --display-name="Customer Info Lake"
+
+## Create the Zone (Curated Zone)
+gcloud dataplex zones create customer-row-zone \
+  --project=$PROJECT_ID \
+  --location=$REGION \
+  --lake=orders-lake \
+  --type=RAW \
+  --display-name="Customer Raw Zone"
+
+## Attach BigQuery Dataset as an Asset
+## https://docs.cloud.google.com/sdk/gcloud/reference/dataplex/assets/create
+## https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dataplex_asset
+gcloud dataplex assets create customer-online-sessions-bucket \
+  --project=$PROJECT_ID \
+  --location=$REGION \
+  --lake=customer-info-lake \
+  --zone=customer-raw-zone \
+  --display-name="Customer Online Sessions" \
+  --resource-type=STORAGE_BUCKET \
+  --resource-name=gs://"$BUCKET"
+
+  
 cat << 'EOF'
 
 ========================================================
