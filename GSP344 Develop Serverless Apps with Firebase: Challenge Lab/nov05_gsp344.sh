@@ -79,7 +79,19 @@ $SERVICE_URL=$(gcloud run services describe netflix-dataset-service \
 echo -e "\n👉  Check netflix-dataset-service v0.1."
 echo -e "  It should respond with: {\"status\":\"Netflix Dataset! Make a query.\"}\n"
 curl -X GET $SERVICE_URL
-  
+
+answer=""
+echo -e "\nReady to proceed?"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
+
 cat << 'EOF'
 
 ========================================================
@@ -103,7 +115,19 @@ $SERVICE_URL=$(gcloud run services describe netflix-dataset-service \
 echo -e "\n👉  Check netflix-dataset-service v0.2."
 echo -e "  It should respond with json dataset\n"
 curl -X GET $SERVICE_URL/2019
-  
+
+answer=""
+echo -e "\nReady to proceed?"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
+
 cat << 'EOF'
 
 ========================================================
@@ -125,6 +149,18 @@ $SERVICE_URL=$(gcloud run services describe frontend-staging-service \
   --format="value(status.url)")
 echo -e "\n👉  Check frontend-staging-service v0.1."
 echo -e "  https://$SERVICE_URL\n"
+
+answer=""
+echo -e "\nReady to proceed?"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
 
 cat << 'EOF'
 
@@ -148,6 +184,18 @@ $SERVICE_URL=$(gcloud run services describe frontend-production-service \
 sed -i "s|data/netflix.json|$SERVICE_URL/2020|g" app.js
 echo -e "\n👉  Check frontend-production-service v0.1."
 echo -e "  https://$SERVICE_URL/2020\n"
+
+answer=""
+echo -e "\nReady to proceed?"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
 
 cd ~
 echo -e "\n✅  All done\n"
