@@ -16,6 +16,7 @@ RESET_FORMAT=$'\033[0m'
 BOLD_TEXT=$'\033[1m'
 UNDERLINE_TEXT=$'\033[4m'
 
+# cat >> ~/.bashrc <<'EOF'
 ## Get project id, project number, region, zone
 export PROJECT_ID=$(gcloud config get-value project)
 export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID \
@@ -31,7 +32,10 @@ echo "🔹  Project number: $PROJECT_NUMBER"
 echo "🔹  Region: $REGION"
 echo "🔹  Zone: $ZONE"
 echo "🔹  User: $USER"
+# echo "🔹  Bukect: $BUCKET"
 echo
+# EOF
+# source ~/.bashrc
 
 cat << 'EOF'
 

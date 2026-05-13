@@ -1,17 +1,15 @@
-Google Kubernetes Engine Pipeline using Cloud Build (GSP1077)  
-https://www.skills.google/games/7173/labs/44433  
+👉 For development  
 
-👉 **Run the following Commands in CloudShell**  
+```bash
+rm -f nov05_gsp1077.sh 
+curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/dev/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/nov05_gsp1077.sh
+sudo chmod +x nov05_gsp1077.sh
+./nov05_gsp1077.sh
 ```
-rm -f abhishek.sh    
-curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/dev/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/abhishek.sh
-sudo chmod +x abhishek.sh
-./abhishek.sh
-```
-
-
 
 <br><br>  
+
+## 👉 Logs  
 
 * 2026-05-10 Changed the script. It now waits for the user to connect the GitHub repositories manually in Cloud Build before creating two triggers.
   

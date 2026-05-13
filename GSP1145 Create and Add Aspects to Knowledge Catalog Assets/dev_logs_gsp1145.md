@@ -11,4 +11,4 @@ chmod +x nov05_gsp1145.sh
 
 ## 👉 Logs
 
-2026-05-12 Created the script
+2026-05-12 Created the script. ✅ [Test result](https://gist.github.com/nov05/5b3dca4d46a6f913c809c8d314117476): all checks passed.  

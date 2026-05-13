@@ -18,19 +18,18 @@ Task 9. Test the rollback
 
 ## 👉 **Run the following Commands in CloudShell**
 
-```
-rm -f abhishek.sh  
-curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/abhishek.sh
-sudo chmod +x abhishek.sh
-./abhishek.sh
+```bash
+rm -f nov05_gsp1077.sh 
+curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/nov05_gsp1077.sh
+sudo chmod +x nov05_gsp1077.sh
+./nov05_gsp1077.sh
 ```
 
-⚠️ Remember to delete the GitHub repositories that were created for this lab after completing it.
-  E.g.: 
-  https://github.com/nov05/hello-cloudbuild-app  
-  https://github.com/nov05/hello-cloudbuild-env   
+⚠️ Remember to delete the GitHub repositories that were created for this lab after completing it. E.g.:      
+  * https://github.com/nov05/hello-cloudbuild-app    
+  * https://github.com/nov05/hello-cloudbuild-env     
 
-<br>  
+<br><br><br>      
 
 **Task 4.7**: Authenticate to your source repository with your username and password. This step has to be done manually.      
 <img src="https://raw.githubusercontent.com/nov05/pictures/refs/heads/master/gcp-skills-boost%20/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/2026-05-11%2000_16_29-Settings.jpg" width=800>  
