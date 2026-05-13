@@ -31,6 +31,7 @@ export REGION=$(gcloud compute project-info describe \
 export ZONE=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
 export BUCKET="$PROJECT_ID-customer-online-sessions"
+export BUCKET_DQ="$PROJECT_ID-dq-config"
 gcloud config set compute/region $REGION
 echo
 echo "🔹  Project ID: $PROJECT_ID"
@@ -220,6 +221,20 @@ Task 3. Assign a Knowledge Catalog IAM role to another user
 ========================================================
 
 EOF
+gcloud dataplex assets add-iam-policy-binding customer-engagements \
+    --location=$REGION \
+    --lake=sales-lake \
+    --zone=raw-customer-zone \
+    --member="user:$USERNAME2" \
+    --role="roles/dataplex.dataReader"
+gcloud dataplex assets add-iam-policy-binding customer-engagements \
+    --location=$REGION \
+    --lake=sales-lake \
+    --zone=raw-customer-zone \
+    --member="user:$USERNAME2" \
+    --role="roles/dataplex.dataWriter"
+    
+
 cat << 'EOF'
 
 ========================================================
@@ -227,6 +242,23 @@ Task 4. Create and upload a data quality specification file to Cloud Storage
 ========================================================
 
 EOF
+cat > dq-customer-orders.yaml << EOF
+rules:
+- nonNullExpectation: {}
+  column: user_id
+  dimension: COMPLETENESS
+  threshold: 1
+- nonNullExpectation: {}
+  column: order_id
+  dimension: COMPLETENESS
+  threshold: 1
+postScanActions:
+  bigqueryExport:
+    resultsTable: projects/$PROJECT_ID/datasets/orders_dq_dataset/tables/results
+EOF
+gcloud storage cp dq-customer-orders.yaml gs://$BUCKET_DQ
+
+
 cat << 'EOF'
 
 ========================================================
@@ -234,4 +266,40 @@ Task 5. Define and run an auto data quality job in Knowledge Catalog
 ========================================================
 
 EOF
+## Create the Data Quality Scan (CLI equivalent of the UI job)
+gcloud dataplex datascans create data-quality customer-orders-data-quality-job \
+  --project=$PROJECT_ID \
+  --location=$REGION \
+  --data-source-resource="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customer_orders/tables/ordered_items" \
+  --data-quality-spec-file="gs://$BUCKET_DQ/dq-customer-raw-data.yaml"
+
+## Run the job
+gcloud dataplex datascans run customer-orders-data-quality-job \
+  --location=$REGION
+echo
+echo "👉  Running customer-orders-data-quality-job..."
+
+## Check job status
+while true; do
+  JOB=$(gcloud dataplex datascans jobs list \
+    --location=$REGION \
+    --datascan=customer-orders-data-quality-job \
+    --format="value(name)" | head -n 1)
+  STATUS=$(gcloud dataplex datascans jobs describe $JOB \
+    --location=$REGION \
+    --datascan=customer-orders-data-quality-job \
+    --format="value(state)")
+  echo "Job status: $STATUS"
+  if [[ "$STATUS" == "SUCCEEDED" || "$STATUS" == "FAILED" ]]; then
+    break
+  fi
+  sleep 10
+done
+  
+## View result
+bq query --use_legacy_sql=false "\
+SELECT *
+FROM \`$PROJECT_ID.orders_dq_dataset.results\`
+"
+
 echo -e "\n✅  All done\n"
