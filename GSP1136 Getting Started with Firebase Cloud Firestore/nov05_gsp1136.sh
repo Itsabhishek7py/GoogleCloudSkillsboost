@@ -125,13 +125,11 @@ process.stdin.on("end",()=>{
 ')
 
 firebase apps:sdkconfig WEB "$APP_ID" \
-| node -e '
+  | node -e '
 let d = "";
-
 process.stdin.on("data", c => d += c);
 process.stdin.on("end", () => {
   const cfg = JSON.parse(d);
-
   console.log(`import { initializeApp } from "firebase/app"
 
 const firebaseConfig = {
@@ -145,7 +143,6 @@ const firebaseConfig = {
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
-
 console.log("Hello, Firestore!")`);
 });
 ' > src/index.js
@@ -210,21 +207,21 @@ EOF
 npm install webpack webpack-cli --save-dev
 npm install --save-dev html-webpack-plugin
 
-# sed -i 's/"main": "index.js"/"private": "true"/' package.json
+sed -i 's/"main": "index.js"/"private": "true"/' package.json
 sed -i '/"type": "commonjs"/d' package.json
-sed -i 's/"main": "index.js",/"private": "true",\
-  "scripts": {\
-    "test": "echo \\"Error: no test specified\\" \&\& exit 1",\
+sed -i 's/"test": "echo \\"Error: no test specified\\" \&\& exit 1"/"test": "echo \\"Error: no test specified\\" \&\& exit 1",\
     "build": "webpack"\
   },/' package.json
+echo -e "\n👉  Check package.json:\n"
+cat package.json
 
 npm run build
 
 # Start server in background
 python3 -m http.server 8080 --directory dist > server.log 2>&1 &
 echo $! > server.pid
-echo "👉  Server started with PID $(cat server.pid)"
-echo "👉  Open the Cloud Shell web preview on port 8080"
+echo -e "\n👉  Server started with PID $(cat server.pid)"
+echo -e "👉  Open the Cloud Shell web preview on port 8080\n"
 
 echo -e "\nReady to proceed?"
 while true; do
