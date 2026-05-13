@@ -55,59 +55,182 @@ Task 1. Create a lake, zone, and asset in Knowledge Catalog
 EOF
 gcloud services enable dataplex.googleapis.com
 
-## Create the Lake
-gcloud dataplex lakes create customer-info-lake \
+## Create a Lake
+gcloud dataplex lakes create sales-lake \
   --project=$PROJECT_ID \
   --location=$REGION \
-  --display-name="Customer Info Lake"
+  --display-name="Sales Lake"
 
-## Create the Zone (Curated Zone)
-gcloud dataplex zones create customer-raw-zone \
+## Create a raw zone 
+gcloud dataplex zones create raw-customer-zone \
   --project=$PROJECT_ID \
   --location=$REGION \
-  --lake=customer-info-lake \
+  --lake=sales-lake \
   --type=RAW \
-  --display-name="Customer Raw Zone" \
+  --display-name="Raw Customer Zone" \
   --resource-location-type=SINGLE_REGION
 
-## Attach BigQuery Dataset as an Asset
-## https://docs.cloud.google.com/sdk/gcloud/reference/dataplex/assets/create
-## https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dataplex_asset
-gcloud dataplex assets create customer-online-sessions \
+## Create a curated zone 
+gcloud dataplex zones create curated-customer-zone \
   --project=$PROJECT_ID \
   --location=$REGION \
-  --lake=customer-info-lake \
-  --zone=customer-raw-zone \
-  --display-name="Customer Online Sessions" \
+  --lake=sales-lake \
+  --type=CURATED \
+  --display-name="Curated Customer Zone" \
+  --resource-location-type=SINGLE_REGION
+  
+## Attach a bucket to a zone as asset
+## https://docs.cloud.google.com/sdk/gcloud/reference/dataplex/assets/create
+## https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dataplex_asset
+gcloud dataplex assets create customer-engagements \
+  --project=$PROJECT_ID \
+  --location=$REGION \
+  --lake=sales-lake \
+  --zone=raw-customer-zone \
+  --display-name="Customer Engagements" \
   --resource-type=STORAGE_BUCKET \
   --resource-name="projects/$PROJECT_ID/buckets/$BUCKET"
 
-   
+## Attach a BigQuery dataset to a zone as an Asset
+gcloud dataplex assets create customer-orders \
+  --project=$PROJECT_ID \
+  --location=$REGION \
+  --lake=orders-lake \
+  --zone=curated-customer-zone \
+  --display-name="Customer Orders" \
+  --resource-type=BIGQUERY_DATASET \
+  --resource-name="projects/$PROJECT_ID/datasets/customers"
+
+## Verify
+# echo -e "\n👉  Data lake list:"
+# gcloud dataplex lakes list \
+#   --location=$REGION
+# echo -e "\n👉  Data zone list:"
+# gcloud dataplex zones list \
+#   --lake=sales-lake \
+#   --location=$REGION
+# echo -e "\n👉  Data asset list (row-customer-zone):"
+# gcloud dataplex assets list \
+#   --lake=sales-lake \
+#   --zone=row-customer-zone \
+#   --location=$REGION
+# echo -e "\n👉  Data asset list (curated-customer-zone):"
+# gcloud dataplex assets list \
+#   --lake=sales-lake \
+#   --zone=curated-customer-zone \
+#   --location=$REGION
+
 cat << 'EOF'
 
 ========================================================
 Task 2. Create an aspect type and add an aspect to a zone
+========================================================
+https://docs.cloud.google.com/dataplex/docs/enrich-entries-metadata#gcloud
+
+EOF
+cat > aspect-type.json <<EOF
+{
+  "name": "protected_customer_data_template",
+  "type": "record",
+  "recordFields": [
+    {
+      "name": "raw_data_flag",
+      "type": "enum",
+      "index": 1,
+      "annotations": {
+        "displayName": "Raw Data Flag"
+      },
+      # "constraints": {
+      #   "required": true
+      # },
+      "enumValues": [
+        {
+          "name": "Yes",
+          "index": 1
+        },
+        {
+          "name": "No",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "name": "protected_contact_information_flag",
+      "type": "enum",
+      "index": 1,
+      "annotations": {
+        "displayName": "Protected Contact Information Flag"
+      },
+      "enumValues": [
+        {
+          "name": "Yes",
+          "index": 1
+        },
+        {
+          "name": "No",
+          "index": 2
+        }
+      ]
+    },
+  ]
+}
+EOF
+
+## Create aspect type
+gcloud dataplex aspect-types create protected-customer-data-aspect \
+  --location=$REGION \
+  --display-name="Protected Customer Data Aspect" \
+  --metadata-template-file-name=aspect-type.json
+  
+## Verify
+echo -e "\n👉  Check entry list:"
+gcloud dataplex entries list \
+  --location=$REGION \
+  --entry-group=@dataplex
+export ASPECT_ENTRY_ID="protected-customer-data-aspect_aspectType"
+
+echo -e "\n👉  Check entry $ASPECT_ENTRY_ID:"
+gcloud dataplex entries describe $ASPECT_ENTRY_ID \
+  --location=$REGION \
+  --entry-group=@dataplex
+
+cat > aspect-patch.json <<EOF
+{
+  "$PROJECT_ID.$REGION.protected-customer-data-aspect": {
+    "data": {
+      "raw_data_flag": "Yes",
+      "protected_contact_information_flag": "Yes",
+    },
+  },
+}
+EOF
+echo -e "👉  Check aspect-patch.json:"
+cat aspect-patch.json
+
+gcloud dataplex entries update \
+  "bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customers/tables/customer_details" \
+  --location="$REGION" \
+  --entry-group="@bigquery" \
+  --update-aspects=aspect-patch.json
+  
+cat << 'EOF'
+
+========================================================
+Task 3. Assign a Knowledge Catalog IAM role to another user
 ========================================================
 
 EOF
 cat << 'EOF'
 
 ========================================================
-Task 2. Create an aspect type and add an aspect to a zone
+Task 4. Create and upload a data quality specification file to Cloud Storage
 ========================================================
 
 EOF
 cat << 'EOF'
 
 ========================================================
-Task 2. Create an aspect type and add an aspect to a zone
-========================================================
-
-EOF
-cat << 'EOF'
-
-========================================================
-Task 2. Create an aspect type and add an aspect to a zone
+Task 5. Define and run an auto data quality job in Knowledge Catalog
 ========================================================
 
 EOF
