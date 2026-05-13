@@ -50,7 +50,7 @@ echo
 cat << 'EOF'
 
 ========================================================
-Task 1. Create a lake, zone, and asset in Knowledge Catalog
+Task 1. Create a Knowledge Catalog lake with two zones and two assets
 ========================================================
 
 EOF
