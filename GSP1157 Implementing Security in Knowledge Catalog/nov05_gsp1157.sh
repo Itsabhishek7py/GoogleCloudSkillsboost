@@ -29,6 +29,7 @@ export REGION=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-region])")
 export ZONE=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+export BUCKET="$PROJECT_ID-bucket"
 gcloud config set compute/region $REGION
 echo
 echo "🔹  Project ID: $PROJECT_ID"
@@ -87,6 +88,14 @@ Task 2. Assign Dataplex Data Reader role to another user
 ========================================================
 
 EOF
+gcloud dataplex assets add-iam-policy-binding customer-online-sessions-bucket \
+    --location=REGION \
+    --lake=customer-info-lake \
+    --zone=customer-raw-zone \
+    --member="user:$USER2" \
+    --role="roles/dataplex.dataReader"
+  
+
 cat << 'EOF'
 
 ========================================================
@@ -94,6 +103,28 @@ Task 3. Test access to Knowledge Catalog resources as a Dataplex Data Reader
 ========================================================
 
 EOF
+cat << EOF
+👉  Log in a new tab as $USER2. Run the following commands. 
+    You will receive an error, and no files are uploaded to the bucket.
+
+export BUCKET="$PROJECT_ID-bucket"
+curl -O https://storage.googleapis.com/spls/gsp1157/test.csv
+gcloud storage cp test.csv gs://$BUCKET/
+
+EOF
+
+answer=""
+echo -e "\nReady to proceed?"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
+    
 cat << 'EOF'
 
 ========================================================
@@ -101,6 +132,15 @@ Task 4. Assign Dataplex Writer role to another user
 ========================================================
 
 EOF
+gcloud dataplex assets add-iam-policy-binding customer-online-sessions-bucket \
+    --location=REGION \
+    --lake=customer-info-lake \
+    --zone=customer-raw-zone \
+    --member="user:$USER2" \
+    --role="roles/dataplex.dataWriter"
+cat << EOF
+
+
 cat << 'EOF'
 
 ========================================================
@@ -108,3 +148,25 @@ Task 5. Upload new file to Cloud Storage bucket as a Dataplex Data Writer
 ========================================================
 
 EOF
+👉  Log in a new tab as $USER2. Run the following commands. 
+    User 2 can successfully upload a new file to the Cloud Storage bucket as a Dataplex Data Writer.
+
+export BUCKET="$PROJECT_ID-bucket"
+curl -O https://storage.googleapis.com/spls/gsp1157/test.csv
+gcloud storage cp test.csv gs://$BUCKET/
+
+EOF
+
+answer=""
+echo -e "\nReady to proceed?"
+while true; do
+  printf " (y/n): "
+  read answer
+  if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    break
+  fi
+  ## move cursor up one line and clear it
+  echo -ne "\033[1A\033[2K"
+done
+
+echo "👉  All done"
