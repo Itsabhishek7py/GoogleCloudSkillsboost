@@ -82,7 +82,7 @@ gcloud dataplex assets create customer-online-sessions-bucket \
   --resource-type=STORAGE_BUCKET \
   --resource-name="projects/_/buckets/$BUCKET"
 
-  
+   
 cat << 'EOF'
 
 ========================================================
