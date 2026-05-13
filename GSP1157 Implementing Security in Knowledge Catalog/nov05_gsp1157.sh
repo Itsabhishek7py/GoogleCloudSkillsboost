@@ -73,7 +73,7 @@ gcloud dataplex zones create customer-raw-zone \
 ## Attach BigQuery Dataset as an Asset
 ## https://docs.cloud.google.com/sdk/gcloud/reference/dataplex/assets/create
 ## https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dataplex_asset
-gcloud dataplex assets create customer-online-sessions-bucket \
+gcloud dataplex assets create customer-online-sessions \
   --project=$PROJECT_ID \
   --location=$REGION \
   --lake=customer-info-lake \
@@ -90,7 +90,7 @@ Task 2. Assign Dataplex Data Reader role to another user
 ========================================================
 
 EOF
-gcloud dataplex assets add-iam-policy-binding customer-online-sessions-bucket \
+gcloud dataplex assets add-iam-policy-binding customer-online-sessions \
     --location=REGION \
     --lake=customer-info-lake \
     --zone=customer-raw-zone \
@@ -134,7 +134,7 @@ Task 4. Assign Dataplex Writer role to another user
 ========================================================
 
 EOF
-gcloud dataplex assets add-iam-policy-binding customer-online-sessions-bucket \
+gcloud dataplex assets add-iam-policy-binding customer-online-sessions \
     --location=REGION \
     --lake=customer-info-lake \
     --zone=customer-raw-zone \
