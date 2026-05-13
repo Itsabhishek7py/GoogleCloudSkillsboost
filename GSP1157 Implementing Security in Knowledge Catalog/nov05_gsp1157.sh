@@ -66,7 +66,8 @@ gcloud dataplex zones create customer-raw-zone \
   --location=$REGION \
   --lake=customer-info-lake \
   --type=RAW \
-  --display-name="Customer Raw Zone"
+  --display-name="Customer Raw Zone" \
+  --resource-location-type=SINGLE_REGION
 
 ## Attach BigQuery Dataset as an Asset
 ## https://docs.cloud.google.com/sdk/gcloud/reference/dataplex/assets/create
