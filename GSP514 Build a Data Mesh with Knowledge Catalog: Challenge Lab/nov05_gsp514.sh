@@ -210,12 +210,15 @@ EOF
 echo -e "👉  Check aspect-patch.json:"
 cat aspect-patch.json
 
+## ⚠️ Tip: On te console -> Knowledge Catalog -> Search "raw-customer-zone" 
+##    Fine its System: BigQuery and Resource Identifier: 
+##    projects/qwiklabs-gcp-01-de3837dfa4a7/datasets/raw_customer_zone
 gcloud dataplex entries update \
-  "dataplex.googleapis.com/projects/$PROJECT_ID/lakes/sales-lake/zones/raw-customer-zone" \
+  "bigquery.googleapis.com/projects/$PROJECT_ID/datasets/raw_customer_zone" \
   --location="$REGION" \
-  --entry-group="@dataplex" \
+  --entry-group="@bigquery" \
   --update-aspects=aspect-patch.json
-  
+
 cat << 'EOF'
 
 ========================================================
@@ -244,6 +247,7 @@ Task 4. Create and upload a data quality specification file to Cloud Storage
 ========================================================
 
 EOF
+rm -f dq-customer-orders.yaml
 cat > dq-customer-orders.yaml << EOF
 rules:
 - nonNullExpectation: {}
@@ -273,7 +277,7 @@ gcloud dataplex datascans create data-quality customer-orders-data-quality-job \
   --project=$PROJECT_ID \
   --location=$REGION \
   --data-source-resource="//bigquery.googleapis.com/projects/$PROJECT_ID/datasets/customer_orders/tables/ordered_items" \
-  --data-quality-spec-file="gs://$BUCKET_DQ/dq-customer-raw-data.yaml"
+  --data-quality-spec-file="gs://$BUCKET_DQ/dq-customer-orders.yaml"
 
 ## Run the job
 gcloud dataplex datascans run customer-orders-data-quality-job \
