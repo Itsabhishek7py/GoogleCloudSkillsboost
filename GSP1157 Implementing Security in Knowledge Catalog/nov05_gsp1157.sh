@@ -91,7 +91,7 @@ Task 2. Assign Dataplex Data Reader role to another user
 
 EOF
 gcloud dataplex assets add-iam-policy-binding customer-online-sessions \
-    --location=REGION \
+    --location=$REGION \
     --lake=customer-info-lake \
     --zone=customer-raw-zone \
     --member="user:$USERNAME2" \
@@ -135,7 +135,7 @@ Task 4. Assign Dataplex Writer role to another user
 
 EOF
 gcloud dataplex assets add-iam-policy-binding customer-online-sessions \
-    --location=REGION \
+    --location=$REGION \
     --lake=customer-info-lake \
     --zone=customer-raw-zone \
     --member="user:$USERNAME2" \
