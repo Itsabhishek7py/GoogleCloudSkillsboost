@@ -8,7 +8,7 @@ chmod +x nov05_gsp344.sh
 ```
 
 * Code folder - https://github.com/rosera/pet-theory/tree/main/lab06
-* Reference (year 2023) code - https://gist.github.com/starlight173/dec0b4098a29c4f589f6a87c58447029  
+* Reference code (year 2023) - https://gist.github.com/starlight173/dec0b4098a29c4f589f6a87c58447029  
   
 ## 👉 Logs   
 
