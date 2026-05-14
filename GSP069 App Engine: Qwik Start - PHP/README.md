@@ -11,4 +11,12 @@ Task 5. Make a change
 Task 6. Test your knowledge
 ```
 
-
+```bash
+git clone https://github.com/GoogleCloudPlatform/php-docs-samples.git
+cd php-docs-samples/appengine/standard/helloworld
+sed -i 's/^runtime: php.*/runtime: php83/' app.yaml
+grep runtime app.yaml
+printf '1\n' | gcloud app create
+gcloud app deploy --quiet
+gcloud app browse
+```
