@@ -8,7 +8,8 @@ chmod +x nov05_gsp344.sh
 ```
 
 * Code folder - https://github.com/rosera/pet-theory/tree/main/lab06
-* Reference code (year 2023) - https://gist.github.com/starlight173/dec0b4098a29c4f589f6a87c58447029  
+* Reference code (year 2023) - https://gist.github.com/starlight173/dec0b4098a29c4f589f6a87c58447029
+* Ref code (20260506) - https://github.com/prateekrajput08/Arcade-Google-Cloud-Labs/blob/main/Develop%20Serverless%20Apps%20with%20Firebase%3A%20Challenge%20Lab/TechCode.sh  
   
 ## 👉 Logs   
 
