@@ -23,8 +23,14 @@ echo "🔹  User: $USER"
 echo
 # EOF
 # source ~/.bashrc
+
 cd ~
 git clone https://github.com/rosera/pet-theory.git
+
+gcloud services enable \
+  artifactregistry.googleapis.com \
+  cloudbuild.googleapis.com \
+  run.googleapis.com
   
 cat << 'EOF'
 
