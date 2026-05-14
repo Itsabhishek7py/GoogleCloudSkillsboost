@@ -11,6 +11,8 @@ Task 5. Migrate Products to microservice
 Task 6. Migrate Frontend to microservice
 ```
 
+* Code repo - https://github.com/googlecodelabs/monolith-to-microservices
+  
 ## 👉 Run the following Commands in CloudShell
 
 
