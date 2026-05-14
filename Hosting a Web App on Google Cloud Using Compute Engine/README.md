@@ -2,15 +2,6 @@
 
 https://www.skills.google/games/7171/labs/44409
 
-* In this lab, you learn how to perform the following tasks:
-  - Create Compute Engine instances
-  - Create instance templates from source instances
-  - Create managed instance groups
-  - Create and test managed instance group health checks
-  - Create HTTP(S) Load Balancers
-  - Create load balancer health checks
-  - Use a Content Delivery Network (CDN) for Caching
-
 ```text
 Task 1. Enable the Compute Engine API
 Task 2. Create a Cloud Storage bucket
