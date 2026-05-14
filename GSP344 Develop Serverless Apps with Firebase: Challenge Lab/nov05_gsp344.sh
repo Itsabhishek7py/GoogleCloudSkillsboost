@@ -149,7 +149,7 @@ gcloud run deploy frontend-staging-service \
   --region $REGION \
   --allow-unauthenticated \
   --max-instances 1 \
-  # --set-env-vars REST_API_SERVICE=$SERVICE_URL
+  --set-env-vars="REST_API_SERVICE=${SERVICE_URL}"
 export URL=$(gcloud run services describe frontend-staging-service \
   --region $REGION \
   --format="value(status.url)")
@@ -186,7 +186,7 @@ gcloud run deploy frontend-production-service \
   --region $REGION \
   --allow-unauthenticated \
   --max-instances 1 \
-  # --set-env-vars REST_API_SERVICE=$SERVICE_URL
+  --set-env-vars="REST_API_SERVICE=${SERVICE_URL}"
 export URL=$(gcloud run services describe frontend-production-service \
   --region $REGION \
   --format="value(status.url)")
