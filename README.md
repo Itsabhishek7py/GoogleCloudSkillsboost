@@ -20,7 +20,7 @@
 * Example of creating Dataplex aspect and adding to BigQuery table and column   
   bash script - [nov05_gsp1145.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP1145%20Create%20and%20Add%20Aspects%20to%20Knowledge%20Catalog%20Assets/nov05_gsp1145.sh)   
 
-* Example of migrating monolith website to microservices on K8s Engines
+* Example of migrating monolith website to microservices on K8s Engines   
   [folder](https://github.com/nov05/gcp-skills-boost/tree/main/Migrating%20a%20Monolithic%20Website%20to%20Microservices%20on%20Google%20Kubernetes%20Engine)
   
 * Example of ensuring VM running status and SSH readiness   
