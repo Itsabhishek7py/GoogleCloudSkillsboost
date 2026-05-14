@@ -1,5 +1,5 @@
 #!/bin/bash
-## Created by nov05, 2026-05-11  
+## Created by nov05, 2026-05-12  
 
 # cat >> ~/.bashrc <<'EOF'
 ## Get project id, project number, region, zone
