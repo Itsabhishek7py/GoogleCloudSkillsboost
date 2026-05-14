@@ -32,7 +32,7 @@
   bash script - [nov05_gsp1136.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP1136%20Getting%20Started%20with%20Firebase%20Cloud%20Firestore/nov05_gsp1136.sh)
 
 * Example of deploying serverless Firebase app on k8s   
-  bash script - [nov05_gsp334](https://github.com/nov05/gcp-skills-boost/blob/dev/GSP344%20Develop%20Serverless%20Apps%20with%20Firebase%3A%20Challenge%20Lab/nov05_gsp344.sh)    
+  bash script - [nov05_gsp334.sh](https://github.com/nov05/gcp-skills-boost/blob/dev/GSP344%20Develop%20Serverless%20Apps%20with%20Firebase%3A%20Challenge%20Lab/nov05_gsp344.sh)    
 <br><br><br>
 
 * [Google Skills Arcade information](https://docs.google.com/document/d/17iMpVCALHSoYOevKprBKqasOMGgkyA5Mwk2hxtJmxmo)
