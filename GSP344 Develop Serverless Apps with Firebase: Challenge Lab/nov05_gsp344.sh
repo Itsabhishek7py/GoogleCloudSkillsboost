@@ -62,7 +62,7 @@ EOF
 gcloud artifacts repositories create rest-api-repo \
   --repository-format=docker \
   --location=$REGION \
-  --description="GSP344 REST API container repository"
+  --description="GSP344 Firebase REST API container repository"
   
 cd ~/pet-theory/lab06/firebase-rest-api/solution-01
 gcloud builds submit \
