@@ -2,7 +2,7 @@
 
 ```bash
 rm -f abhishek.sh
-curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/dev/Migrating%20a%20Monolithic%20Website%20to%20Microservices%20on%20Google%20Kubernetes%20Engine/abhishek.sh
+curl -LO https://raw.githubusercontent.com/nov05/gcp-skills-boost/refs/heads/dev/Migrating%20a%20Monolithic%20Website%20to%20Microservices%20on%20Google%20Kubernetes%20Engine/abhishek.sh
 sudo chmod +x abhishek.sh
 ./abhishek.sh
 ```
