@@ -1,21 +1,6 @@
 #!/bin/bash
 ## Created by nov05, 2026-05-13
 
-# Bright Foreground Colors
-BLACK_TEXT=$'\033[0;90m'
-RED_TEXT=$'\033[0;91m'
-GREEN_TEXT=$'\033[0;92m'
-YELLOW_TEXT=$'\033[0;93m'
-BLUE_TEXT=$'\033[0;94m'
-MAGENTA_TEXT=$'\033[0;95m'
-CYAN_TEXT=$'\033[0;96m'
-WHITE_TEXT=$'\033[0;97m'
-## Text format
-NO_COLOR=$'\033[0m'
-RESET_FORMAT=$'\033[0m'
-BOLD_TEXT=$'\033[1m'
-UNDERLINE_TEXT=$'\033[4m'
-
 # cat >> ~/.bashrc <<'EOF'
 ## Get project id, project number, region, zone
 export PROJECT_ID=$(gcloud config get-value project)
@@ -44,8 +29,8 @@ echo
 
 gcloud config set compute/region $REGION
 gcloud config set compute/zone $ZONE
-
-## This will enable the necessary Service APIs, and it will also generate a terraform/terraform.tfvars file with the following keys.
+## This will enable the necessary Service APIs, and it will also 
+## generate a terraform/terraform.tfvars file with the following keys.
 make setup-project
 cat terraform/terraform.tfvars
 make tf-apply
@@ -53,11 +38,14 @@ make tf-apply
 ## Task 2. Validation
 
 gcloud compute ssh gke-demo-bastion
-
 sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
 echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> ~/.bashrc
 source ~/.bashrc
+gcloud container clusters get-credentials gke-demo-cluster --zone placeholder
 
 ## Task 3. Installing the hello server
 
+kubectl apply -f ./manifests/hello-app/
+kubectl get pods
 
+echo -e "\n✅  All done\n"
