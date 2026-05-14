@@ -24,4 +24,7 @@ chmod +x nov05_gsp344.sh
     @maxsahir5026 1 hour ago
     I have wasted my 5-6 hours trying to solve Task 5 and Task 6. Using every method.
     I can see everything is working however the check box is not getting completed.
-    ```  
+    ```
+
+    Left a comment asking for help on this issue.
+    https://discuss.google.dev/t/what-s-changing-in-the-google-skills-arcade-from-april-2026/345557/24  
