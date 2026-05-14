@@ -25,6 +25,10 @@ echo
 # EOF
 # source ~/.bashrc
 
+gsutil cp -r gs://spls/gsp480/gke-network-policy-demo .
+cd gke-network-policy-demo
+chmod -R 755 *
+
 ## Task 1. Lab setup
 
 gcloud config set compute/region $REGION
@@ -41,7 +45,24 @@ gcloud compute ssh gke-demo-bastion
 sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
 echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> ~/.bashrc
 source ~/.bashrc
-gcloud container clusters get-credentials gke-demo-cluster --zone placeholder
+
+export PROJECT_ID=$(gcloud config get-value project)
+export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID \
+  --format='value(projectNumber)')
+export REGION=$(gcloud compute project-info describe \
+  --format="value(commonInstanceMetadata.items[google-compute-default-region])")
+export ZONE=$(gcloud compute project-info describe \
+  --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+gcloud config set project $PROJECT_ID  
+gcloud config set compute/region $REGION
+echo
+echo "🔹  Project ID: $PROJECT_ID"
+echo "🔹  Project number: $PROJECT_NUMBER"
+echo "🔹  Region: $REGION"
+echo "🔹  Zone: $ZONE"
+echo "🔹  User: $USER"
+echo
+gcloud container clusters get-credentials gke-demo-cluster --zone $ZONE
 
 ## Task 3. Installing the hello server
 
