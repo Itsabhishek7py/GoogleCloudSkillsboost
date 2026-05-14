@@ -33,9 +33,17 @@ echo
 
 # Initialize project settings
 echo "${CYAN}${BOLD}➤ Configuring Project Settings${RESET}"
-export PROJECT_ID=$DEVSHELL_PROJECT_ID
-export ZONE=$(gcloud config get-value compute/zone)
-export REGION=${ZONE%-*}
+## ⚠️ nov05: Regin might be unset.
+# export PROJECT_ID=$DEVSHELL_PROJECT_ID
+# export ZONE=$(gcloud config get-value compute/zone)
+# export REGION=${ZONE%-*}
+export PROJECT_ID=$(gcloud config get-value project)
+export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID \
+  --format='value(projectNumber)')
+export REGION=$(gcloud compute project-info describe \
+  --format="value(commonInstanceMetadata.items[google-compute-default-region])")
+export ZONE=$(gcloud compute project-info describe \
+  --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
 gcloud config set compute/region $REGION
 
 echo "${GREEN}✓ Project ID: $PROJECT_ID${RESET}"
