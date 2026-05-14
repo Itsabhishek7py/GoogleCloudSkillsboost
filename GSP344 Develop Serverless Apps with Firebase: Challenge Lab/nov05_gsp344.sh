@@ -194,7 +194,7 @@ export URL=$(gcloud run services describe frontend-production-service \
   --region $REGION \
   --format="value(status.url)")
 echo -e "\n👉  Check frontend-production-service v0.1."
-echo -e "  $URL/2020\n"
+echo -e "  $URL\n"
 
 answer=""
 echo -e "\nReady to proceed?"
