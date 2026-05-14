@@ -15,9 +15,6 @@ Task 6. Migrate Frontend to microservice
 
 
 ```bash
-gcloud auth list
-export ZONE=$(gcloud compute project-info describe \
-  --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
 rm -f abhishek.sh
 curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Migrating%20a%20Monolithic%20Website%20to%20Microservices%20on%20Google%20Kubernetes%20Engine/abhishek.sh
 sudo chmod +x abhishek.sh
