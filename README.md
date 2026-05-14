@@ -25,13 +25,14 @@
 
 * Example of ensuring service account readiness   
   bash script - [nov05_gsp097.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Cloud%20Natural%20Language%20API%3A%20Qwik%20Start/nov05_gsp097.sh)       
-
 * Example of calling APIs from a VM   
   bash script - [nov05_gsp038.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Entity%20and%20Sentiment%20Analysis%20with%20the%20Natural%20Language%20API/nov05_gsp038.sh)
 
 * Example of creating a Firebase app, writing and reading a Firestore document    
-  bash script - [nov05_gs1136.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP1136%20Getting%20Started%20with%20Firebase%20Cloud%20Firestore/nov05_gsp1136.sh)
+  bash script - [nov05_gsp1136.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP1136%20Getting%20Started%20with%20Firebase%20Cloud%20Firestore/nov05_gsp1136.sh)
 
+* Example of deploying serverless Firebase app on k8s   
+  bash script - [nov05_gsp334](https://github.com/nov05/gcp-skills-boost/blob/dev/GSP344%20Develop%20Serverless%20Apps%20with%20Firebase%3A%20Challenge%20Lab/nov05_gsp344.sh)    
 <br><br><br>
 
 * [Google Skills Arcade information](https://docs.google.com/document/d/17iMpVCALHSoYOevKprBKqasOMGgkyA5Mwk2hxtJmxmo)
