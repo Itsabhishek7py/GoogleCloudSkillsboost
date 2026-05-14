@@ -29,8 +29,8 @@ flask --app main run
 ```
 Web Preview (web preview icon) > Preview on port 5000
 ```bash
+printf '1\n' | gcloud app create
 gcloud app deploy --quiet
-```
-```bash
 gcloud app browse
 ```
+
