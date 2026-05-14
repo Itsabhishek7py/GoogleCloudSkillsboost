@@ -48,4 +48,32 @@ gcloud container clusters get-credentials gke-demo-cluster --zone placeholder
 kubectl apply -f ./manifests/hello-app/
 kubectl get pods
 
+## Task 4. Confirming default access to the hello server
+
+kubectl logs --tail 10 -f $(kubectl get pods -oname -l app=hello)
+kubectl logs --tail 10 -f $(kubectl get pods -oname -l app=not-hello)
+
+## Task 5. Restricting access with a Network Policy
+
+kubectl apply -f ./manifests/network-policy.yaml
+kubectl logs --tail 10 -f $(kubectl get pods -oname -l app=not-hello)
+
+## Task 6. Restricting namespaces with Network Policies
+
+kubectl delete -f ./manifests/network-policy.yaml
+kubectl create -f ./manifests/network-policy-namespaced.yaml
+kubectl logs --tail 10 -f $(kubectl get pods -oname -l app=hello)
+kubectl -n hello-apps apply -f ./manifests/hello-app/hello-client.yaml
+
+## Task 7. Validation
+
+kubectl logs --tail 10 -f -n hello-apps $(kubectl get pods -oname -l app=hello -n hello-apps)
+
+## Task 8. Teardown
+
+exit
+make teardown
+
+## Task 9. Troubleshooting in your own environment
+
 echo -e "\n✅  All done\n"
