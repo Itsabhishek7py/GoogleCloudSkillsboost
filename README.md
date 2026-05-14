@@ -31,7 +31,11 @@
 
 * Example of creating a Firebase app, writing and reading a Firestore document    
   bash script - [nov05_gs1136.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP1136%20Getting%20Started%20with%20Firebase%20Cloud%20Firestore/nov05_gsp1136.sh)
-  
+
+<br><br><br>
+
+* [Google Skills Arcade information](https://docs.google.com/document/d/17iMpVCALHSoYOevKprBKqasOMGgkyA5Mwk2hxtJmxmo)
+
 <br><br><br>
 
 ---
