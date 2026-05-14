@@ -9,4 +9,4 @@ chmod +x nov05_gsp480.sh
 
 ## 👉 Logs
 
-* 2026-05-13 Created script nov05_gsp480.sh.   
+* 2026-05-13 Created script nov05_gsp480.sh. ✅ [Test result](https://gist.github.com/nov05/496c8a6c958ce87c2ec36782927b20ec)    
