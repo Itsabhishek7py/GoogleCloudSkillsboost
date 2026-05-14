@@ -147,6 +147,8 @@ Task 5. Deploy the staging frontend
 EOF
 
 cd ~/pet-theory/lab06/firebase-frontend
+npm install && npm run build
+
 gcloud builds submit \
   --tag $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-staging:0.1 \
   --region $REGION
@@ -186,6 +188,8 @@ EOF
 cd ~/pet-theory/lab06/firebase-frontend/public
 sed -i "s|data/netflix.json|$SERVICE_URL/2020|g" app.js
 cd ~/pet-theory/lab06/firebase-frontend
+npm install && npm run build
+
 gcloud builds submit \
   --tag $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-production:0.1 \
   --region $REGION
