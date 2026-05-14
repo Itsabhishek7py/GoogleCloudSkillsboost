@@ -26,5 +26,5 @@ chmod +x nov05_gsp344.sh
     I can see everything is working however the check box is not getting completed.
     ```
 
-    Left a comment asking for help on this issue.
+    Left a comment asking for help on this issue.    
     https://discuss.google.dev/t/what-s-changing-in-the-google-skills-arcade-from-april-2026/345557/24  
