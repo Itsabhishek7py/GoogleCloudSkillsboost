@@ -20,21 +20,26 @@
 * Example of creating Dataplex aspect and adding to BigQuery table and column   
   bash script - [nov05_gsp1145.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP1145%20Create%20and%20Add%20Aspects%20to%20Knowledge%20Catalog%20Assets/nov05_gsp1145.sh)   
 
-* Example of migrating monolith website to microservices on K8s Engines   
-  [folder](https://github.com/nov05/gcp-skills-boost/tree/main/Migrating%20a%20Monolithic%20Website%20to%20Microservices%20on%20Google%20Kubernetes%20Engine)
-  
+* Example of migrating monolith website to microservices on K8s Engines    
+  [folder](https://github.com/nov05/gcp-skills-boost/tree/main/Migrating%20a%20Monolithic%20Website%20to%20Microservices%20on%20Google%20Kubernetes%20Engine)  
+
 * Example of ensuring VM running status and SSH readiness   
   bash script - [nov05_GSP004.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Creating%20a%20Persistent%20Disk/nov05_GSP004.sh)
 
 * Example of ensuring service account readiness   
   bash script - [nov05_gsp097.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Cloud%20Natural%20Language%20API%3A%20Qwik%20Start/nov05_gsp097.sh)       
-
 * Example of calling APIs from a VM   
   bash script - [nov05_gsp038.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Entity%20and%20Sentiment%20Analysis%20with%20the%20Natural%20Language%20API/nov05_gsp038.sh)
 
 * Example of creating a Firebase app, writing and reading a Firestore document    
-  bash script - [nov05_gs1136.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP1136%20Getting%20Started%20with%20Firebase%20Cloud%20Firestore/nov05_gsp1136.sh)
-  
+  bash script - [nov05_gsp1136.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP1136%20Getting%20Started%20with%20Firebase%20Cloud%20Firestore/nov05_gsp1136.sh)
+
+* Example of deploying serverless Firebase app on k8s   
+  bash script - [nov05_gsp334.sh](https://github.com/nov05/gcp-skills-boost/blob/dev/GSP344%20Develop%20Serverless%20Apps%20with%20Firebase%3A%20Challenge%20Lab/nov05_gsp344.sh)    
+<br><br><br>
+
+* [Google Skills Arcade information](https://docs.google.com/document/d/17iMpVCALHSoYOevKprBKqasOMGgkyA5Mwk2hxtJmxmo)
+
 <br><br><br>
 
 ---

@@ -3,6 +3,9 @@
 
 # cat >> ~/.bashrc <<'EOF'
 ## Get project id, project number, region, zone
+export PROJECT_ID=$(gcloud projects list \
+  --format='value(PROJECT_ID)' \
+  --filter='qwiklabs-gcp')
 export PROJECT_ID=$(gcloud config get-value project)
 export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID \
   --format='value(projectNumber)')
@@ -11,7 +14,7 @@ export REGION=$(gcloud compute project-info describe \
 export ZONE=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
 # export BUCKET="$PROJECT_ID-bucket"
-gcloud config set project $(gcloud projects list --format='value(PROJECT_ID)' --filter='qwiklabs-gcp')
+gcloud config set project $PROJECT_ID
 gcloud config set compute/region $REGION
 echo
 echo "🔹  Project ID: $PROJECT_ID"
@@ -87,6 +90,7 @@ echo -e "\n👉  Check netflix-dataset-service v0.1."
 echo "  curl -X GET $SERVICE_URL"
 echo -e "  It should respond with: {\"status\":\"Netflix Dataset! Make a query.\"}\n"
 curl -X GET $SERVICE_URL
+echo
 
 answer=""
 echo -e "\nReady to proceed?"

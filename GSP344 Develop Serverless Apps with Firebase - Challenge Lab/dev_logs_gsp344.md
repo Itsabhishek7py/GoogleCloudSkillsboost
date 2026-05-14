@@ -13,7 +13,10 @@ chmod +x nov05_gsp344.sh
   
 ## 👉 Logs   
 
-* 2026-05-13 Created script `nov05_gsp344.sh`. Check [the test result](https://gist.github.com/nov05/7b0a38bd7b8fef78368b045a823b14a1).
+* 2026-05-13 Created script `nov05_gsp344.sh`. Check [✅ the test result](https://gist.github.com/nov05/7b0a38bd7b8fef78368b045a823b14a1).
+  
+    Manual Last Updated May 12, 2026   
+    Lab Last Tested May 12, 2026  
   
     https://www.youtube.com/watch?v=5Qg8gTJVXxI   
     People are all having issues with Tasks 5 and 6.
@@ -21,4 +24,7 @@ chmod +x nov05_gsp344.sh
     @maxsahir5026 1 hour ago
     I have wasted my 5-6 hours trying to solve Task 5 and Task 6. Using every method.
     I can see everything is working however the check box is not getting completed.
-    ```  
+    ```
+
+    Left a comment asking for help on this issue.    
+    https://discuss.google.dev/t/what-s-changing-in-the-google-skills-arcade-from-april-2026/345557/24  
