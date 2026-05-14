@@ -1,4 +1,4 @@
-# 👉 Deploy Your Website on Cloud Run (GSP659)
+# 🟢 Deploy Your Website on Cloud Run (GSP659)
 
 https://www.skills.google/games/7171/labs/44407
 
