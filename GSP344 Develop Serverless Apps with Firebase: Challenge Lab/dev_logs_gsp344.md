@@ -15,7 +15,7 @@ chmod +x nov05_gsp344.sh
 
 * 2026-05-13 Created script `nov05_gsp344.sh`. Check [✅ the test result](https://gist.github.com/nov05/7b0a38bd7b8fef78368b045a823b14a1).
   
-    Manual Last Updated May 12, 2026
+    Manual Last Updated May 12, 2026   
     Lab Last Tested May 12, 2026  
   
     https://www.youtube.com/watch?v=5Qg8gTJVXxI   
