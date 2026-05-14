@@ -115,10 +115,10 @@ export SERVICE_URL=$(gcloud run services describe netflix-dataset-service \
   --format="value(status.url)")
 echo -e "\n👉  Check netflix-dataset-service v0.2."
 # echo "  curl -X GET $SERVICE_URL/2019"
-echo "  curl -s $SERVICE_URL/2019 | jq '.' | head -n 3"
+echo "  curl -s $SERVICE_URL/2019 | jq '.' | head -n 20"
 echo -e "  It should respond with json dataset\n"
 # curl -X GET $SERVICE_URL/2019
-curl -s $SERVICE_URL/2019 | jq '.' | head -n 3
+curl -s $SERVICE_URL/2019 | jq '.' | head -n 20
 
 answer=""
 echo -e "\nReady to proceed?"
