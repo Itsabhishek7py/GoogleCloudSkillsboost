@@ -9,4 +9,4 @@ sudo chmod +x abhishek.sh
 
 ## 👉 Logs
 
-* 2026-05-14 Tested the original script.  
+* 2026-05-14 Tested the original script. It didn't pass any check. Bug fix was done.   
