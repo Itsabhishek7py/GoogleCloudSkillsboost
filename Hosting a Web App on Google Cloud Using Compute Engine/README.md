@@ -13,7 +13,7 @@ Task 7. Scale Compute Engine
 Task 8. Update the website
 ```
 
-## 👉 Run the following Commands in CloudShell
+## 👉 Run the following Commands in Cloud Shell
 
 ```bash
 export ZONE=$(gcloud compute project-info describe \
@@ -25,7 +25,7 @@ sudo chmod +x abhishek1.sh
 
 ⚠️ IMPORTANT: Hit the `Check my progress` button at the end of Task 6
 
-Now run the commands in cloud shell again
+Now continue to run the commands in cloud shell.  
 
 ```bash
 curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Hosting%20a%20Web%20App%20on%20Google%20Cloud%20Using%20Compute%20Engine/abhishek2.sh
