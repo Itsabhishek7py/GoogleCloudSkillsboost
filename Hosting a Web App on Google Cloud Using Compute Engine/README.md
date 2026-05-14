@@ -16,8 +16,10 @@ Task 8. Update the website
 ## 👉 Run the following Commands in Cloud Shell
 
 ```bash
+gcloud auth list
 export ZONE=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+rm -f abhishek1.sh
 curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Hosting%20a%20Web%20App%20on%20Google%20Cloud%20Using%20Compute%20Engine/abhishek1.sh
 sudo chmod +x abhishek1.sh
 ./abhishek1.sh
@@ -28,6 +30,10 @@ sudo chmod +x abhishek1.sh
 Now continue to run the commands in cloud shell.  
 
 ```bash
+gcloud auth list
+export ZONE=$(gcloud compute project-info describe \
+  --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+rm -f abhishek2.sh
 curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Hosting%20a%20Web%20App%20on%20Google%20Cloud%20Using%20Compute%20Engine/abhishek2.sh
 sudo chmod +x abhishek2.sh
 ./abhishek2.sh
