@@ -178,6 +178,7 @@ EOF
 
 cd ~/pet-theory/lab06/firebase-frontend/public
 sed -i "s|data/netflix.json|$SERVICE_URL/2020|g" app.js
+cd ~/pet-theory/lab06/firebase-frontend
 gcloud builds submit \
   --tag $REGION-docker.pkg.dev/$PROJECT_ID/rest-api-repo/frontend-production:0.1
 gcloud run deploy frontend-production-service \
