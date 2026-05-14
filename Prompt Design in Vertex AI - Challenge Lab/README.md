@@ -1,4 +1,4 @@
-#### Prompt Design in Vertex AI: Challenge Lab
+# Prompt Design in Vertex AI: Challenge Lab
 
 
 ```
