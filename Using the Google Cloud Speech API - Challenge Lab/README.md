@@ -1,4 +1,4 @@
-# Using the Google Cloud Speech API: Challenge Lab
+# 🟢 Using the Google Cloud Speech API: Challenge Lab
 
 ### In this lab, You need to:
 
@@ -13,7 +13,7 @@ export ZONE=$(gcloud compute instances list lab-vm --format 'csv[no-heading](zon
 gcloud compute ssh lab-vm --project=$DEVSHELL_PROJECT_ID --zone=$ZONE --quiet
 ```
 
-```
+```bash
 curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Using%20the%20Google%20Cloud%20Speech%20API%3A%20Challenge%20Lab/abhishek.sh
 sudo chmod +x abhishek.sh
 ./abhishek.sh
