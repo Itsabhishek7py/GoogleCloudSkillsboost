@@ -1,14 +1,16 @@
 # 🟢 Google Skills Labs Automation  
 
+⚠️ For the code maintained by Nov05, please use https://github.com/nov05/nov05-gcp-skills-boost instead. The legacy code organization in this repository has caused too much headache to maintain.
+
 * [**Script templates**](https://github.com/nov05/gcp-skills-boost/tree/dev/templates)
 
 * **General example**  
-  lab - [GSP330 Implement DevOps Workflows in Google Cloud](https://github.com/nov05/gcp-skills-boost/blob/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%20-%20Challenge%20Lab)    
-  bash script - [nov05_GSP330.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%20-%20Challenge%20Lab/nov05_GSP330.sh)    
+  lab - [GSP330 Implement DevOps Workflows in Google Cloud](https://github.com/nov05/gcp-skills-boost/tree/main/GSP330%20Implement%20DevOps%20Workflows%20in%20Google%20Cloud%20-%20Challenge%20Lab)    
+  bash script - [nov05_GSP330.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP330%20Implement%20DevOps%20Workflows%20in%20Google%20Cloud%20-%20Challenge%20Lab/nov05_GSP330.sh)    
 
 * **Example of creating 1st-gen Cloud Build triggers via the CLI**    
   In this example, the script waits for the user to connect the GitHub repositories manually in `Cloud Build` before creating two triggers. It can also find the last but one successful build of a trigger and retry the build, which equals to a rollback.      
-  lab - [GSP1077 Google Kubernetes Engine Pipeline using Cloud Build](https://github.com/nov05/gcp-skills-boost/tree/dev/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build)     
+  lab - [GSP1077 Google Kubernetes Engine Pipeline using Cloud Build](https://github.com/nov05/gcp-skills-boost/tree/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build)     
   bash script - [nov05_gsp1077.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Google%20Kubernetes%20Engine%20Pipeline%20using%20Cloud%20Build/nov05_gsp1077.sh)
 
 * **Example of building data mesh, creating and adding Dataplex aspect to zone**    
@@ -35,7 +37,8 @@
   bash script - [nov05_gsp1136.sh](https://github.com/nov05/gcp-skills-boost/blob/main/GSP1136%20Getting%20Started%20with%20Firebase%20Cloud%20Firestore/nov05_gsp1136.sh)
 
 * Example of deploying serverless Firebase app on k8s   
-  bash script - [nov05_gsp334.sh](https://github.com/nov05/gcp-skills-boost/blob/dev/GSP344%20Develop%20Serverless%20Apps%20with%20Firebase%3A%20Challenge%20Lab/nov05_gsp344.sh)    
+  bash script - [nov05_gsp334.sh](https://github.com/nov05/gcp-skills-boost/blob/dev/GSP344%20Develop%20Serverless%20Apps%20with%20Firebase%3A%20Challenge%20Lab/nov05_gsp344.sh)   
+
 <br><br><br>
 
 * [Google Skills Arcade information](https://docs.google.com/document/d/17iMpVCALHSoYOevKprBKqasOMGgkyA5Mwk2hxtJmxmo)
