@@ -149,5 +149,5 @@ echo "${WHITE}${BOLD}For more cloud tutorials and guides:${RESET}"
 echo "${YELLOW}${BOLD}👉 Subscribe to Dr. Abhishek Cloud Tutorials:${RESET}"
 echo "${BLUE}${UNDERLINE}https://www.youtube.com/@drabhishek.5460/videos${RESET}"
 echo
-echo "${MAGENTA}Thank you Do like share and subscribe to the channel ${RESET}"
+echo "${MAGENTA}Thank you for using this script!${RESET}"
 echo
