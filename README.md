@@ -3,8 +3,8 @@
 * [**Script templates**](https://github.com/nov05/gcp-skills-boost/tree/dev/templates)
 
 * **General example**  
-  lab - [GSP330 Implement DevOps Workflows in Google Cloud](https://github.com/nov05/gcp-skills-boost/tree/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%3A%20Challenge%20Lab)    
-  bash script - [nov05_GSP330.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%3A%20Challenge%20Lab/nov05_GSP330.sh)    
+  lab - [GSP330 Implement DevOps Workflows in Google Cloud](https://github.com/nov05/gcp-skills-boost/blob/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%20-%20Challenge%20Lab)    
+  bash script - [nov05_GSP330.sh](https://github.com/nov05/gcp-skills-boost/blob/main/Implement%20DevOps%20Workflows%20in%20Google%20Cloud%20-%20Challenge%20Lab/nov05_GSP330.sh)    
 
 * **Example of creating 1st-gen Cloud Build triggers via the CLI**    
   In this example, the script waits for the user to connect the GitHub repositories manually in `Cloud Build` before creating two triggers. It can also find the last but one successful build of a trigger and retry the build, which equals to a rollback.      
@@ -41,6 +41,7 @@
 * [Google Skills Arcade information](https://docs.google.com/document/d/17iMpVCALHSoYOevKprBKqasOMGgkyA5Mwk2hxtJmxmo)
 
 <br><br><br>
+
 
 ---
 
@@ -79,9 +80,7 @@
 
 </div>
 
----
-
-### 📌 Important Notice  
+### Important Notice  
 This educational material is provided for learning purposes only to help you:  
 - Understand Google Cloud lab services  
 - Enhance your technical skills  
@@ -94,6 +93,4 @@ This educational material is provided for learning purposes only to help you:
 4. Adhere to YouTube Community Guidelines  
 
 ❌ Not intended to bypass legitimate learning processes  
-✅ Meant to supplement your educational journey  
-
-</div>
+✅ Meant to supplement your educational journey 
