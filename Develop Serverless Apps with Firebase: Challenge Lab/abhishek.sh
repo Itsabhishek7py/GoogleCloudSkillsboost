@@ -1,7 +1,7 @@
 #!/bin/bash
 # ============================================================
 # 🚀 DEVELOP SERVERLESS APPS WITH FIREBASE - CHALLENGE LAB
-# ❤️ Subscribe to Dr Abhishek
+# ❤️ Subscribe to Dr Abhishek agye copy krne 
 # 📺 https://www.youtube.com/@drabhishek.5460/videos
 # ============================================================
 
@@ -46,7 +46,7 @@ export DEVSHELL_PROJECT_ID=$(gcloud config get-value project)
 REGION=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items.google-compute-default-region)")
 
-# Fallback if region not detected ab ek bina readme wala isko copy krega
+# Fallback if region not detected
 if [[ -z "$REGION" ]]; then
   REGION="us-east4"
 fi
