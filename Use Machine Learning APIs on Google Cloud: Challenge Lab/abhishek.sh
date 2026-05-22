@@ -1,54 +1,52 @@
 #!/bin/bash
 
 # ============================================
-#           mai hu jadugar
+#              fir agya chori karne 
 # ============================================
 
 ORANGE='\033[38;5;208m'
 DARK_ORANGE='\033[38;5;166m'
 LIGHT_ORANGE='\033[38;5;215m'
 GOLD='\033[38;5;220m'
-WHITE='\033[1;37m'
 GREEN='\033[1;32m'
 RED='\033[1;31m'
+WHITE='\033[1;37m'
 CYAN='\033[1;36m'
 RESET='\033[0m'
+
+clear
 
 # ============================================
 #                HEADER
 # ============================================
 
-clear
-
 echo -e "${ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
 echo -e "${ORANGE}║                                                      ║${RESET}"
-echo -e "${ORANGE}║      ${GOLD}WELCOME TO DR ABHISHEK CLOUD LAB like karo jaldi ${ORANGE}         ║${RESET}"
+echo -e "${ORANGE}║        ${GOLD}DR ABHISHEK CLOUD LAB AUTOMATION${ORANGE}       ║${RESET}"
 echo -e "${ORANGE}║                                                      ║${RESET}"
 echo -e "${ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
 echo ""
 
 # ============================================
-#          USER CONFIGURATION INPUT
+#          USER INPUT SECTION
 # ============================================
 
 echo -e "${DARK_ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
-echo -e "${DARK_ORANGE}║              ${WHITE}CONFIGURATION PANEL${DARK_ORANGE}                ║${RESET}"
+echo -e "${DARK_ORANGE}║               ${WHITE}CONFIGURATION PANEL${DARK_ORANGE}               ║${RESET}"
 echo -e "${DARK_ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
 echo ""
 
-read -p "$(echo -e "${LIGHT_ORANGE}ENTER LANGUAGE (en/fr/es): ${RESET}")" LANGUAGE
-read -p "$(echo -e "${LIGHT_ORANGE}ENTER LOCALE (en_US/fr_FR): ${RESET}")" LOCAL
-read -p "$(echo -e "${LIGHT_ORANGE}ENTER BIGQUERY ROLE: ${RESET}")" BIGQUERY_ROLE
-read -p "$(echo -e "${LIGHT_ORANGE}ENTER STORAGE ROLE: ${RESET}")" CLOUD_STORAGE_ROLE
+read -p "$(echo -e "${LIGHT_ORANGE}ENTER LANGUAGE (ex: en/ja/fr): ${RESET}")" LANGUAGE
+read -p "$(echo -e "${LIGHT_ORANGE}ENTER LOCALE (ex: en_US/ja_JP): ${RESET}")" LOCAL
 
 echo ""
 
 # ============================================
-#          ENABLE REQUIRED APIs
+#             ENABLE APIS
 # ============================================
 
 echo -e "${ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
-echo -e "${ORANGE}║                 ${WHITE}ENABLING APIs${ORANGE}                     ║${RESET}"
+echo -e "${ORANGE}║                  ${WHITE}ENABLING APIs${ORANGE}                    ║${RESET}"
 echo -e "${ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
 echo ""
 
@@ -57,53 +55,48 @@ gcloud services enable translate.googleapis.com
 gcloud services enable bigquery.googleapis.com
 gcloud services enable storage.googleapis.com
 
-echo -e "${GREEN}✓ Required APIs Enabled Successfully${RESET}"
+echo ""
+echo -e "${GREEN}✓ APIs Enabled Successfully${RESET}"
 echo ""
 
 # ============================================
-#          SERVICE ACCOUNT SETUP
+#        SERVICE ACCOUNT CREATION
 # ============================================
 
 echo -e "${ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
-echo -e "${ORANGE}║             ${WHITE}SERVICE ACCOUNT SETUP${ORANGE}               ║${RESET}"
+echo -e "${ORANGE}║              ${WHITE}SERVICE ACCOUNT SETUP${ORANGE}               ║${RESET}"
 echo -e "${ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
 echo ""
 
 echo -e "${CYAN}→ Creating Service Account...${RESET}"
 
-gcloud iam service-accounts create sample-sa
+gcloud iam service-accounts create sample-sa --quiet
 
 echo ""
 
-echo -e "${CYAN}→ Assigning BigQuery Role...${RESET}"
+echo -e "${CYAN}→ Assigning IAM Roles...${RESET}"
 
 gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
---member=serviceAccount:sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com \
---role=$BIGQUERY_ROLE
+--member="serviceAccount:sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com" \
+--role="roles/bigquery.admin" --quiet
+
+gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
+--member="serviceAccount:sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com" \
+--role="roles/storage.admin" --quiet
+
+gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
+--member="serviceAccount:sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com" \
+--role="roles/serviceusage.serviceUsageConsumer" --quiet
 
 echo ""
-
-echo -e "${CYAN}→ Assigning Storage Role...${RESET}"
-
-gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
---member=serviceAccount:sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com \
---role=$CLOUD_STORAGE_ROLE
-
-echo ""
-
-echo -e "${CYAN}→ Assigning Service Usage Consumer Role...${RESET}"
-
-gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
---member=serviceAccount:sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com \
---role=roles/serviceusage.serviceUsageConsumer
-
+echo -e "${GREEN}✓ IAM Roles Assigned${RESET}"
 echo ""
 
 # ============================================
-#             WAIT FOR IAM
+#           WAIT FOR IAM
 # ============================================
 
-echo -e "${LIGHT_ORANGE}Waiting 60 seconds for IAM propagation...${RESET}"
+echo -e "${LIGHT_ORANGE}Waiting for IAM propagation...${RESET}"
 
 for i in {1..60}; do
     echo -ne "${GOLD}$i/60 seconds completed...\r${RESET}"
@@ -114,76 +107,96 @@ echo ""
 echo ""
 
 # ============================================
-#          CREATE KEY FILE
+#          CREATE FRESH KEY
 # ============================================
 
-echo -e "${CYAN}→ Creating Credential Key...${RESET}"
+echo -e "${CYAN}→ Creating Fresh Credential Key...${RESET}"
 
-gcloud iam service-accounts keys create sample-sa-key.json \
---iam-account sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com
+rm -f key.json
 
-export GOOGLE_APPLICATION_CREDENTIALS=${PWD}/sample-sa-key.json
+gcloud iam service-accounts keys create key.json \
+--iam-account=sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com
 
-echo -e "${GREEN}✓ Credential File Created${RESET}"
 echo ""
 
 # ============================================
-#          DOWNLOAD PYTHON SCRIPT
+#         EXPORT CREDENTIALS
+# ============================================
+
+export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/key.json
+
+echo -e "${GREEN}✓ Credentials Exported${RESET}"
+echo ""
+
+# ============================================
+#      ACTIVATE SERVICE ACCOUNT
+# ============================================
+
+echo -e "${CYAN}→ Activating Service Account...${RESET}"
+
+gcloud auth activate-service-account \
+sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com \
+--key-file=key.json
+
+echo ""
+echo -e "${GREEN}✓ Service Account Activated${RESET}"
+echo ""
+
+# ============================================
+#       DOWNLOAD PYTHON SCRIPT
 # ============================================
 
 echo -e "${ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
-echo -e "${ORANGE}║                ${WHITE}DOWNLOADING FILES${ORANGE}                  ║${RESET}"
+echo -e "${ORANGE}║               ${WHITE}DOWNLOADING SCRIPT${ORANGE}                  ║${RESET}"
 echo -e "${ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
 echo ""
 
-wget https://raw.githubusercontent.com/guys-in-the-cloud/cloud-skill-boosts/main/Challenge-labs/Integrate%20with%20Machine%20Learning%20APIs%3A%20Challenge%20Lab/analyze-images-v2.py
+wget -O analyze-images-v2.py \
+https://raw.githubusercontent.com/guys-in-the-cloud/cloud-skill-boosts/main/Challenge-labs/Integrate%20with%20Machine%20Learning%20APIs%3A%20Challenge%20Lab/analyze-images-v2.py
 
-echo -e "${GREEN}✓ Python Script Downloaded${RESET}"
+echo ""
+echo -e "${GREEN}✓ Script Downloaded${RESET}"
 echo ""
 
 # ============================================
-#           UPDATE LOCALE
+#            UPDATE LOCALE
 # ============================================
 
 echo -e "${CYAN}→ Updating Locale to ${WHITE}$LOCAL${RESET}"
 
 sed -i "s/'en'/'${LOCAL}'/g" analyze-images-v2.py
 
-echo -e "${GREEN}✓ Locale Updated Successfully${RESET}"
+echo ""
+echo -e "${GREEN}✓ Locale Updated${RESET}"
 echo ""
 
 # ============================================
-#          RUN PYTHON SCRIPT
+#           RUN SCRIPT
 # ============================================
 
 echo -e "${ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
-echo -e "${ORANGE}║               ${WHITE}RUNNING ANALYSIS${ORANGE}                   ║${RESET}"
+echo -e "${ORANGE}║                ${WHITE}RUNNING ANALYSIS${ORANGE}                  ║${RESET}"
 echo -e "${ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
 echo ""
-
-python3 analyze-images-v2.py
-
-if [ $? -ne 0 ]; then
-    echo -e "${RED}❌ Error Running Script${RESET}"
-    exit 1
-fi
 
 python3 analyze-images-v2.py $DEVSHELL_PROJECT_ID $DEVSHELL_PROJECT_ID
 
 if [ $? -ne 0 ]; then
-    echo -e "${RED}❌ Error Running BigQuery Upload${RESET}"
+    echo ""
+    echo -e "${RED}❌ Script Failed${RESET}"
     exit 1
 fi
 
-echo -e "${GREEN}✓ Image Processing Completed${RESET}"
+echo ""
+echo -e "${GREEN}✓ Image Analysis Completed${RESET}"
 echo ""
 
 # ============================================
-#            BIGQUERY RESULT
+#           BIGQUERY QUERY
 # ============================================
 
 echo -e "${ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
-echo -e "${ORANGE}║                ${WHITE}BIGQUERY RESULTS${ORANGE}                  ║${RESET}"
+echo -e "${ORANGE}║                 ${WHITE}BIGQUERY RESULTS${ORANGE}                  ║${RESET}"
 echo -e "${ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
 echo ""
 
@@ -193,7 +206,7 @@ bq query --use_legacy_sql=false \
 echo ""
 
 # ============================================
-#              SUCCESS MESSAGE
+#             SUCCESS MESSAGE
 # ============================================
 
 echo -e "${GREEN}══════════════════════════════════════════════════════${RESET}"
