@@ -1,157 +1,177 @@
 #!/bin/bash
 
-# ============================================
-#           agaye copy karne  bhai  thumbnail b karte ho pata chala
-# ============================================
-
-ORANGE='\033[38;5;208m'
-DARK_ORANGE='\033[38;5;166m'
-LIGHT_ORANGE='\033[38;5;215m'
-GOLD='\033[38;5;220m'
-GREEN='\033[1;32m'
-RED='\033[1;31m'
-WHITE='\033[1;37m'
-CYAN='\033[1;36m'
-RESET='\033[0m'
+BLACK_TEXT=$'\033[0;90m'
+RED_TEXT=$'\033[0;91m'
+GREEN_TEXT=$'\033[0;92m'
+YELLOW_TEXT=$'\033[38;5;220m'
+BLUE_TEXT=$'\033[0;94m'
+MAGENTA_TEXT=$'\033[0;95m'
+CYAN_TEXT=$'\033[0;96m'
+WHITE_TEXT=$'\033[0;97m'
+ORANGE_TEXT=$'\033[38;5;208m'
+DARK_ORANGE=$'\033[38;5;166m'
+LIGHT_ORANGE=$'\033[38;5;215m'
+BOLD_TEXT=$'\033[1m'
+UNDERLINE_TEXT=$'\033[4m'
+RESET_FORMAT=$'\033[0m'
 
 clear
 
 # ============================================
-#                HEADER
+#                SPINNER FUNCTION
 # ============================================
 
-echo -e "${ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
-echo -e "${ORANGE}║                                                      ║${RESET}"
-echo -e "${ORANGE}║        ${GOLD}DR ABHISHEK CLOUD LAB AUTOMATION${ORANGE}       ║${RESET}"
-echo -e "${ORANGE}║                                                      ║${RESET}"
-echo -e "${ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
-echo ""
+spinner() {
+    local pid=$1
+    local delay=0.1
+    local spinstr='|/-\'
+
+    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+        local temp=${spinstr#?}
+        printf " ${ORANGE_TEXT}${BOLD_TEXT}[%c] Subscribe to Dr Abhishek Cloud Tutorial...${RESET_FORMAT}  " "$spinstr"
+        local spinstr=$temp${spinstr%"$temp"}
+        sleep $delay
+        printf "\r"
+    done
+
+    printf "                                                                 \r"
+}
 
 # ============================================
-#          USER INPUT SECTION
+#              WELCOME MESSAGE
 # ============================================
 
-echo -e "${DARK_ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
-echo -e "${DARK_ORANGE}║               ${WHITE}CONFIGURATION PANEL${DARK_ORANGE}               ║${RESET}"
-echo -e "${DARK_ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
-echo ""
+echo "${ORANGE_TEXT}${BOLD_TEXT}==================================================================${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}             WELCOME TO DR ABHISHEK CLOUD TUTORIAL               ${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}==================================================================${RESET_FORMAT}"
+echo
 
-read -p "$(echo -e "${LIGHT_ORANGE}ENTER LANGUAGE (ex: en/ja/fr): ${RESET}")" LANGUAGE
+echo -e "${LIGHT_ORANGE}${BOLD_TEXT}Please enter the following configuration details:${RESET_FORMAT}"
 
-read -p "$(echo -e "${LIGHT_ORANGE}ENTER LOCALE (ex: en_US/ja_JP): ${RESET}")" LOCAL
+read -p "$(echo -e "${YELLOW_TEXT}${BOLD_TEXT}ENTER LANGUAGE (e.g., en, fr, es): ${RESET_FORMAT}")" LANGUAGE
 
-read -p "$(echo -e "${LIGHT_ORANGE}ENTER BIGQUERY ROLE:${RESET}")" BIGQUERY_ROLE
+read -p "$(echo -e "${YELLOW_TEXT}${BOLD_TEXT}ENTER LOCAL (e.g., ja, en_US): ${RESET_FORMAT}")" LOCAL
 
-read -p "$(echo -e "${LIGHT_ORANGE}ENTER CLOUD STORAGE ROLE:${RESET}")" CLOUD_STORAGE_ROLE
+read -p "$(echo -e "${YELLOW_TEXT}${BOLD_TEXT}ENTER BIGQUERY ROLE (roles/bigquery.admin): ${RESET_FORMAT}")" BIGQUERY_ROLE
 
-echo ""
-
-# ============================================
-#           EXPORT ROLE VALUES
-# ============================================
-
-export BIGQUERY_ROLE=$BIGQUERY_ROLE
-export CLOUD_STORAGE_ROLE=$CLOUD_STORAGE_ROLE
-
-echo -e "${GREEN}✓ Exported Role Variables${RESET}"
-
-echo -e "${LIGHT_ORANGE}BIGQUERY_ROLE=${WHITE}$BIGQUERY_ROLE${RESET}"
-
-echo -e "${LIGHT_ORANGE}CLOUD_STORAGE_ROLE=${WHITE}$CLOUD_STORAGE_ROLE${RESET}"
+read -p "$(echo -e "${YELLOW_TEXT}${BOLD_TEXT}ENTER CLOUD STORAGE ROLE (roles/storage.admin): ${RESET_FORMAT}")" CLOUD_STORAGE_ROLE
 
 echo ""
 
 # ============================================
-#             ENABLE APIS
+#              VARIABLES
 # ============================================
 
-echo -e "${ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
-echo -e "${ORANGE}║                  ${WHITE}ENABLING APIs${ORANGE}                    ║${RESET}"
-echo -e "${ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
-echo ""
-
-gcloud services enable vision.googleapis.com
-gcloud services enable translate.googleapis.com
-gcloud services enable bigquery.googleapis.com
-gcloud services enable storage.googleapis.com
-
-echo ""
-echo -e "${GREEN}✓ APIs Enabled Successfully${RESET}"
-echo ""
+SA_NAME="sample-sa"
+SA_EMAIL="${SA_NAME}@${DEVSHELL_PROJECT_ID}.iam.gserviceaccount.com"
+KEY_FILE="sample-sa-key.json"
+SCRIPT_NAME="analyze-images-v2.py"
 
 # ============================================
-#        SERVICE ACCOUNT CREATION
+#              ENABLE APIS
 # ============================================
 
-echo -e "${ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
-echo -e "${ORANGE}║              ${WHITE}SERVICE ACCOUNT SETUP${ORANGE}               ║${RESET}"
-echo -e "${ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
-echo ""
+echo -e "${ORANGE_TEXT}${BOLD_TEXT}→ Enabling required APIs...${RESET_FORMAT}"
 
-echo -e "${CYAN}→ Creating Service Account...${RESET}"
+(
+gcloud services enable \
+vision.googleapis.com \
+translate.googleapis.com \
+bigquery.googleapis.com \
+storage.googleapis.com \
+--quiet
+) &
 
-gcloud iam service-accounts create sample-sa --quiet
+spinner $!
 
-echo ""
+echo -e "${GREEN_TEXT}${BOLD_TEXT}✓ APIs enabled successfully${RESET_FORMAT}\n"
 
 # ============================================
-#         ASSIGN IAM ROLES
+#         CREATE SERVICE ACCOUNT
 # ============================================
 
-echo -e "${CYAN}→ Assigning IAM Roles...${RESET}"
+if gcloud iam service-accounts list --filter="email:${SA_EMAIL}" --format="value(email)" | grep -q "${SA_EMAIL}"; then
 
-gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
---member="serviceAccount:sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com" \
---role="$BIGQUERY_ROLE" --quiet
+    echo -e "${YELLOW_TEXT}${BOLD_TEXT}✓ Service account already exists${RESET_FORMAT}"
 
-gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
---member="serviceAccount:sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com" \
---role="$CLOUD_STORAGE_ROLE" --quiet
+else
 
-gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
---member="serviceAccount:sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com" \
---role="roles/serviceusage.serviceUsageConsumer" --quiet
+    echo -e "${ORANGE_TEXT}${BOLD_TEXT}→ Creating service account...${RESET_FORMAT}"
 
-echo ""
-echo -e "${GREEN}✓ IAM Roles Assigned${RESET}"
+    (
+    gcloud iam service-accounts create ${SA_NAME} \
+    --display-name="ML APIs Challenge Lab SA"
+    ) &
+
+    spinner $!
+
+    echo -e "${GREEN_TEXT}${BOLD_TEXT}✓ Service account created${RESET_FORMAT}"
+
+fi
+
 echo ""
 
 # ============================================
-#           WAIT FOR IAM
+#             ASSIGN IAM ROLES
 # ============================================
 
-echo -e "${LIGHT_ORANGE}Waiting for IAM propagation...${RESET}"
+echo -e "${ORANGE_TEXT}${BOLD_TEXT}→ Assigning IAM roles...${RESET_FORMAT}"
 
-for i in {1..60}; do
-    echo -ne "${GOLD}$i/60 seconds completed...\r${RESET}"
-    sleep 1
+(
+for ROLE in "${BIGQUERY_ROLE}" "${CLOUD_STORAGE_ROLE}" "roles/serviceusage.serviceUsageConsumer"; do
+
+gcloud projects add-iam-policy-binding ${DEVSHELL_PROJECT_ID} \
+--member="serviceAccount:${SA_EMAIL}" \
+--role="${ROLE}" \
+--quiet
+
 done
+) &
+
+spinner $!
+
+echo -e "${GREEN_TEXT}${BOLD_TEXT}✓ IAM roles assigned${RESET_FORMAT}\n"
+
+# ============================================
+#          WAIT FOR PROPAGATION
+# ============================================
+
+echo -e "${ORANGE_TEXT}${BOLD_TEXT}→ Waiting for IAM propagation...${RESET_FORMAT}"
+
+(
+sleep 120
+) &
+
+spinner $!
+
+echo -e "${GREEN_TEXT}${BOLD_TEXT}✓ IAM propagation completed${RESET_FORMAT}\n"
+
+# ============================================
+#            CREATE KEY FILE
+# ============================================
+
+echo -e "${ORANGE_TEXT}${BOLD_TEXT}→ Creating service account key...${RESET_FORMAT}"
+
+rm -f ${KEY_FILE}
+
+(
+gcloud iam service-accounts keys create ${KEY_FILE} \
+--iam-account="${SA_EMAIL}"
+) &
+
+spinner $!
+
+echo -e "${GREEN_TEXT}${BOLD_TEXT}✓ Key file created${RESET_FORMAT}"
 
 echo ""
-echo ""
 
 # ============================================
-#          CREATE FRESH KEY
+#        EXPORT CREDENTIALS
 # ============================================
 
-echo -e "${CYAN}→ Creating Fresh Credential Key...${RESET}"
+export GOOGLE_APPLICATION_CREDENTIALS="${PWD}/${KEY_FILE}"
 
-rm -f key.json
-
-gcloud iam service-accounts keys create key.json \
---iam-account=sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com
-
-echo ""
-
-# ============================================
-#         EXPORT CREDENTIALS
-# ============================================
-
-export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/key.json
-
-echo -e "${GREEN}✓ Credentials Exported${RESET}"
-
-echo -e "${LIGHT_ORANGE}GOOGLE_APPLICATION_CREDENTIALS=${WHITE}$GOOGLE_APPLICATION_CREDENTIALS${RESET}"
+echo -e "${GREEN_TEXT}${BOLD_TEXT}✓ GOOGLE_APPLICATION_CREDENTIALS exported${RESET_FORMAT}"
 
 echo ""
 
@@ -159,34 +179,34 @@ echo ""
 #      ACTIVATE SERVICE ACCOUNT
 # ============================================
 
-echo -e "${CYAN}→ Activating Service Account...${RESET}"
+echo -e "${ORANGE_TEXT}${BOLD_TEXT}→ Activating service account...${RESET_FORMAT}"
 
+(
 gcloud auth activate-service-account \
-sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com \
---key-file=key.json
+${SA_EMAIL} \
+--key-file=${KEY_FILE}
+) &
 
-echo ""
+spinner $!
 
-echo -e "${GREEN}✓ Service Account Activated${RESET}"
+echo -e "${GREEN_TEXT}${BOLD_TEXT}✓ Service account activated${RESET_FORMAT}"
 
 echo ""
 
 # ============================================
-#       DOWNLOAD PYTHON SCRIPT
+#          DOWNLOAD SCRIPT
 # ============================================
 
-echo -e "${ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
-echo -e "${ORANGE}║               ${WHITE}DOWNLOADING SCRIPT${ORANGE}                  ║${RESET}"
-echo -e "${ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
+echo -e "${ORANGE_TEXT}${BOLD_TEXT}→ Downloading analyze-images-v2.py...${RESET_FORMAT}"
 
-echo ""
-
-wget -O analyze-images-v2.py \
+(
+wget -q -O ${SCRIPT_NAME} \
 https://raw.githubusercontent.com/guys-in-the-cloud/cloud-skill-boosts/main/Challenge-labs/Integrate%20with%20Machine%20Learning%20APIs%3A%20Challenge%20Lab/analyze-images-v2.py
+) &
 
-echo ""
+spinner $!
 
-echo -e "${GREEN}✓ Script Downloaded${RESET}"
+echo -e "${GREEN_TEXT}${BOLD_TEXT}✓ Script downloaded successfully${RESET_FORMAT}"
 
 echo ""
 
@@ -194,49 +214,44 @@ echo ""
 #            UPDATE LOCALE
 # ============================================
 
-echo -e "${CYAN}→ Updating Locale to ${WHITE}$LOCAL${RESET}"
+echo -e "${ORANGE_TEXT}${BOLD_TEXT}→ Updating locale to ${LOCAL}...${RESET_FORMAT}"
 
-sed -i "s/'en'/'${LOCAL}'/g" analyze-images-v2.py
+(
+sed -i "s/'en'/'${LOCAL}'/g" ${SCRIPT_NAME}
+) &
 
-echo ""
+spinner $!
 
-echo -e "${GREEN}✓ Locale Updated${RESET}"
+echo -e "${GREEN_TEXT}${BOLD_TEXT}✓ Locale updated successfully${RESET_FORMAT}"
 
 echo ""
 
 # ============================================
-#           RUN SCRIPT
+#            RUN SCRIPT
 # ============================================
 
-echo -e "${ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
-echo -e "${ORANGE}║                ${WHITE}RUNNING ANALYSIS${ORANGE}                  ║${RESET}"
-echo -e "${ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
+echo -e "${ORANGE_TEXT}${BOLD_TEXT}→ Running image analysis...${RESET_FORMAT}"
 
-echo ""
+(
+python3 ${SCRIPT_NAME} ${DEVSHELL_PROJECT_ID} ${DEVSHELL_PROJECT_ID}
+) &
 
-python3 analyze-images-v2.py $DEVSHELL_PROJECT_ID $DEVSHELL_PROJECT_ID
+spinner $!
 
 if [ $? -ne 0 ]; then
-    echo ""
-    echo -e "${RED}❌ Script Failed${RESET}"
+    echo -e "${RED_TEXT}${BOLD_TEXT}❌ Script execution failed${RESET_FORMAT}"
     exit 1
 fi
 
-echo ""
-
-echo -e "${GREEN}✓ Image Analysis Completed${RESET}"
+echo -e "${GREEN_TEXT}${BOLD_TEXT}✓ Image analysis completed${RESET_FORMAT}"
 
 echo ""
 
 # ============================================
-#           BIGQUERY QUERY
+#         BIGQUERY VERIFICATION
 # ============================================
 
-echo -e "${ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
-echo -e "${ORANGE}║                 ${WHITE}BIGQUERY RESULTS${ORANGE}                  ║${RESET}"
-echo -e "${ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
-
-echo ""
+echo -e "${ORANGE_TEXT}${BOLD_TEXT}→ Running BigQuery verification query...${RESET_FORMAT}"
 
 bq query --use_legacy_sql=false \
 "SELECT locale,COUNT(locale) as lcount FROM image_classification_dataset.image_text_detail GROUP BY locale ORDER BY lcount DESC"
@@ -244,17 +259,15 @@ bq query --use_legacy_sql=false \
 echo ""
 
 # ============================================
-#             SUCCESS MESSAGE
+#          COMPLETION MESSAGE
 # ============================================
 
-echo -e "${GREEN}══════════════════════════════════════════════════════${RESET}"
-echo -e "${GREEN}                                                      ${RESET}"
-echo -e "${GREEN}        🎉 LAB COMPLETED SUCCESSFULLY 🎉              ${RESET}"
-echo -e "${GREEN}                                                      ${RESET}"
-echo -e "${GREEN}══════════════════════════════════════════════════════${RESET}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}              LAB COMPLETED SUCCESSFULLY!              ${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
 
 echo ""
 
-echo -e "${LIGHT_ORANGE}YouTube:${RESET} https://www.youtube.com/@drabhishek.5460/videos"
+echo "${RED_TEXT}${BOLD_TEXT}${UNDERLINE_TEXT}https://www.youtube.com/@drabhishek.5460/videos${RESET_FORMAT}"
 
-echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}Don't forget to Like, Share and Subscribe for more Videos${RESET_FORMAT}"
