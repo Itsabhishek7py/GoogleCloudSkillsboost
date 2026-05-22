@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ============================================
-#              fir agya chori karne 
+# fir se agyaa copy krne is bar iska report bhjeta hu
 # ============================================
 
 ORANGE='\033[38;5;208m'
@@ -74,15 +74,29 @@ gcloud iam service-accounts create sample-sa --quiet
 
 echo ""
 
+# ============================================
+#         EXPORT ROLE VARIABLES
+# ============================================
+
+export BIGQUERY_ROLE="roles/bigquery.admin"
+export CLOUD_STORAGE_ROLE="roles/storage.admin"
+
+echo -e "${GREEN}✓ Roles Exported${RESET}"
+echo ""
+
+# ============================================
+#         ASSIGN IAM ROLES
+# ============================================
+
 echo -e "${CYAN}→ Assigning IAM Roles...${RESET}"
 
 gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
 --member="serviceAccount:sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com" \
---role="roles/bigquery.admin" --quiet
+--role="$BIGQUERY_ROLE" --quiet
 
 gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
 --member="serviceAccount:sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com" \
---role="roles/storage.admin" --quiet
+--role="$CLOUD_STORAGE_ROLE" --quiet
 
 gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
 --member="serviceAccount:sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com" \
