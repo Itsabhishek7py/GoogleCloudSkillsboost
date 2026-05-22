@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ============================================
-# fir se agyaa copy krne is bar iska report bhjeta hu
+#    smile kro copy krne se pehle 
 # ============================================
 
 ORANGE='\033[38;5;208m'
@@ -37,7 +37,27 @@ echo -e "${DARK_ORANGE}╚══════════════════
 echo ""
 
 read -p "$(echo -e "${LIGHT_ORANGE}ENTER LANGUAGE (ex: en/ja/fr): ${RESET}")" LANGUAGE
+
 read -p "$(echo -e "${LIGHT_ORANGE}ENTER LOCALE (ex: en_US/ja_JP): ${RESET}")" LOCAL
+
+read -p "$(echo -e "${LIGHT_ORANGE}ENTER BIGQUERY ROLE:${RESET}")" BIGQUERY_ROLE
+
+read -p "$(echo -e "${LIGHT_ORANGE}ENTER CLOUD STORAGE ROLE:${RESET}")" CLOUD_STORAGE_ROLE
+
+echo ""
+
+# ============================================
+#           EXPORT ROLE VALUES
+# ============================================
+
+export BIGQUERY_ROLE=$BIGQUERY_ROLE
+export CLOUD_STORAGE_ROLE=$CLOUD_STORAGE_ROLE
+
+echo -e "${GREEN}✓ Exported Role Variables${RESET}"
+
+echo -e "${LIGHT_ORANGE}BIGQUERY_ROLE=${WHITE}$BIGQUERY_ROLE${RESET}"
+
+echo -e "${LIGHT_ORANGE}CLOUD_STORAGE_ROLE=${WHITE}$CLOUD_STORAGE_ROLE${RESET}"
 
 echo ""
 
@@ -72,16 +92,6 @@ echo -e "${CYAN}→ Creating Service Account...${RESET}"
 
 gcloud iam service-accounts create sample-sa --quiet
 
-echo ""
-
-# ============================================
-#         EXPORT ROLE VARIABLES
-# ============================================
-
-export BIGQUERY_ROLE="roles/bigquery.admin"
-export CLOUD_STORAGE_ROLE="roles/storage.admin"
-
-echo -e "${GREEN}✓ Roles Exported${RESET}"
 echo ""
 
 # ============================================
@@ -140,6 +150,9 @@ echo ""
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/key.json
 
 echo -e "${GREEN}✓ Credentials Exported${RESET}"
+
+echo -e "${LIGHT_ORANGE}GOOGLE_APPLICATION_CREDENTIALS=${WHITE}$GOOGLE_APPLICATION_CREDENTIALS${RESET}"
+
 echo ""
 
 # ============================================
@@ -153,7 +166,9 @@ sample-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com \
 --key-file=key.json
 
 echo ""
+
 echo -e "${GREEN}✓ Service Account Activated${RESET}"
+
 echo ""
 
 # ============================================
@@ -163,13 +178,16 @@ echo ""
 echo -e "${ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
 echo -e "${ORANGE}║               ${WHITE}DOWNLOADING SCRIPT${ORANGE}                  ║${RESET}"
 echo -e "${ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
+
 echo ""
 
 wget -O analyze-images-v2.py \
 https://raw.githubusercontent.com/guys-in-the-cloud/cloud-skill-boosts/main/Challenge-labs/Integrate%20with%20Machine%20Learning%20APIs%3A%20Challenge%20Lab/analyze-images-v2.py
 
 echo ""
+
 echo -e "${GREEN}✓ Script Downloaded${RESET}"
+
 echo ""
 
 # ============================================
@@ -181,7 +199,9 @@ echo -e "${CYAN}→ Updating Locale to ${WHITE}$LOCAL${RESET}"
 sed -i "s/'en'/'${LOCAL}'/g" analyze-images-v2.py
 
 echo ""
+
 echo -e "${GREEN}✓ Locale Updated${RESET}"
+
 echo ""
 
 # ============================================
@@ -191,6 +211,7 @@ echo ""
 echo -e "${ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
 echo -e "${ORANGE}║                ${WHITE}RUNNING ANALYSIS${ORANGE}                  ║${RESET}"
 echo -e "${ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
+
 echo ""
 
 python3 analyze-images-v2.py $DEVSHELL_PROJECT_ID $DEVSHELL_PROJECT_ID
@@ -202,7 +223,9 @@ if [ $? -ne 0 ]; then
 fi
 
 echo ""
+
 echo -e "${GREEN}✓ Image Analysis Completed${RESET}"
+
 echo ""
 
 # ============================================
@@ -212,6 +235,7 @@ echo ""
 echo -e "${ORANGE}╔══════════════════════════════════════════════════════╗${RESET}"
 echo -e "${ORANGE}║                 ${WHITE}BIGQUERY RESULTS${ORANGE}                  ║${RESET}"
 echo -e "${ORANGE}╚══════════════════════════════════════════════════════╝${RESET}"
+
 echo ""
 
 bq query --use_legacy_sql=false \
@@ -230,5 +254,7 @@ echo -e "${GREEN}                                                      ${RESET}"
 echo -e "${GREEN}══════════════════════════════════════════════════════${RESET}"
 
 echo ""
+
 echo -e "${LIGHT_ORANGE}YouTube:${RESET} https://www.youtube.com/@drabhishek.5460/videos"
+
 echo ""
