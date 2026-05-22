@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ============================================
-#    smile kro copy krne se pehle 
+#           agaye copy karne  bhai  thumbnail b karte ho pata chala
 # ============================================
 
 ORANGE='\033[38;5;208m'
