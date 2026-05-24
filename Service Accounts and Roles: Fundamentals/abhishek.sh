@@ -1,6 +1,16 @@
 #!/bin/bash
 
-# Define text formatting variables
+# =========================================================
+# AGAYE COPY KRNE NAAAA # FULLY AUTOMATED VERSION
+# =========================================================
+
+# Disable all prompts automatically
+export CLOUDSDK_CORE_DISABLE_PROMPTS=1
+
+# =========================================================
+# COLORS
+# =========================================================
+
 BLACK_TEXT=$'\033[0;90m'
 RED_TEXT=$'\033[0;91m'
 GREEN_TEXT=$'\033[0;92m'
@@ -15,120 +25,212 @@ UNDERLINE_TEXT=$'\033[4m'
 
 clear
 
-# Welcome Banner
+# =========================================================
+# SUBSCRIBE FUNCTION
+# =========================================================
+
+subscribe_message() {
+    echo
+    echo "${MAGENTA_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+    echo "${YELLOW_TEXT}${BOLD_TEXT}🔥 Subscribe to Dr. Abhishek for More Labs${RESET_FORMAT}"
+    echo "${CYAN_TEXT}${UNDERLINE_TEXT}https://www.youtube.com/@drabhishek.5460${RESET_FORMAT}"
+    echo "${MAGENTA_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+    echo
+}
+
+# =========================================================
+# WELCOME BANNER
+# =========================================================
+
 echo
 echo "${CYAN_TEXT}${BOLD_TEXT}╔════════════════════════════════════════════════════════╗${RESET_FORMAT}"
-echo "${CYAN_TEXT}${BOLD_TEXT}          DR. ABHISHEK'S BIGQUERY LAB SCRIPT              ${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}║                                                        ║${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}║        🚀 DR. ABHISHEK'S BIGQUERY  PARTY TIME 🚀        ║${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}║                                                        ║${RESET_FORMAT}"
 echo "${CYAN_TEXT}${BOLD_TEXT}╚════════════════════════════════════════════════════════╝${RESET_FORMAT}"
 echo
-echo "${WHITE_TEXT}This lab demonstrates BigQuery integration with Compute Engine${RESET_FORMAT}"
-echo "${WHITE_TEXT}using service accounts and Python client libraries${RESET_FORMAT}"
+
+echo "${WHITE_TEXT}${BOLD_TEXT}📘 This lab demonstrates:${RESET_FORMAT}"
+echo "${WHITE_TEXT}   ➜ BigQuery Integration with Compute Engine${RESET_FORMAT}"
+echo "${WHITE_TEXT}   ➜ Service Accounts & IAM Roles${RESET_FORMAT}"
+echo "${WHITE_TEXT}   ➜ Python Client Library Automation${RESET_FORMAT}"
 echo
+
+subscribe_message
+
+# =========================================================
+# CLOUD CONFIGURATION
+# =========================================================
 
 echo "${GREEN_TEXT}${BOLD_TEXT}=== INITIATING CLOUD CONFIGURATION ===${RESET_FORMAT}"
 echo
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}👤 Listing active GCP accounts...${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}👤 Listing Active GCP Accounts...${RESET_FORMAT}"
 gcloud auth list
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}🔧 Setting PROJECT_ID variable...${RESET_FORMAT}"
-export PROJECT_ID=$(gcloud config get-value project)
-echo "${GREEN_TEXT}✅ Project ID: ${BOLD_TEXT}$PROJECT_ID${RESET_FORMAT}"
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}🔧 Detecting Lab Configuration...${RESET_FORMAT}"
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}🌍 Determining default compute zone...${RESET_FORMAT}"
-export ZONE=$(gcloud compute project-info describe --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
-echo "${GREEN_TEXT}✅ Zone: ${BOLD_TEXT}$ZONE${RESET_FORMAT}"
+export DEVSHELL_PROJECT_ID=$(gcloud config get-value project)
+export PROJECT_ID=$DEVSHELL_PROJECT_ID
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}🌏 Determining default compute region...${RESET_FORMAT}"
-export REGION=$(gcloud compute project-info describe --format="value(commonInstanceMetadata.items[google-compute-default-region])")
-echo "${GREEN_TEXT}✅ Region: ${BOLD_TEXT}$REGION${RESET_FORMAT}"
+export ZONE=$(gcloud compute project-info describe \
+--format="value(commonInstanceMetadata.items[google-compute-default-zone])")
 
-echo "${MAGENTA_TEXT}${BOLD_TEXT}=== SERVICE ACCOUNT CONFIGURATION ===${RESET_FORMAT}"
+export REGION=$(gcloud compute project-info describe \
+--format="value(commonInstanceMetadata.items[google-compute-default-region])")
+
+# Apply configuration
+gcloud config set compute/zone $ZONE --quiet
+gcloud config set compute/region $REGION --quiet
+
+echo
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Project ID:${RESET_FORMAT} ${CYAN_TEXT}$PROJECT_ID${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Region:${RESET_FORMAT} ${CYAN_TEXT}$REGION${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Zone:${RESET_FORMAT} ${CYAN_TEXT}$ZONE${RESET_FORMAT}"
 echo
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}👤 Creating service account 'my-sa-123'...${RESET_FORMAT}"
-gcloud iam service-accounts create my-sa-123 --display-name "Service Account for BigQuery Demo"
+echo "${BLUE_TEXT}${BOLD_TEXT}⚡ Cloud Environment Initialized Successfully${RESET_FORMAT}"
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}🔑 Granting 'Editor' role to 'my-sa-123'...${RESET_FORMAT}"
+subscribe_message
+
+# =========================================================
+# SERVICE ACCOUNT SETUP
+# =========================================================
+
+echo
+echo "${MAGENTA_TEXT}${BOLD_TEXT}=== SERVICE ACCOUNT SETUP ===${RESET_FORMAT}"
+echo
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}👤 Creating Service Account: my-sa-123${RESET_FORMAT}"
+
+gcloud iam service-accounts create my-sa-123 \
+    --display-name="My Service Account" \
+    --quiet
+
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}🔑 Granting Editor Role...${RESET_FORMAT}"
+
 gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
-  --member serviceAccount:my-sa-123@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com \
-  --role roles/editor
+    --member="serviceAccount:my-sa-123@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/editor" \
+    --quiet
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}👤 Creating service account 'bigquery-qwiklab'...${RESET_FORMAT}"
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}👤 Creating BigQuery Service Account...${RESET_FORMAT}"
+
 gcloud iam service-accounts create bigquery-qwiklab \
-  --description="Service account for BigQuery operations" \
-  --display-name="bigquery-qwiklab"
+    --display-name="bigquery-qwiklab" \
+    --quiet
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}🔑 Granting BigQuery roles to 'bigquery-qwiklab'...${RESET_FORMAT}"
-gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
-  --member="serviceAccount:bigquery-qwiklab@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com" \
-  --role="roles/bigquery.dataViewer"
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}🔑 Assigning BigQuery Roles...${RESET_FORMAT}"
 
 gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
-  --member="serviceAccount:bigquery-qwiklab@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com" \
-  --role="roles/bigquery.user"
+    --member="serviceAccount:bigquery-qwiklab@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/bigquery.dataViewer" \
+    --quiet
 
-echo "${MAGENTA_TEXT}${BOLD_TEXT}=== COMPUTE ENGINE SETUP ===${RESET_FORMAT}"
+gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
+    --member="serviceAccount:bigquery-qwiklab@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/bigquery.user" \
+    --quiet
+
+subscribe_message
+
+# =========================================================
+# VM CREATION
+# =========================================================
+
+echo
+echo "${MAGENTA_TEXT}${BOLD_TEXT}=== COMPUTE ENGINE VM SETUP ===${RESET_FORMAT}"
 echo
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}💻 Creating Compute Engine instance 'bigquery-instance'...${RESET_FORMAT}"
-gcloud compute instances create bigquery-instance \
-  --project=$DEVSHELL_PROJECT_ID \
-  --zone=$ZONE \
-  --machine-type=e2-medium \
-  --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default \
-  --metadata=enable-oslogin=true \
-  --maintenance-policy=MIGRATE \
-  --provisioning-model=STANDARD \
-  --service-account=bigquery-qwiklab@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com \
-  --scopes=https://www.googleapis.com/auth/cloud-platform \
-  --create-disk=auto-delete=yes,boot=yes,device-name=bigquery-instance,image=projects/debian-cloud/global/images/debian-11-bullseye-v20231010,mode=rw,size=10,type=projects/$DEVSHELL_PROJECT_ID/zones/$ZONE/diskTypes/pd-balanced \
-  --no-shielded-secure-boot \
-  --shielded-vtpm \
-  --shielded-integrity-monitoring \
-  --labels=goog-ec-src=vm_add-gcloud \
-  --reservation-affinity=any
+echo "${YELLOW_TEXT}${BOLD_TEXT}💻 Creating VM Instance...${RESET_FORMAT}"
 
-echo "${BLUE_TEXT}${BOLD_TEXT}⏳ Waiting for instance initialization (20 seconds)...${RESET_FORMAT}"
-echo -n "${BLUE_TEXT}${BOLD_TEXT}   ["
+gcloud compute instances create bigquery-instance \
+    --project=$DEVSHELL_PROJECT_ID \
+    --zone=$ZONE \
+    --machine-type=e2-medium \
+    --image-family=debian-12 \
+    --image-project=debian-cloud \
+    --service-account=bigquery-qwiklab@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com \
+    --scopes=https://www.googleapis.com/auth/cloud-platform \
+    --quiet
+
+subscribe_message
+
+# =========================================================
+# SPINNER
+# =========================================================
+
+echo
+echo "${BLUE_TEXT}${BOLD_TEXT}⏳ Waiting for VM Initialization...${RESET_FORMAT}"
+
+spinner="/-\|"
+
+messages=(
+"Preparing VM..."
+"Installing Components..."
+"Subscribe to Dr. Abhishek 🔥"
+"Launching BigQuery Services..."
+)
+
 for i in {1..20}; do
-    echo -n "#"
+    msg=${messages[$((i % ${#messages[@]}))]}
+    printf "\r${CYAN_TEXT}${BOLD_TEXT}[${spinner:i%4:1}] $msg${RESET_FORMAT}"
     sleep 1
 done
-echo "]${RESET_FORMAT}"
+
+printf "\n"
+
+# =========================================================
+# CREATE REMOTE SCRIPT
+# =========================================================
+
+echo
+echo "${MAGENTA_TEXT}${BOLD_TEXT}=== PREPARING BIGQUERY SCRIPT ===${RESET_FORMAT}"
 echo
 
-echo "${MAGENTA_TEXT}${BOLD_TEXT}=== BIGQUERY SCRIPT DEPLOYMENT ===${RESET_FORMAT}"
-echo
-
-echo "${YELLOW_TEXT}${BOLD_TEXT}📝 Creating local script 'cp_disk.sh'...${RESET_FORMAT}"
-cat > cp_disk.sh <<'EOF_CP'
+cat > cp_disk.sh << 'EOF'
 #!/bin/bash
 
-# Install required packages
-echo "${GREEN}Installing required packages...${RESET}"
-sudo apt-get update -qq
-sudo apt-get install -y -qq git python3-pip
+echo "Updating packages..."
+sudo apt-get update -y
 
-# Upgrade pip and install Python libraries
-echo "${GREEN}Installing Python libraries...${RESET}"
-pip3 install --quiet --upgrade pip
-pip3 install --quiet google-cloud-bigquery pyarrow pandas db-dtypes
+echo "Installing dependencies..."
+sudo apt-get install -y python3 python3-pip python3-venv git
 
-# Create Python script
-cat > query.py <<'EOF_PY'
+echo "Creating Python virtual environment..."
+python3 -m venv myvenv
+
+source myvenv/bin/activate
+
+echo "Upgrading pip..."
+pip install --upgrade pip
+
+echo "Installing BigQuery libraries..."
+pip install google-cloud-bigquery pyarrow pandas db-dtypes
+
+echo
+echo "🔥 Subscribe to Dr. Abhishek"
+echo "https://www.youtube.com/@drabhishek.5460"
+echo
+
+echo "Creating Python query file..."
+
+cat > query.py << 'PYEOF'
 from google.auth import compute_engine
 from google.cloud import bigquery
-import pandas as pd
 
-print("Initializing BigQuery client...")
 credentials = compute_engine.Credentials(
-    service_account_email='YOUR_SERVICE_ACCOUNT')
+    service_account_email='YOUR_SERVICE_ACCOUNT'
+)
 
 query = '''
 SELECT
   year,
-  COUNT(1) as num_babies
+  COUNT(1) AS num_babies
 FROM
   publicdata.samples.natality
 WHERE
@@ -141,45 +243,71 @@ ORDER BY
 
 client = bigquery.Client(
     project='PROJECT_ID',
-    credentials=credentials)
+    credentials=credentials
+)
 
-print("\nExecuting BigQuery job...")
+print("\n🔥 Subscribe to Dr. Abhishek")
+print("https://www.youtube.com/@drabhishek.5460\n")
+
+print("Executing Query...\n")
+
 df = client.query(query).to_dataframe()
 
-print("\nQuery results:")
 print(df.to_string(index=False))
-EOF_PY
+PYEOF
 
-# Replace placeholders
-sed -i -e "s/PROJECT_ID/$(gcloud config get-value project)/g" query.py
-sed -i -e "s/YOUR_SERVICE_ACCOUNT/bigquery-qwiklab@$(gcloud config get-value project).iam.gserviceaccount.com/g" query.py
+# Replace Variables
 
-# Execute the script
-echo "${GREEN}Running BigQuery query...${RESET}"
+sed -i "s/PROJECT_ID/$(gcloud config get-value project)/g" query.py
+
+sed -i "s/YOUR_SERVICE_ACCOUNT/bigquery-qwiklab@$(gcloud config get-value project).iam.gserviceaccount.com/g" query.py
+
+echo
+echo "Running BigQuery Query..."
+echo
+
 python3 query.py
-EOF_CP
-echo "${GREEN_TEXT}${BOLD_TEXT}✅ Script created successfully${RESET_FORMAT}"
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}📤 Copying script to VM instance...${RESET_FORMAT}"
+EOF
+
+# =========================================================
+# COPY FILE TO VM
+# =========================================================
+
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}📤 Copying Script to VM...${RESET_FORMAT}"
+
+subscribe_message
+
 gcloud compute scp cp_disk.sh bigquery-instance:/tmp \
-  --project=$DEVSHELL_PROJECT_ID \
-  --zone=$ZONE \
-  --quiet
+    --project=$DEVSHELL_PROJECT_ID \
+    --zone=$ZONE \
+    --quiet
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}🚀 Executing script on VM instance...${RESET_FORMAT}"
+# =========================================================
+# EXECUTE SCRIPT
+# =========================================================
+
+echo
+echo "${YELLOW_TEXT}${BOLD_TEXT}🚀 Executing Script on VM...${RESET_FORMAT}"
+
+subscribe_message
+
 gcloud compute ssh bigquery-instance \
-  --project=$DEVSHELL_PROJECT_ID \
-  --zone=$ZONE \
-  --quiet \
-  --command="chmod +x /tmp/cp_disk.sh && /tmp/cp_disk.sh"
+    --project=$DEVSHELL_PROJECT_ID \
+    --zone=$ZONE \
+    --quiet \
+    --command="chmod +x /tmp/cp_disk.sh && /tmp/cp_disk.sh"
 
-# Completion Message
+# =========================================================
+# COMPLETION
+# =========================================================
+
 echo
 echo "${GREEN_TEXT}${BOLD_TEXT}╔════════════════════════════════════════════════════════╗${RESET_FORMAT}"
-echo "${GREEN_TEXT}${BOLD_TEXT}             LAB EXECUTION COMPLETED SUCCESSFULLY         ${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}             LAB COMPLETED SUCCESSFULLY                  ${RESET_FORMAT}"
 echo "${GREEN_TEXT}${BOLD_TEXT}╚════════════════════════════════════════════════════════╝${RESET_FORMAT}"
+
 echo
-echo "${MAGENTA_TEXT}${BOLD_TEXT}💡 For more cloud tutorials and labs:${RESET_FORMAT}"
-echo "${BLUE_TEXT}${BOLD_TEXT}${UNDERLINE_TEXT}Subscribe to Dr. Abhishek's YouTube Channel${RESET_FORMAT}"
-echo "${BLUE_TEXT}${BOLD_TEXT}https://www.youtube.com/@drabhishek.5460${RESET_FORMAT}"
-echo
+
+subscribe_message
