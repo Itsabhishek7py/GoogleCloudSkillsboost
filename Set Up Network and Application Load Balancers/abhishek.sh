@@ -1,209 +1,194 @@
 #!/bin/bash
 
-# Enhanced Color Definitions
-BLACK=$'\033[0;90m'
-RED=$'\033[0;91m'
-GREEN=$'\033[0;92m'
-YELLOW=$'\033[0;93m'
-BLUE=$'\033[0;94m'
-MAGENTA=$'\033[0;95m'
-CYAN=$'\033[0;96m'
-WHITE=$'\033[0;97m'
+BLACK_TEXT=$'\033[0;90m' 
+RED_TEXT=$'\033[0;91m' 
+GREEN_TEXT=$'\033[0;92m' 
+YELLOW_TEXT=$'\033[0;93m' 
+ORANGE_TEXT=$'\033[38;5;208m'
+CYAN_TEXT=$'\033[0;96m' 
+WHITE_TEXT=$'\033[0;97m' 
+BOLD_TEXT=$'\033[1m' 
+RESET_FORMAT=$'\033[0m'
 
-NO_COLOR=$'\033[0m'
-RESET=$'\033[0m'
-BOLD=$'\033[1m'
-UNDERLINE=$'\033[4m'
+clear
 
-# Header Section
-echo "${CYAN}${BOLD}╔════════════════════════════════════════════════════════╗${RESET}"
-echo "${CYAN}${BOLD}        WELCOME TO DR ABHISHEK CLOUD TUTORIAL         ${RESET}"
-echo "${CYAN}${BOLD}╚════════════════════════════════════════════════════════╝${RESET}"
+# Spinner function
+spinner() {
+    local pid=$1
+    local delay=0.1
+    local spinstr='|/-\'
+    while ps -p $pid > /dev/null 2>&1; do
+        local temp=${spinstr#?}
+        printf " [%c]  " "$spinstr"
+        local spinstr=$temp${spinstr%"$temp"}
+        sleep $delay
+        printf "\b\b\b\b\b\b"
+    done
+    printf "    \b\b\b\b"
+}
+
+# Welcome message
+echo "${ORANGE_TEXT}${BOLD_TEXT}==================================================================${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}         WELCOME TO DR. ABHISHEK'S CLOUD LAB SETUP${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}==================================================================${RESET_FORMAT}"
 echo
-echo "${MAGENTA}${BOLD}          Expert Tutorial by Dr. Abhishek              ${RESET}"
-echo "${YELLOW}For more GCP tutorials, visit: ${UNDERLINE}https://www.youtube.com/@drabhishek.5460${RESET}"
-echo
-echo "${BLUE}${BOLD}⚡ Initializing Load Balancer Configuration...${RESET}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}🔔 PLEASE SUBSCRIBE TO DR. ABHISHEK'S CHANNEL:${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}📺 https://www.youtube.com/@drabhishek.5460/videos${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}==================================================================${RESET_FORMAT}"
 echo
 
-# User Input Section
-echo "${GREEN}${BOLD}▬▬▬▬▬▬▬▬▬ ZONE CONFIGURATION ▬▬▬▬▬▬▬▬▬${RESET}"
-read -p "${YELLOW}${BOLD}Enter the ZONE (e.g., us-central1-a): ${RESET}" ZONE
+# ========================= ZONE CONFIGURATION =========================
 
-# Validate Zone Input
+echo "${GREEN_TEXT}${BOLD_TEXT}▬▬▬▬▬▬▬▬▬ ZONE CONFIGURATION ▬▬▬▬▬▬▬▬▬${RESET_FORMAT}"
+
+read -p "${YELLOW_TEXT}${BOLD_TEXT}Enter the ZONE (e.g. us-central1-a): ${RESET_FORMAT}" ZONE
+
 if [[ -z "$ZONE" ]]; then
-  echo "${RED}${BOLD}Error: Zone cannot be empty.${RESET}"
-  exit 1
+    echo "${RED_TEXT}${BOLD_TEXT}Error: Zone cannot be empty.${RESET_FORMAT}"
+    exit 1
 fi
 
-export ZONE
-export REGION=${ZONE%-*}
+REGION=${ZONE%-*}
+
 gcloud config set compute/region $REGION
 gcloud config set compute/zone $ZONE
 
-echo "${CYAN}Selected Zone: ${WHITE}${BOLD}$ZONE${RESET}"
-echo "${CYAN}Derived Region: ${WHITE}${BOLD}$REGION${RESET}"
+echo
+echo "${CYAN_TEXT}Selected Zone: ${WHITE_TEXT}${BOLD_TEXT}$ZONE${RESET_FORMAT}"
+echo "${CYAN_TEXT}Derived Region: ${WHITE_TEXT}${BOLD_TEXT}$REGION${RESET_FORMAT}"
 echo
 
-# Web Server Creation
-echo "${GREEN}${BOLD}▬▬▬▬▬▬▬▬▬ WEB SERVER SETUP ▬▬▬▬▬▬▬▬▬${RESET}"
-echo "${YELLOW}Creating web server instances...${RESET}"
+# ========================= WEB SERVER SETUP =========================
+
+echo "${GREEN_TEXT}${BOLD_TEXT}▬▬▬▬▬▬▬▬▬ WEB SERVER SETUP ▬▬▬▬▬▬▬▬▬${RESET_FORMAT}"
 
 create_web_server() {
-  local server_name=$1
-  echo "${CYAN}Creating instance ${BOLD}$server_name${RESET}..."
-  gcloud compute instances create $server_name \
-    --zone=$ZONE \
-    --tags=network-lb-tag \
-    --machine-type=e2-small \
-    --image-family=debian-11 \
-    --image-project=debian-cloud \
-    --metadata=startup-script='#!/bin/bash
-      apt-get update
-      apt-get install apache2 -y
-      service apache2 restart
-      echo "<h3>Web Server: '"$server_name"'</h3>" | tee /var/www/html/index.html'
-  echo "${GREEN}✅ Instance $server_name created successfully!${RESET}"
-  echo
+    local server_name=$1
+
+    echo "${CYAN_TEXT}Creating ${server_name}...${RESET_FORMAT}"
+
+    gcloud compute instances create $server_name \
+      --zone=$ZONE \
+      --tags=network-lb-tag \
+      --machine-type=e2-small \
+      --image-family=debian-11 \
+      --image-project=debian-cloud \
+      --metadata=startup-script="#!/bin/bash
+apt-get update
+apt-get install apache2 -y
+service apache2 restart
+echo '<h3>Web Server: $server_name</h3>' > /var/www/html/index.html" &
+
+    local pid=$!
+    spinner $pid
+    wait $pid
+
+    echo "${GREEN_TEXT}${server_name} created successfully.${RESET_FORMAT}"
+    echo
 }
 
-create_web_server "www1"
-create_web_server "www2"
-create_web_server "www3"
+create_web_server www1
+create_web_server www2
+create_web_server www3
 
-# Firewall Configuration
-echo "${GREEN}${BOLD}▬▬▬▬▬▬▬▬▬ FIREWALL SETUP ▬▬▬▬▬▬▬▬▬${RESET}"
-echo "${YELLOW}Configuring firewall rules...${RESET}"
+# ========================= FIREWALL =========================
+
+echo "${GREEN_TEXT}${BOLD_TEXT}▬▬▬▬▬▬▬▬▬ FIREWALL SETUP ▬▬▬▬▬▬▬▬▬${RESET_FORMAT}"
+
+echo "${CYAN_TEXT}Creating firewall rule...${RESET_FORMAT}"
+
 gcloud compute firewall-rules create www-firewall-network-lb \
-  --target-tags network-lb-tag \
-  --allow tcp:80
-echo "${GREEN}✅ Firewall rule created successfully!${RESET}"
+    --target-tags network-lb-tag \
+    --allow tcp:80 &
+
+pid=$!
+spinner $pid
+wait $pid
+
+echo "${GREEN_TEXT}Firewall rule created.${RESET_FORMAT}"
 echo
 
-# Network Load Balancer Setup
-echo "${GREEN}${BOLD}▬▬▬▬▬ NETWORK LOAD BALANCER ▬▬▬▬▬${RESET}"
-echo "${YELLOW}Setting up network load balancer...${RESET}"
+# ========================= VERIFY INSTANCES =========================
 
-echo "${CYAN}Creating IP address...${RESET}"
-gcloud compute addresses create network-lb-ip-1 --region $REGION
+echo "${GREEN_TEXT}${BOLD_TEXT}▬▬▬▬▬▬▬▬▬ VERIFY INSTANCES ▬▬▬▬▬▬▬▬▬${RESET_FORMAT}"
 
-echo "${CYAN}Creating health check...${RESET}"
-gcloud compute http-health-checks create basic-check
+gcloud compute instances list
 
-echo "${CYAN}Creating target pool...${RESET}"
+echo
+echo "${YELLOW_TEXT}Waiting for startup scripts to finish...${RESET_FORMAT}"
+sleep 30
+
+# ========================= NETWORK LOAD BALANCER =========================
+
+echo "${GREEN_TEXT}${BOLD_TEXT}▬▬▬▬▬▬▬▬▬ NETWORK LOAD BALANCER ▬▬▬▬▬▬▬▬▬${RESET_FORMAT}"
+
+echo "${CYAN_TEXT}Reserving IP address...${RESET_FORMAT}"
+gcloud compute addresses create network-lb-ip-1 \
+    --region=$REGION &
+pid=$!
+spinner $pid
+wait $pid
+
+echo "${CYAN_TEXT}Creating health check...${RESET_FORMAT}"
+gcloud compute http-health-checks create basic-check &
+pid=$!
+spinner $pid
+wait $pid
+
+echo "${CYAN_TEXT}Creating target pool...${RESET_FORMAT}"
 gcloud compute target-pools create www-pool \
-  --region $REGION \
-  --http-health-check basic-check
+    --region=$REGION \
+    --http-health-check basic-check &
+pid=$!
+spinner $pid
+wait $pid
 
-echo "${CYAN}Adding instances to pool...${RESET}"
+echo "${CYAN_TEXT}Adding instances to target pool...${RESET_FORMAT}"
 gcloud compute target-pools add-instances www-pool \
-  --instances www1,www2,www3
+    --instances www1,www2,www3 &
+pid=$!
+spinner $pid
+wait $pid
 
-echo "${CYAN}Creating forwarding rule...${RESET}"
+echo "${CYAN_TEXT}Creating forwarding rule...${RESET_FORMAT}"
 gcloud compute forwarding-rules create www-rule \
-  --region $REGION \
-  --ports 80 \
-  --address network-lb-ip-1 \
-  --target-pool www-pool
+    --region=$REGION \
+    --ports=80 \
+    --address=network-lb-ip-1 \
+    --target-pool=www-pool &
+pid=$!
+spinner $pid
+wait $pid
 
-IPADDRESS=$(gcloud compute forwarding-rules describe www-rule --region $REGION --format="json" | jq -r .IPAddress)
-echo "${GREEN}✅ Network load balancer configured successfully!${RESET}"
-echo "${CYAN}Load Balancer IP: ${WHITE}${BOLD}$IPADDRESS${RESET}"
+echo
+echo "${YELLOW_TEXT}Waiting for health checks...${RESET_FORMAT}"
+sleep 30
+
+IPADDRESS=$(gcloud compute forwarding-rules describe www-rule \
+    --region=$REGION \
+    --format="get(IPAddress)")
+
+echo
+echo "${GREEN_TEXT}${BOLD_TEXT}LOAD BALANCER CREATED SUCCESSFULLY${RESET_FORMAT}"
+echo "${CYAN_TEXT}Load Balancer IP:${RESET_FORMAT} ${WHITE_TEXT}${BOLD_TEXT}$IPADDRESS${RESET_FORMAT}"
 echo
 
-# HTTP Load Balancer Setup
-echo "${GREEN}${BOLD}▬▬▬▬▬ HTTP LOAD BALANCER ▬▬▬▬▬${RESET}"
-echo "${YELLOW}Setting up HTTP load balancer...${RESET}"
+# ========================= TEST LOAD BALANCER =========================
 
-echo "${CYAN}Creating instance template...${RESET}"
-gcloud compute instance-templates create lb-backend-template \
-  --region=$REGION \
-  --network=default \
-  --subnet=default \
-  --tags=allow-health-check \
-  --machine-type=e2-medium \
-  --image-family=debian-11 \
-  --image-project=debian-cloud \
-  --metadata=startup-script='#!/bin/bash
-    apt-get update
-    apt-get install apache2 -y
-    a2ensite default-ssl
-    a2enmod ssl
-    vm_hostname="$(curl -H "Metadata-Flavor:Google" \
-    http://169.254.169.254/computeMetadata/v1/instance/name)"
-    echo "Page served from: $vm_hostname" | \
-    tee /var/www/html/index.html
-    systemctl restart apache2'
-echo "${GREEN}✅ Instance template created successfully!${RESET}"
+echo "${GREEN_TEXT}${BOLD_TEXT}▬▬▬▬▬▬▬▬▬ TESTING LOAD BALANCER ▬▬▬▬▬▬▬▬▬${RESET_FORMAT}"
+
+for i in {1..10}
+do
+    curl -s http://$IPADDRESS
+    echo
+done
+
 echo
-
-echo "${CYAN}Creating managed instance group...${RESET}"
-gcloud compute instance-groups managed create lb-backend-group \
-  --template=lb-backend-template \
-  --size=2 \
-  --zone=$ZONE
-echo "${GREEN}✅ Managed instance group created successfully!${RESET}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}=========================================================${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}          LAB COMPLETED SUCCESSFULLY!${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}=========================================================${RESET_FORMAT}"
 echo
-
-echo "${CYAN}Configuring health check firewall...${RESET}"
-gcloud compute firewall-rules create fw-allow-health-check \
-  --network=default \
-  --action=allow \
-  --direction=ingress \
-  --source-ranges=130.211.0.0/22,35.191.0.0/16 \
-  --target-tags=allow-health-check \
-  --rules=tcp:80
-echo "${GREEN}✅ Firewall rule created successfully!${RESET}"
-echo
-
-echo "${CYAN}Creating global IP address...${RESET}"
-gcloud compute addresses create lb-ipv4-1 --ip-version=IPV4 --global
-
-echo "${CYAN}Creating health check...${RESET}"
-gcloud compute health-checks create http http-basic-check --port 80
-
-echo "${CYAN}Creating backend service...${RESET}"
-gcloud compute backend-services create web-backend-service \
-  --protocol=HTTP \
-  --port-name=http \
-  --health-checks=http-basic-check \
-  --global
-
-echo "${CYAN}Adding backend to service...${RESET}"
-gcloud compute backend-services add-backend web-backend-service \
-  --instance-group=lb-backend-group \
-  --instance-group-zone=$ZONE \
-  --global
-
-echo "${CYAN}Creating URL map...${RESET}"
-gcloud compute url-maps create web-map-http --default-service web-backend-service
-
-echo "${CYAN}Creating target HTTP proxy...${RESET}"
-gcloud compute target-http-proxies create http-lb-proxy --url-map web-map-http
-
-echo "${CYAN}Creating forwarding rule...${RESET}"
-gcloud compute forwarding-rules create http-content-rule \
-  --address=lb-ipv4-1 \
-  --global \
-  --target-http-proxy=http-lb-proxy \
-  --ports=80
-echo "${GREEN}✅ HTTP load balancer configured successfully!${RESET}"
-echo
-
-# Cleanup and Completion
-echo "${GREEN}${BOLD}▬▬▬▬▬▬▬▬ CLEANUP ▬▬▬▬▬▬▬▬${RESET}"
-echo "${YELLOW}Removing script for security...${RESET}"
-rm -- "$0"
-echo "${GREEN}✅ Script removed successfully!${RESET}"
-echo
-
-# Completion Message
-echo "${GREEN}${BOLD}╔════════════════════════════════════════════════════════╗${RESET}"
-echo "${GREEN}${BOLD}          LOAD BALANCER SETUP COMPLETED!                  ${RESET}"
-echo "${GREEN}${BOLD}╚════════════════════════════════════════════════════════╝${RESET}"
-echo
-echo "${RED}${BOLD}🙏 Special thanks to Dr. Abhishek for this tutorial!${RESET}"
-echo "${YELLOW}${BOLD}📺 Subscribe for more GCP content:${RESET}"
-echo "${BLUE}${UNDERLINE}https://www.youtube.com/@drabhishek.5460${RESET}"
-echo
-echo "${MAGENTA}${BOLD}🚀 Happy cloud computing with Google Cloud!${RESET}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}🔴 PLEASE SUBSCRIBE TO DR. ABHISHEK'S CHANNEL:${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}📺 https://www.youtube.com/@drabhishek.5460/videos${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}=========================================================${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}⭐ Don't forget to Like, Share and Subscribe for more amazing content!${RESET_FORMAT}"
