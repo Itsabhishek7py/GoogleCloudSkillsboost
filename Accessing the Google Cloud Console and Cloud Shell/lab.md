@@ -22,7 +22,6 @@ export BUCKET_NAME_2=
 ```
 gcloud storage buckets create gs://$BUCKET_NAME --location=$REGION
 
-gsutil uniformbucketlevelaccess set off gs://$BUCKET_NAME
 
 gcloud compute instances create first-vm --zone=$ZONE --machine-type=e2-micro --tags=http-server
 
