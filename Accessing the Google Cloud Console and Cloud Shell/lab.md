@@ -56,31 +56,17 @@ gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT --member serviceAcc
 ## Task 3. Work with Cloud Storage in Cloud Shell
 
 ```
-gsutil cp gs://cloud-training/ak8s/cat.jpg cat.jpg
+# Task 3
 
-gsutil cp cat.jpg gs://$BUCKET_NAME
+gcloud storage cp gs://cloud-training/ak8s/cat.jpg cat.jpg
 
-gsutil cp gs://$BUCKET_NAME/cat.jpg gs://$BUCKET_NAME_2/cat.jpg
+gcloud storage cp cat.jpg gs://$BUCKET_NAME
 
-gsutil acl get gs://$BUCKET_NAME/cat.jpg  > acl.txt
-cat acl.txt
+gcloud storage cp gs://$BUCKET_NAME/cat.jpg gs://$BUCKET_NAME_2/cat.jpg
 
-gsutil acl set private gs://$BUCKET_NAME/cat.jpg
-
-gsutil acl get gs://$BUCKET_NAME/cat.jpg  > acl-2.txt
-cat acl-2.txt
-
-gcloud auth activate-service-account --key-file credentials.json
-
-gsutil cp gs://$BUCKET_NAME/cat.jpg ./cat-copy.jpg
-
-gsutil cp gs://$BUCKET_NAME_2/cat.jpg ./cat-copy.jpg
-
-gcloud config set account $USERNAME
-
-gsutil cp gs://$BUCKET_NAME/cat.jpg ./copy2-of-cat.jpg
-
-gsutil iam ch allUsers:objectViewer gs://$BUCKET_NAME
+gcloud storage buckets add-iam-policy-binding gs://$BUCKET_NAME \
+--member=allUsers \
+--role=roles/storage.objectViewer
 ```
 
 ## Task 4. Explore the Cloud Shell Editor
