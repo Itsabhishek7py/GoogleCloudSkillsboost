@@ -24,11 +24,11 @@ RESET=`tput sgr0`
 
 # Header Section
 echo "${BG_MAGENTA}${BOLD}╔════════════════════════════════════════════════════════╗${RESET}"
-echo "${BG_MAGENTA}${BOLD}        WELCOME TO DR ABHISHEK CLOUD TUTORIAL           ${RESET}"
+echo "${BG_MAGENTA}${BOLD}        WELCOME TO S Nilesh CLOUD TUTORIAL           ${RESET}"
 echo "${BG_MAGENTA}${BOLD}╚════════════════════════════════════════════════════════╝${RESET}"
 echo
-echo "${CYAN}${BOLD}          Expert Tutorial by Dr. Abhishek              ${RESET}"
-echo "${YELLOW}For more GKE tutorials, visit: https://www.youtube.com/@drabhishek.5460${RESET}"
+echo "${CYAN}${BOLD}          Expert Tutorial by S. Nilesh              ${RESET}"
+echo "${YELLOW}For more GKE tutorials, visit: https://www.youtube.com/@SNilesh.5460${RESET}"
 echo
 echo "${BLUE}${BOLD}⚡ Initializing GKE Cluster Setup...${RESET}"
 echo
@@ -292,8 +292,8 @@ echo "${BG_GREEN}${BOLD}╔═════════════════�
 echo "${BG_GREEN}${BOLD}         LAB COMPLETE!             ${RESET}"
 echo "${BG_GREEN}${BOLD}╚════════════════════════════════════════════════════════╝${RESET}"
 echo
-echo "${RED}${BOLD}🙏 Thank you for following Dr. Abhishek's tutorial!${RESET}"
+echo "${RED}${BOLD}🙏 Thank you for following S. Nilesh's tutorial!${RESET}"
 echo "${YELLOW}${BOLD}📺 Subscribe for more GKE content:${RESET}"
-echo "${BLUE}https://www.youtube.com/@drabhishek.5460${RESET}"
+echo "${BLUE}https://www.youtube.com/@SNilesh.5460${RESET}"
 echo
 echo "${MAGENTA}${BOLD}🚀 Happy monitoring with GKE and Prometheus!${RESET}"
