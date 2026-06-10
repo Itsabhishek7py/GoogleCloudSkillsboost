@@ -17,6 +17,15 @@ sudo chmod +x abhishek.sh
 ./abhishek.sh
 ```
 
+
+```
+
+curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Configure%20Service%20Accounts%20and%20IAM%20for%20Google%20Cloud%3A%20Challenge%20Lab/abhishek1.sh
+sudo chmod +x abhishek1.sh
+./abhishek1.sh
+
+```
+
 ### Congratulations !!!!
 
 <div align="center">
