@@ -54,34 +54,49 @@ assign_projects() {
   spinner
   echo " ${GREEN_TEXT}✓${RESET_FORMAT}"
   
-  echo
-  echo "${GREEN_TEXT}${BOLD_TEXT}Available Projects:${RESET_FORMAT}"
-  echo "${WHITE_TEXT}$(gcloud projects list --format="table(projectId,name)")${RESET_FORMAT}"
-  echo
+#!/bin/bash
 
-  echo -n "${GREEN_TEXT}${BOLD_TEXT}✍️ Enter PROJECT_2 ID: ${RESET_FORMAT}"
-  read PROJECT_2
+# 1. Fetch and format the available projects
+echo
+echo -e "${GREEN_TEXT}${BOLD_TEXT}Available Projects:${RESET_FORMAT}"
 
-  if [[ ! "$PROJECT_LIST" =~ (^|[[:space:]])"$PROJECT_2"($|[[:space:]]) ]]; then
-    echo "${RED_TEXT}${BOLD_TEXT}❌ Error: Invalid project ID. Please try again.${RESET_FORMAT}"
-    return 1
-  fi
+# Extract clean IDs from your layout, ignoring labels and 'qwiklabs-resources'
+PROJECT_LIST=$(gcloud projects list --format="value(projectId)" | grep -v "qwiklabs-resources")
 
-  echo -n "${BLUE_TEXT}${BOLD_TEXT}🔍 Selecting PROJECT_1...${RESET_FORMAT}"
-  (PROJECT_1=$(echo "$PROJECT_LIST" | grep -v "^$PROJECT_2$" | head -n 1)) &
-  spinner
-  echo " ${GREEN_TEXT}✓${RESET_FORMAT}"
+# Display the projects to the user
+gcloud projects list --format="table(projectId,name)"
+    echo
 
-  if [[ -z "$PROJECT_1" ]]; then
-    echo "${RED_TEXT}${BOLD_TEXT}⚠️ Error: No available project for PROJECT_1${RESET_FORMAT}"
-    return 1
-  fi
+# 2. Read and Validate PROJECT_2 input
+    echo -n -e "${GREEN_TEXT}${BOLD_TEXT}✍️ Enter PROJECT_2 ID: ${RESET_FORMAT}"
+    read -r PROJECT_2
 
-  echo -n "${MAGENTA_TEXT}${BOLD_TEXT}⬆️ Exporting variables...${RESET_FORMAT}"
-  (export PROJECT_2
-   export PROJECT_1) &
-  spinner
-  echo " ${GREEN_TEXT}✓${RESET_FORMAT}"
+# Clean input of any accidental spaces
+    PROJECT_2=$(echo "$PROJECT_2" | xargs)
+
+# Exact match validation against the clean list
+    if ! echo "$PROJECT_LIST" | grep -qxF "$PROJECT_2"; then
+    echo -e "${RED_TEXT}${BOLD_TEXT}❌ Error: Invalid project ID. Please try again.${RESET_FORMAT}"
+    return 1 2>/dev/null || exit 1
+    fi
+
+# 3. Select PROJECT_1 (The other project ID from the list)
+    echo -n -e "${BLUE_TEXT}${BOLD_TEXT}🔍 Selecting PROJECT_1...${RESET_FORMAT}"
+
+# Pull the ID that does NOT match PROJECT_2
+    PROJECT_1=$(echo "$PROJECT_LIST" | grep -v "^${PROJECT_2}$" | head -n 1)
+
+    if [[ -z "$PROJECT_1" ]]; then
+        echo -e "\n${RED_TEXT}${BOLD_TEXT}⚠️ Error: No available project for PROJECT_1${RESET_FORMAT}"
+        return 1 2>/dev/null || exit 1
+    fi
+    echo -e " ${GREEN_TEXT}✓${RESET_FORMAT} ($PROJECT_1)"
+
+# 4. Export variables to the current environment
+    echo -n -e "${MAGENTA_TEXT}${BOLD_TEXT}⬆️ Exporting variables...${RESET_FORMAT}"
+    export PROJECT_1
+    export PROJECT_2
+    echo -e " ${GREEN_TEXT}✓${RESET_FORMAT}"
 
   echo
   echo "${BLUE_TEXT}${BOLD_TEXT}┌──────────────────────┬─────────────────────────────────┐"
