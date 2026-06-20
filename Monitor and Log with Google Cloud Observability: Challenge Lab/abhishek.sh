@@ -33,8 +33,8 @@ echo
 
 # User Input Section
 echo "${GREEN}${BOLD}▬▬▬▬▬▬▬▬ USER INPUT ▬▬▬▬▬▬▬▬${RESET}"
-read -p "${YELLOW}Enter custom_metric: ${RESET}" custom_metric
-read -p "${YELLOW}Enter VALUE: ${RESET}" VALUE
+read -p "${YELLOW}Enter Custom Metric Name: ${RESET}" custom_metric
+read -p "${YELLOW}Enter Alert Thershold: ${RESET}" VALUE
 echo
 
 # Authentication Check
