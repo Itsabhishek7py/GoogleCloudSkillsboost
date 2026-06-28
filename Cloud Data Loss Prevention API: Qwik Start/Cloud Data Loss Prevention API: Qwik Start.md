@@ -1,4 +1,4 @@
-## Cloud Data Loss Prevention API: Qwik Start
+## Cloud Data Loss Prevention API : Qwik Start
 
 
 ### What you'll learn
