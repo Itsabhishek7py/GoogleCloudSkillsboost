@@ -21,10 +21,8 @@ BG_WHITE=`tput setab 7`
 
 BOLD=`tput bold`
 RESET=`tput sgr0`
-#----------------------------------------------------start--------------------------------------------------#
 
-# Ask user for input values
-echo "${CYAN}${BOLD}Please enter the following values abhi sab isko copy krenge:${RESET}"
+echo "${CYAN}${BOLD}Please enter the following values:${RESET}"
 echo ""
 
 read -p "$(echo ${YELLOW}Enter REGION ${RESET}(e.g., us-central1, us-east1, europe-west1): " REGION
@@ -61,6 +59,7 @@ fi
 echo ""
 echo "${BG_MAGENTA}${BOLD}Starting Execution${RESET}"
 
+# Enable required services
 gcloud services enable \
   artifactregistry.googleapis.com \
   cloudfunctions.googleapis.com \
@@ -72,18 +71,23 @@ gcloud services enable \
 
 sleep 30
 
+# Get project details
 PROJECT_NUMBER=$(gcloud projects list --filter="project_id:$DEVSHELL_PROJECT_ID" --format='value(project_number)')
 
-SERVICE_ACCOUNT=$(gsutil kms serviceaccount -p $PROJECT_NUMBER)
+# Get the default compute service account
+SERVICE_ACCOUNT="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
 
+# Add IAM binding for Pub/Sub publisher
 gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
   --member serviceAccount:$SERVICE_ACCOUNT \
   --role roles/pubsub.publisher
 
+# Create Cloud Storage bucket
 gsutil mb -l $REGION gs://$DEVSHELL_PROJECT_ID
 
 export BUCKET="gs://$DEVSHELL_PROJECT_ID"
 
+# Create and deploy Cloud Storage triggered function
 mkdir ~/$FUNCTION_NAME && cd $_
 touch index.js && touch package.json
 
@@ -106,8 +110,8 @@ cat > package.json <<EOF
 }
 EOF
 
-deploy_function() {
-  gcloud functions deploy $FUNCTION_NAME \
+# Deploy storage function
+gcloud functions deploy $FUNCTION_NAME \
   --gen2 \
   --runtime nodejs24 \
   --entry-point $FUNCTION_NAME \
@@ -117,25 +121,14 @@ deploy_function() {
   --trigger-location $REGION \
   --max-instances 2 \
   --quiet
-}
 
-# Loop until the Cloud Run service is created
-while true; do
-  # Run the deployment command
-  deploy_function
-
-  # Check if Cloud Run service is created
-  if gcloud run services describe $FUNCTION_NAME --region $REGION &> /dev/null; then
-    echo "Cloud Run service is created. Exiting the loop."
-    break
-  else
-    echo "Waiting for Cloud Run service to be created..."
-    sleep 10
-  fi
-done
+# Wait for function to be ready
+echo "Waiting for $FUNCTION_NAME to be deployed..."
+sleep 30
 
 cd ..
 
+# Create and deploy HTTP function
 mkdir ~/HTTP_FUNCTION && cd $_
 touch index.js && touch package.json
 
@@ -145,7 +138,6 @@ functions.http('$HTTP_FUNCTION', (req, res) => {
   res.status(200).send('awesome lab');
 });
 EOF
-
 
 cat > package.json <<EOF
 {
@@ -158,8 +150,8 @@ cat > package.json <<EOF
 }
 EOF
 
-deploy_function() {
-  gcloud functions deploy $HTTP_FUNCTION \
+# Deploy HTTP function
+gcloud functions deploy $HTTP_FUNCTION \
   --gen2 \
   --runtime nodejs24 \
   --entry-point $HTTP_FUNCTION \
@@ -170,22 +162,10 @@ deploy_function() {
   --max-instances 2 \
   --min-instances 1 \
   --quiet
-}
 
-# Loop until the Cloud Run service is created
-while true; do
-  # Run the deployment command
-  deploy_function
-
-  # Check if Cloud Run service is created
-  if gcloud run services describe $HTTP_FUNCTION --region $REGION &> /dev/null; then
-    echo "Cloud Run service is created. Exiting the loop."
-    break
-  else
-    echo "Waiting for Cloud Run service to be created..."
-    sleep 10
-  fi
-done
+# Wait for HTTP function to be ready
+echo "Waiting for $HTTP_FUNCTION to be deployed..."
+sleep 30
 
 echo "${BG_RED}${BOLD}Congratulations For Completing The Lab !!!${RESET}"
 
