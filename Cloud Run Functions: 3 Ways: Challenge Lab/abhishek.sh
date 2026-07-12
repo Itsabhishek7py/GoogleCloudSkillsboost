@@ -1,133 +1,65 @@
 #!/bin/bash
+# Define color variables
 
-# Enable strict error handling
-set -e
-set -o pipefail
+BLACK=`tput setaf 0`
+RED=`tput setaf 1`
+GREEN=`tput setaf 2`
+YELLOW=`tput setaf 3`
+BLUE=`tput setaf 4`
+MAGENTA=`tput setaf 5`
+CYAN=`tput setaf 6`
+WHITE=`tput setaf 7`
 
-# Color Definitions
-COLOR_BLACK=$'\033[0;30m'
-COLOR_RED=$'\033[0;31m'
-COLOR_GREEN=$'\033[0;32m'
-COLOR_YELLOW=$'\033[0;33m'
-COLOR_BLUE=$'\033[0;34m'
-COLOR_MAGENTA=$'\033[0;35m'
-COLOR_CYAN=$'\033[0;36m'
-COLOR_WHITE=$'\033[0;37m'
-COLOR_RESET=$'\033[0m'
+BG_BLACK=`tput setab 0`
+BG_RED=`tput setab 1`
+BG_GREEN=`tput setab 2`
+BG_YELLOW=`tput setab 3`
+BG_BLUE=`tput setab 4`
+BG_MAGENTA=`tput setab 5`
+BG_CYAN=`tput setab 6`
+BG_WHITE=`tput setab 7`
 
-# Text Formatting
-BOLD=$'\033[1m'
-UNDERLINE=$'\033[4m'
-BLINK=$'\033[5m'
-REVERSE=$'\033[7m'
+BOLD=`tput bold`
+RESET=`tput sgr0`
+#----------------------------------------------------start--------------------------------------------------#
 
-# Function to validate function name
-validate_function_name() {
-    local name=$1
-    if [ -z "$name" ]; then
-        echo "${COLOR_RED}Error: Function name cannot be empty${COLOR_RESET}"
-        return 1
-    fi
-    if [[ ! $name =~ ^[a-z][a-z0-9-]{4,61}[a-z0-9]$ ]]; then
-        echo "${COLOR_RED}Error: Invalid function name '$name'${COLOR_RESET}"
-        echo "Function names must:"
-        echo "  - Start with a letter"
-        echo "  - End with alphanumeric"
-        echo "  - Only lowercase letters, numbers, hyphens"
-        echo "  - Be 6-63 characters long"
-        return 1
-    fi
-    return 0
-}
+# Ask user for input values
+echo "${CYAN}${BOLD}Please enter the following values abhi sab isko copy krenge:${RESET}"
+echo ""
 
-# Function to validate region
-validate_region() {
-    local region=$1
-    if [ -z "$region" ]; then
-        echo "${COLOR_RED}Error: Region cannot be empty${COLOR_RESET}"
-        return 1
-    fi
-    return 0
-}
+read -p "$(echo ${YELLOW}Enter REGION ${RESET}(e.g., us-central1, us-east1, europe-west1): " REGION
+while [[ -z "$REGION" ]]; do
+    echo "${RED}REGION cannot be empty. Please enter a valid region.${RESET}"
+    read -p "Enter REGION: " REGION
+done
 
-# Function to validate bucket name
-validate_bucket() {
-    local bucket=$1
-    if [ -z "$bucket" ]; then
-        echo "${COLOR_RED}Error: Bucket name cannot be empty${COLOR_RESET}"
-        return 1
-    fi
-    return 0
-}
+read -p "$(echo ${YELLOW}Enter FUNCTION_NAME ${RESET}(e.g., my-storage-function): " FUNCTION_NAME
+while [[ -z "$FUNCTION_NAME" ]]; do
+    echo "${RED}FUNCTION_NAME cannot be empty. Please enter a valid name.${RESET}"
+    read -p "Enter FUNCTION_NAME: " FUNCTION_NAME
+done
 
-# Check required variables
-if [ -z "$DEVSHELL_PROJECT_ID" ]; then
-    echo "${COLOR_RED}Error: DEVSHELL_PROJECT_ID environment variable not set${COLOR_RESET}"
-    echo "Please set it using: export DEVSHELL_PROJECT_ID=your-project-id"
+read -p "$(echo ${YELLOW}Enter HTTP_FUNCTION ${RESET}(e.g., my-http-function): " HTTP_FUNCTION
+while [[ -z "$HTTP_FUNCTION" ]]; do
+    echo "${RED}HTTP_FUNCTION cannot be empty. Please enter a valid name.${RESET}"
+    read -p "Enter HTTP_FUNCTION: " HTTP_FUNCTION
+done
+
+echo ""
+echo "${GREEN}${BOLD}You entered:${RESET}"
+echo "  REGION: ${CYAN}$REGION${RESET}"
+echo "  FUNCTION_NAME: ${CYAN}$FUNCTION_NAME${RESET}"
+echo "  HTTP_FUNCTION: ${CYAN}$HTTP_FUNCTION${RESET}"
+echo ""
+
+read -p "$(echo ${MAGENTA}Are these values correct? ${RESET}(y/n): " confirm
+if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+    echo "${RED}Exiting. Please run the script again and enter correct values.${RESET}"
     exit 1
 fi
 
-echo
-echo "${COLOR_CYAN}${BOLD}┌──────────────────────────────────────────────────────────────┐${COLOR_RESET}"
-echo "${COLOR_CYAN}${BOLD}│             Welcome to Dr abhishek cloud tutorial              │${COLOR_RESET}"
-echo "${COLOR_CYAN}${BOLD}└──────────────────────────────────────────────────────────────┘${COLOR_RESET}"
-echo
-
-# User Inputs with Validation
-while true; do
-    read -p "${COLOR_YELLOW}${BOLD}Enter Cloud Storage Function Name: ${COLOR_RESET}" STORAGE_FUNCTION
-    if validate_function_name "$STORAGE_FUNCTION"; then
-        break
-    fi
-done
-echo
-
-while true; do
-    read -p "${COLOR_YELLOW}${BOLD}Enter HTTP Function Name: ${COLOR_RESET}" HTTP_FUNCTION
-    if validate_function_name "$HTTP_FUNCTION"; then
-        break
-    fi
-done
-echo
-
-while true; do
-    read -p "${COLOR_YELLOW}${BOLD}Enter Region: ${COLOR_RESET}" REGION
-    if validate_region "$REGION"; then
-        break
-    fi
-done
-echo
-
-while true; do
-    read -p "${COLOR_YELLOW}${BOLD}Enter Bucket Name (from task 1): ${COLOR_RESET}" BUCKET_NAME
-    if validate_bucket "$BUCKET_NAME"; then
-        break
-    fi
-done
-echo
-
-# Export Variables
-export STORAGE_FUNCTION=$STORAGE_FUNCTION
-export HTTP_FUNCTION=$HTTP_FUNCTION
-export REGION=$REGION
-export BUCKET_NAME=$BUCKET_NAME
-
-# Cleanup function
-cleanup() {
-    echo "${COLOR_YELLOW}${BOLD}🧹 Cleaning up temporary files...${COLOR_RESET}"
-    if [ -d ~/$STORAGE_FUNCTION ]; then
-        rm -rf ~/$STORAGE_FUNCTION
-    fi
-    if [ -d ~/$HTTP_FUNCTION ]; then
-        rm -rf ~/$HTTP_FUNCTION
-    fi
-}
-trap cleanup EXIT
-
-# Enable GCP Services
-echo
-echo "${COLOR_BLUE}${BOLD}⏳ Enabling Required GCP Services...${COLOR_RESET}"
-echo
+echo ""
+echo "${BG_MAGENTA}${BOLD}Starting Execution${RESET}"
 
 gcloud services enable \
   artifactregistry.googleapis.com \
@@ -139,60 +71,30 @@ gcloud services enable \
   pubsub.googleapis.com
 
 sleep 30
-echo "${COLOR_GREEN}${BOLD}✅ GCP services enabled successfully!${COLOR_RESET}"
-echo
 
-# Configure IAM
 PROJECT_NUMBER=$(gcloud projects list --filter="project_id:$DEVSHELL_PROJECT_ID" --format='value(project_number)')
-SERVICE_ACCOUNT="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
 
-echo "${COLOR_BLUE}${BOLD}⏳ Configuring IAM permissions...${COLOR_RESET}"
+SERVICE_ACCOUNT=$(gsutil kms serviceaccount -p $PROJECT_NUMBER)
 
-# Add necessary IAM bindings
 gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
   --member serviceAccount:$SERVICE_ACCOUNT \
   --role roles/pubsub.publisher
 
-gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
-  --member serviceAccount:$SERVICE_ACCOUNT \
-  --role roles/storage.objectAdmin
+gsutil mb -l $REGION gs://$DEVSHELL_PROJECT_ID
 
-gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
-  --member serviceAccount:$SERVICE_ACCOUNT \
-  --role roles/eventarc.eventReceiver
+export BUCKET="gs://$DEVSHELL_PROJECT_ID"
 
-echo "${COLOR_GREEN}${BOLD}✅ IAM permissions configured!${COLOR_RESET}"
-echo
-
-# Check if bucket exists, if not create it
-echo "${COLOR_BLUE}${BOLD}⏳ Checking storage bucket...${COLOR_RESET}"
-if gsutil ls gs://$BUCKET_NAME &> /dev/null; then
-    echo "${COLOR_GREEN}${BOLD}✅ Bucket $BUCKET_NAME already exists!${COLOR_RESET}"
-else
-    echo "${COLOR_YELLOW}${BOLD}⚠️  Bucket $BUCKET_NAME not found. Creating...${COLOR_RESET}"
-    gsutil mb -l $REGION gs://$BUCKET_NAME
-    echo "${COLOR_GREEN}${BOLD}✅ Storage bucket created successfully!${COLOR_RESET}"
-fi
-echo
-
-# Create Cloud Storage Event Function
-echo "${COLOR_BLUE}${BOLD}🛠️  Building Cloud Storage Event Function...${COLOR_RESET}"
-echo
-
-mkdir -p ~/$STORAGE_FUNCTION && cd $_
+mkdir ~/$FUNCTION_NAME && cd $_
 touch index.js && touch package.json
 
-# Create index.js with exact code from task
 cat > index.js <<EOF
 const functions = require('@google-cloud/functions-framework');
-
-functions.cloudEvent('$STORAGE_FUNCTION', (cloudevent) => {
+functions.cloudEvent('$FUNCTION_NAME', (cloudevent) => {
   console.log('A new event in your Cloud Storage bucket has been logged!');
   console.log(cloudevent);
 });
 EOF
 
-# Create package.json with exact code from task
 cat > package.json <<EOF
 {
   "name": "nodejs-functions-gen2-codelab",
@@ -204,70 +106,47 @@ cat > package.json <<EOF
 }
 EOF
 
-echo "${COLOR_GREEN}${BOLD}✅ Storage function files created!${COLOR_RESET}"
-echo
-
-deploy_storage_function() {
-  echo "${COLOR_BLUE}${BOLD}🚀 Deploying Cloud Storage Function...${COLOR_RESET}"
-  gcloud functions deploy $STORAGE_FUNCTION \
+deploy_function() {
+  gcloud functions deploy $FUNCTION_NAME \
   --gen2 \
   --runtime nodejs24 \
-  --entry-point $STORAGE_FUNCTION \
+  --entry-point $FUNCTION_NAME \
   --source . \
   --region $REGION \
-  --trigger-bucket gs://$BUCKET_NAME \
+  --trigger-bucket $BUCKET \
   --trigger-location $REGION \
   --max-instances 2 \
   --quiet
 }
 
-# Deploy Storage Function with retry
-echo "${COLOR_BLUE}${BOLD}⏳ Deploying Storage Function (may take a few minutes)...${COLOR_RESET}"
-echo
+# Loop until the Cloud Run service is created
+while true; do
+  # Run the deployment command
+  deploy_function
 
-MAX_RETRIES=5
-RETRY_COUNT=0
-DEPLOYED=false
-
-while [ $RETRY_COUNT -lt $MAX_RETRIES ] && [ "$DEPLOYED" = false ]; do
-    if deploy_storage_function; then
-        echo "${COLOR_GREEN}${BOLD}✅ Cloud Storage Function deployed successfully!${COLOR_RESET}"
-        DEPLOYED=true
-        break
-    else
-        RETRY_COUNT=$((RETRY_COUNT + 1))
-        if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-            echo "${COLOR_YELLOW}${BOLD}⚠️  Deployment failed. Waiting 30 seconds before retry $RETRY_COUNT of $MAX_RETRIES...${COLOR_RESET}"
-            sleep 30
-        else
-            echo "${COLOR_RED}${BOLD}❌ Failed to deploy after $MAX_RETRIES attempts.${COLOR_RESET}"
-            echo "${COLOR_YELLOW}${BOLD}💡 Note: It may take a few minutes for APIs to be fully enabled.${COLOR_RESET}"
-            echo "${COLOR_YELLOW}${BOLD}   Try running the script again after 2-3 minutes.${COLOR_RESET}"
-            exit 1
-        fi
-    fi
+  # Check if Cloud Run service is created
+  if gcloud run services describe $FUNCTION_NAME --region $REGION &> /dev/null; then
+    echo "Cloud Run service is created. Exiting the loop."
+    break
+  else
+    echo "Waiting for Cloud Run service to be created..."
+    sleep 10
+  fi
 done
 
 cd ..
 
-# Create HTTP Function
-echo
-echo "${COLOR_BLUE}${BOLD}🛠️  Building HTTP Trigger Function...${COLOR_RESET}"
-echo
-
-mkdir -p ~/$HTTP_FUNCTION && cd $_
+mkdir ~/HTTP_FUNCTION && cd $_
 touch index.js && touch package.json
 
-# Create index.js with exact code from task
 cat > index.js <<EOF
 const functions = require('@google-cloud/functions-framework');
-
 functions.http('$HTTP_FUNCTION', (req, res) => {
-  res.status(200).send('HTTP function (2nd gen) has been called!');
+  res.status(200).send('awesome lab');
 });
 EOF
 
-# Create package.json with exact code from task
+
 cat > package.json <<EOF
 {
   "name": "nodejs-functions-gen2-codelab",
@@ -279,11 +158,7 @@ cat > package.json <<EOF
 }
 EOF
 
-echo "${COLOR_GREEN}${BOLD}✅ HTTP function files created!${COLOR_RESET}"
-echo
-
-deploy_http_function() {
-  echo "${COLOR_BLUE}${BOLD}🚀 Deploying HTTP Function...${COLOR_RESET}"
+deploy_function() {
   gcloud functions deploy $HTTP_FUNCTION \
   --gen2 \
   --runtime nodejs24 \
@@ -291,69 +166,30 @@ deploy_http_function() {
   --source . \
   --region $REGION \
   --trigger-http \
-  --allow-unauthenticated \
-  --min-instances 1 \
+  --timeout 600s \
   --max-instances 2 \
+  --min-instances 1 \
   --quiet
 }
 
-# Deploy HTTP Function
-echo "${COLOR_BLUE}${BOLD}⏳ Deploying HTTP Function...${COLOR_RESET}"
-echo
+# Loop until the Cloud Run service is created
+while true; do
+  # Run the deployment command
+  deploy_function
 
-RETRY_COUNT=0
-DEPLOYED=false
-
-while [ $RETRY_COUNT -lt $MAX_RETRIES ] && [ "$DEPLOYED" = false ]; do
-    if deploy_http_function; then
-        echo "${COLOR_GREEN}${BOLD}✅ HTTP Function deployed successfully!${COLOR_RESET}"
-        DEPLOYED=true
-        break
-    else
-        RETRY_COUNT=$((RETRY_COUNT + 1))
-        if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-            echo "${COLOR_YELLOW}${BOLD}⚠️  Deployment failed. Waiting 30 seconds before retry $RETRY_COUNT of $MAX_RETRIES...${COLOR_RESET}"
-            sleep 30
-        else
-            echo "${COLOR_RED}${BOLD}❌ Failed to deploy after $MAX_RETRIES attempts.${COLOR_RESET}"
-            exit 1
-        fi
-    fi
+  # Check if Cloud Run service is created
+  if gcloud run services describe $HTTP_FUNCTION --region $REGION &> /dev/null; then
+    echo "Cloud Run service is created. Exiting the loop."
+    break
+  else
+    echo "Waiting for Cloud Run service to be created..."
+    sleep 10
+  fi
 done
 
-# Get HTTP Function URL
-HTTP_URL=$(gcloud functions describe $HTTP_FUNCTION --region $REGION --format='value(serviceConfig.uri)')
+echo "${BG_RED}${BOLD}Congratulations For Completing The Lab !!!${RESET}"
 
-cd ..
+echo "${BG_GREEN}${BOLD}Subscribe to Dr. Abhishek's YouTube Channel for more awesome content!${RESET}"
+echo "${CYAN}${BOLD}👉 https://www.youtube.com/@dr.abhishek${RESET}"
 
-# Completion Message
-echo
-echo "${COLOR_GREEN}${BOLD}┌──────────────────────────────────────────────────────────────┐${COLOR_RESET}"
-echo "${COLOR_GREEN}${BOLD}│          Lab Completed Successfully!                        │${COLOR_RESET}"
-echo "${COLOR_GREEN}${BOLD}└──────────────────────────────────────────────────────────────┘${COLOR_RESET}"
-echo
-echo "${COLOR_MAGENTA}${BOLD}📋 Deployment Details:${COLOR_RESET}"
-echo "${COLOR_CYAN}Project ID: ${DEVSHELL_PROJECT_ID}${COLOR_RESET}"
-echo "${COLOR_CYAN}Region: ${REGION}${COLOR_RESET}"
-echo "${COLOR_CYAN}Bucket: gs://${BUCKET_NAME}${COLOR_RESET}"
-echo "${COLOR_CYAN}Storage Function: ${STORAGE_FUNCTION}${COLOR_RESET}"
-echo "${COLOR_CYAN}HTTP Function: ${HTTP_FUNCTION}${COLOR_RESET}"
-if [ ! -z "$HTTP_URL" ]; then
-    echo "${COLOR_CYAN}HTTP Function URL: ${HTTP_URL}${COLOR_RESET}"
-fi
-echo
-echo "${COLOR_MAGENTA}${BOLD}💡 Test your HTTP Function:${COLOR_RESET}"
-echo "${COLOR_CYAN}curl ${HTTP_URL}${COLOR_RESET}"
-echo
-echo "${COLOR_MAGENTA}${BOLD}💡 Test your Storage Trigger:${COLOR_RESET}"
-echo "${COLOR_CYAN}echo \"Hello World\" > test.txt && gsutil cp test.txt gs://${BUCKET_NAME}/${COLOR_RESET}"
-echo "${COLOR_CYAN}Then check logs: gcloud functions logs read ${STORAGE_FUNCTION} --region ${REGION}${COLOR_RESET}"
-echo
-echo "${COLOR_MAGENTA}${BOLD}📊 Check function status:${COLOR_RESET}"
-echo "${COLOR_CYAN}gcloud functions describe ${STORAGE_FUNCTION} --region ${REGION}${COLOR_RESET}"
-echo "${COLOR_CYAN}gcloud functions describe ${HTTP_FUNCTION} --region ${REGION}${COLOR_RESET}"
-echo
-echo "${COLOR_MAGENTA}${BOLD}For more cloud tutorials, subscribe:${COLOR_RESET}"
-echo "${COLOR_CYAN}${BOLD}https://www.youtube.com/@drabhishek.5460/videos${COLOR_RESET}"
-echo "${COLOR_MAGENTA}${BOLD}Dr. Abhishek - Cloud Computing Expert${COLOR_RESET}"
-echo
+#-----------------------------------------------------end----------------------------------------------------------#
