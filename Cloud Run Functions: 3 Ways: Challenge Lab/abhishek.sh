@@ -36,19 +36,20 @@ echo ""
 echo "${CYAN}${BOLD}Please enter the following values:${RESET}"
 echo ""
 
-read -p "$(echo ${YELLOW}Enter REGION ${RESET}(e.g., us-central1, us-east1, europe-west1): " REGION
+# FIXED: Removed nested echo and used simple read with prompt
+read -p "Enter REGION (e.g., us-central1, us-east1, europe-west1): " REGION
 while [[ -z "$REGION" ]]; do
     echo "${RED}REGION cannot be empty. Please enter a valid region.${RESET}"
     read -p "Enter REGION: " REGION
 done
 
-read -p "$(echo ${YELLOW}Enter FUNCTION_NAME ${RESET}(e.g., my-storage-function): " FUNCTION_NAME
+read -p "Enter FUNCTION_NAME (e.g., my-storage-function): " FUNCTION_NAME
 while [[ -z "$FUNCTION_NAME" ]]; do
     echo "${RED}FUNCTION_NAME cannot be empty. Please enter a valid name.${RESET}"
     read -p "Enter FUNCTION_NAME: " FUNCTION_NAME
 done
 
-read -p "$(echo ${YELLOW}Enter HTTP_FUNCTION ${RESET}(e.g., my-http-function): " HTTP_FUNCTION
+read -p "Enter HTTP_FUNCTION (e.g., my-http-function): " HTTP_FUNCTION
 while [[ -z "$HTTP_FUNCTION" ]]; do
     echo "${RED}HTTP_FUNCTION cannot be empty. Please enter a valid name.${RESET}"
     read -p "Enter HTTP_FUNCTION: " HTTP_FUNCTION
@@ -61,7 +62,7 @@ echo "  FUNCTION_NAME: ${CYAN}$FUNCTION_NAME${RESET}"
 echo "  HTTP_FUNCTION: ${CYAN}$HTTP_FUNCTION${RESET}"
 echo ""
 
-read -p "$(echo ${MAGENTA}Are these values correct? ${RESET}(y/n): " confirm
+read -p "Are these values correct? (y/n): " confirm
 if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
     echo "${RED}Exiting. Please run the script again and enter correct values.${RESET}"
     exit 1
@@ -110,7 +111,6 @@ echo "${CYAN}${BOLD}Step 4: Creating Cloud Storage trigger function...${RESET}"
 mkdir -p ~/$FUNCTION_NAME && cd ~/$FUNCTION_NAME
 touch index.js && touch package.json
 
-# Fixed heredoc syntax - removed spaces after <<EOF
 cat > index.js <<'EOF'
 const functions = require('@google-cloud/functions-framework');
 functions.cloudEvent('FUNCTION_NAME_PLACEHOLDER', (cloudevent) => {
