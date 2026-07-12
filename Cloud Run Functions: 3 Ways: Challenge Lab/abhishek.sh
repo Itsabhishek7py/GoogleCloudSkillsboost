@@ -22,6 +22,17 @@ BG_WHITE=`tput setab 7`
 BOLD=`tput bold`
 RESET=`tput sgr0`
 
+# Welcome Banner - Dr. Abhishek's Tutorial
+echo "${BG_CYAN}${BOLD}╔════════════════════════════════════════════════════════════╗${RESET}"
+echo "${BG_CYAN}${BOLD}║     WELCOME TO DR. ABHISHEK'S TUTORIAL                   ║${RESET}"
+echo "${BG_CYAN}${BOLD}║     PLEASE SUBSCRIBE TO THE CHANNEL FOR MORE UPDATES    ║${RESET}"
+echo "${BG_CYAN}${BOLD}╚════════════════════════════════════════════════════════════╝${RESET}"
+echo ""
+echo "${YELLOW}${BOLD}📺 YouTube Channel: ${CYAN}https://www.youtube.com/@drabhishek.5460/videos${RESET}"
+echo "${MAGENTA}${BOLD}🔔 Don't forget to LIKE, SHARE, and SUBSCRIBE!${RESET}"
+echo "${GREEN}${BOLD}👍 Hit the Bell Icon for latest updates!${RESET}"
+echo ""
+
 echo "${CYAN}${BOLD}Please enter the following values:${RESET}"
 echo ""
 
@@ -60,6 +71,7 @@ echo ""
 echo "${BG_MAGENTA}${BOLD}Starting Execution${RESET}"
 
 # Enable required services
+echo "${CYAN}${BOLD}Step 1: Enabling required Google Cloud Services...${RESET}"
 gcloud services enable \
   artifactregistry.googleapis.com \
   cloudfunctions.googleapis.com \
@@ -77,17 +89,24 @@ PROJECT_NUMBER=$(gcloud projects list --filter="project_id:$DEVSHELL_PROJECT_ID"
 # Get the default compute service account
 SERVICE_ACCOUNT="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
 
+echo "${CYAN}${BOLD}Step 2: Configuring IAM permissions...${RESET}"
 # Add IAM binding for Pub/Sub publisher
 gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
   --member serviceAccount:$SERVICE_ACCOUNT \
   --role roles/pubsub.publisher
 
+sleep 10
+
 # Create Cloud Storage bucket
+echo "${CYAN}${BOLD}Step 3: Creating Cloud Storage bucket...${RESET}"
 gsutil mb -l $REGION gs://$DEVSHELL_PROJECT_ID
 
 export BUCKET="gs://$DEVSHELL_PROJECT_ID"
 
+echo "${GREEN}${BOLD}✓ Bucket created: $BUCKET${RESET}"
+
 # Create and deploy Cloud Storage triggered function
+echo "${CYAN}${BOLD}Step 4: Creating Cloud Storage trigger function...${RESET}"
 mkdir ~/$FUNCTION_NAME && cd $_
 touch index.js && touch package.json
 
@@ -123,12 +142,14 @@ gcloud functions deploy $FUNCTION_NAME \
   --quiet
 
 # Wait for function to be ready
-echo "Waiting for $FUNCTION_NAME to be deployed..."
+echo "${YELLOW}Waiting for $FUNCTION_NAME to be deployed...${RESET}"
 sleep 30
+echo "${GREEN}${BOLD}✓ Storage function deployed successfully!${RESET}"
 
 cd ..
 
 # Create and deploy HTTP function
+echo "${CYAN}${BOLD}Step 5: Creating HTTP function...${RESET}"
 mkdir ~/HTTP_FUNCTION && cd $_
 touch index.js && touch package.json
 
@@ -164,12 +185,51 @@ gcloud functions deploy $HTTP_FUNCTION \
   --quiet
 
 # Wait for HTTP function to be ready
-echo "Waiting for $HTTP_FUNCTION to be deployed..."
+echo "${YELLOW}Waiting for $HTTP_FUNCTION to be deployed...${RESET}"
 sleep 30
+echo "${GREEN}${BOLD}✓ HTTP function deployed successfully!${RESET}"
 
-echo "${BG_RED}${BOLD}Congratulations For Completing The Lab !!!${RESET}"
+# Get the HTTP function URL
+HTTP_URL=$(gcloud functions describe $HTTP_FUNCTION --region $REGION --format='value(serviceConfig.uri)')
+echo "${CYAN}${BOLD}HTTP Function URL: ${RESET}$HTTP_URL"
 
-echo "${BG_GREEN}${BOLD}Subscribe to Dr. Abhishek's YouTube Channel for more awesome content!${RESET}"
-echo "${CYAN}${BOLD}👉 https://www.youtube.com/@dr.abhishek${RESET}"
+# Test the HTTP function
+echo "${CYAN}${BOLD}Step 6: Testing HTTP function...${RESET}"
+curl -s $HTTP_URL
+echo ""
+
+# Completion Banners
+echo ""
+echo "${BG_GREEN}${BOLD}╔════════════════════════════════════════════════════════════╗${RESET}"
+echo "${BG_GREEN}${BOLD}║          LAB COMPLETED SUCCESSFULLY!                     ║${RESET}"
+echo "${BG_GREEN}${BOLD}╚════════════════════════════════════════════════════════════╝${RESET}"
+echo ""
+echo "${BG_MAGENTA}${BOLD}╔════════════════════════════════════════════════════════════╗${RESET}"
+echo "${BG_MAGENTA}${BOLD}║     THANK YOU FOR FOLLOWING DR. ABHISHEK'S TUTORIAL     ║${RESET}"
+echo "${BG_MAGENTA}${BOLD}╚════════════════════════════════════════════════════════════╝${RESET}"
+echo ""
+echo "${CYAN}${BOLD}📺 Please Subscribe to Dr. Abhishek's YouTube Channel:${RESET}"
+echo "${YELLOW}🔗 https://www.youtube.com/@drabhishek.5460/videos${RESET}"
+echo ""
+echo "${MAGENTA}${BOLD}👍 Like | Share | Subscribe | Press the Bell Icon${RESET}"
+echo "${MAGENTA}${BOLD}🔔 Stay updated with the latest cloud computing tutorials!${RESET}"
+echo ""
+echo "${GREEN}${BOLD}🎯 What you learned in this lab:${RESET}"
+echo "  • Google Cloud Functions (Gen 2)"
+echo "  • Cloud Storage Triggers"
+echo "  • HTTP Triggers"
+echo "  • Node.js Cloud Functions"
+echo "  • IAM & Service Accounts"
+echo "  • Cloud Build & Deployment"
+echo ""
+echo "${GREEN}${BOLD}📚 For more tutorials:${RESET}"
+echo "  • Google Cloud Platform (GCP) Labs"
+echo "  • AWS Tutorials"
+echo "  • Azure Solutions"
+echo "  • DevOps & CI/CD Pipelines"
+echo "  • Kubernetes & Containerization"
+echo ""
+echo "${BG_CYAN}${BOLD}     KEEP LEARNING & KEEP GROWING WITH DR. ABHISHEK        ${RESET}"
+echo ""
 
 #-----------------------------------------------------end----------------------------------------------------------#
