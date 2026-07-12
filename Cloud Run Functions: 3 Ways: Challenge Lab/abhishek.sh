@@ -107,18 +107,22 @@ echo "${GREEN}${BOLD}✓ Bucket created: $BUCKET${RESET}"
 
 # Create and deploy Cloud Storage triggered function
 echo "${CYAN}${BOLD}Step 4: Creating Cloud Storage trigger function...${RESET}"
-mkdir ~/$FUNCTION_NAME && cd $_
+mkdir -p ~/$FUNCTION_NAME && cd ~/$FUNCTION_NAME
 touch index.js && touch package.json
 
-cat > index.js <<EOF
+# Fixed heredoc syntax - removed spaces after <<EOF
+cat > index.js <<'EOF'
 const functions = require('@google-cloud/functions-framework');
-functions.cloudEvent('$FUNCTION_NAME', (cloudevent) => {
+functions.cloudEvent('FUNCTION_NAME_PLACEHOLDER', (cloudevent) => {
   console.log('A new event in your Cloud Storage bucket has been logged!');
   console.log(cloudevent);
 });
 EOF
 
-cat > package.json <<EOF
+# Replace placeholder with actual function name
+sed -i "s/FUNCTION_NAME_PLACEHOLDER/$FUNCTION_NAME/g" index.js
+
+cat > package.json <<'EOF'
 {
   "name": "nodejs-functions-gen2-codelab",
   "version": "0.0.1",
@@ -146,21 +150,24 @@ echo "${YELLOW}Waiting for $FUNCTION_NAME to be deployed...${RESET}"
 sleep 30
 echo "${GREEN}${BOLD}✓ Storage function deployed successfully!${RESET}"
 
-cd ..
+cd ~
 
 # Create and deploy HTTP function
 echo "${CYAN}${BOLD}Step 5: Creating HTTP function...${RESET}"
-mkdir ~/HTTP_FUNCTION && cd $_
+mkdir -p ~/HTTP_FUNCTION && cd ~/HTTP_FUNCTION
 touch index.js && touch package.json
 
-cat > index.js <<EOF
+cat > index.js <<'EOF'
 const functions = require('@google-cloud/functions-framework');
-functions.http('$HTTP_FUNCTION', (req, res) => {
+functions.http('HTTP_FUNCTION_PLACEHOLDER', (req, res) => {
   res.status(200).send('awesome lab');
 });
 EOF
 
-cat > package.json <<EOF
+# Replace placeholder with actual HTTP function name
+sed -i "s/HTTP_FUNCTION_PLACEHOLDER/$HTTP_FUNCTION/g" index.js
+
+cat > package.json <<'EOF'
 {
   "name": "nodejs-functions-gen2-codelab",
   "version": "0.0.1",
