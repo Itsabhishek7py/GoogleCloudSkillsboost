@@ -18,6 +18,12 @@
 ### Run the following Commands in CloudShell
 
 ```
+export HTTP_FUNCTION=
+export FUNCTION_NAME=
+export REGION=
+```
+
+```
 curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Cloud%20Run%20Functions%3A%203%20Ways%3A%20Challenge%20Lab/abhishek.sh
 sudo chmod +x abhishek.sh
 ./abhishek.sh
