@@ -134,7 +134,7 @@ print_message "$ACTION_COLOR" "🐳" "Running pipeline in Docker container..."
 docker run -it \
   -e DEVSHELL_PROJECT_ID=$DEVSHELL_PROJECT_ID \
   -v "$(pwd)/run_pipeline.sh:/run_pipeline.sh" \
-  python:3.7 \
+  python:3.10 \
   /bin/bash -c "/run_pipeline.sh"
 print_success "Pipeline execution initiated"
 echo
