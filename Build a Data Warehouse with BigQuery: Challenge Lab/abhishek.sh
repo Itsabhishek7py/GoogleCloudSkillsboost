@@ -204,7 +204,7 @@ FROM \`bigquery-public-data.covid19_google_mobility.mobility_report\`"
 echo "${YELLOW}Cleaning data by removing NULL values...${RESET}"
 bq query --use_legacy_sql=false \
 "DELETE FROM covid_data.oxford_policy_tracker_by_countries
-WHERE population IS NULL AND country_area IS NULL"
+WHERE population IS NULL OR country_area IS NULL"
 
 # Completion message
 echo
