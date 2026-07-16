@@ -17,8 +17,7 @@ AgentTool(agent=search_agent, skip_summarization=False),
 ## Task 5. `Deploy to Agent Engine`
 ```bash
 adk deploy agent_engine paint_agent \
-  --display_name "Paint Agent" \
-  --staging_bucket 
+  --display_name "Paint Agent" 
 ```
 
 <div align="center">
