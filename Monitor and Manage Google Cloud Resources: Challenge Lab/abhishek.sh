@@ -231,7 +231,7 @@ echo "${BOLD}${CYAN}✓${RESET} Deploying Cloud Function..."
 deploy_function() {
     gcloud functions deploy $FUNCTION_NAME \
     --gen2 \
-    --runtime=nodejs20 \
+    --runtime=nodejs22 \
     --region=$REGION \
     --source=. \
     --entry-point=thumbnail \
