@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 DARK_BLUE=$'\033[38;5;27m'
 TEAL=$'\033[38;5;50m'
 PURPLE=$'\033[38;5;129m'
@@ -19,14 +18,12 @@ LINE="${DARK_BLUE}${BOLD}─${RESET}"
 
 clear
 
-
 echo
 echo "${TOP_CORNER}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${RESET}"
 echo "${DARK_BLUE}${BOLD}         WELCOME TO DR ABHISHEK CLOUD         ${RESET}"
-echo "${DARK_BLUE}${BOLD}           TUTORIAL          ${RESET}"
+echo "${DARK_BLUE}${BOLD}            TUTORIAL          ${RESET}"
 echo "${BOTTOM_CORNER}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${LINE}${RESET}"
 echo
-
 
 spinner() {
     local pid=$!
@@ -42,21 +39,47 @@ spinner() {
     printf "    \b\b\b\b"
 }
 
-# Step 1: API Key Creation
+# Step 1: API Key Creation & Restriction
 echo "${PURPLE}${BOLD}▐▓▒▌ STEP 1: API KEY SETUP ${DARK_BLUE}${BOLD}◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈${RESET}"
 echo
+
+echo -n "${TEAL}${BOLD}🔌 Enabling Required APIs (Vision, Translate, Language, API Keys)..."
+(gcloud services enable vision.googleapis.com translate.googleapis.com language.googleapis.com apikeys.googleapis.com > /dev/null 2>&1) &
+spinner
+echo -e "\r${LIME}${BOLD}✔ Required APIs enabled successfully!          ${RESET}"
+
 echo -n "${TEAL}${BOLD}🔑 Creating API Key..."
-(gcloud alpha services api-keys create --display-name="cloud-ml-key" > /dev/null 2>&1) &
+(gcloud services api-keys create --display-name="cloud-ml-key" > /dev/null 2>&1) &
 spinner
 echo -e "\r${LIME}${BOLD}✔ API Key created successfully!          ${RESET}"
 
+# Small delay to ensure the key is fully registered before fetching
+sleep 3
+
 echo -n "${TEAL}${BOLD}🔍 Fetching API Key Name..."
-KEY_NAME=$(gcloud alpha services api-keys list --format="value(name)" --filter "displayName=cloud-ml-key" 2>/dev/null)
+KEY_NAME=$(gcloud services api-keys list --format="value(name,displayName)" | grep "cloud-ml-key" | head -n 1 | awk '{print $1}')
 echo -e "\r${LIME}${BOLD}✔ API Key Name: ${DARK_BLUE}$KEY_NAME          ${RESET}"
 
 echo -n "${TEAL}${BOLD}🔑 Fetching API Key String..."
-API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_NAME --format="value(keyString)" 2>/dev/null)
+API_KEY=$(gcloud services api-keys get-key-string $KEY_NAME --format="value(keyString)" 2>/dev/null)
 echo -e "\r${LIME}${BOLD}✔ API Key String retrieved!          ${RESET}"
+
+echo -n "${TEAL}${BOLD}🔒 Restricting API Key..."
+cat > api_key_restrictions.json <<EOF
+{
+  "restrictions": {
+    "apiTargets": [
+      { "service": "vision.googleapis.com" },
+      { "service": "translate.googleapis.com" },
+      { "service": "language.googleapis.com" }
+    ]
+  }
+}
+EOF
+(gcloud services api-keys update $KEY_NAME --api-restrictions-from-file=api_key_restrictions.json > /dev/null 2>&1) &
+spinner
+rm -f api_key_restrictions.json
+echo -e "\r${LIME}${BOLD}✔ API Key restricted to Vision, Translation, & Natural Language APIs!          ${RESET}"
 echo
 
 # Step 2: Project Configuration
