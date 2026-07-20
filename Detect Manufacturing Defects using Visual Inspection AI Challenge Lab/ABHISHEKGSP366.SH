@@ -38,13 +38,18 @@ read FILE_1
 echo "${YELLOW_TEXT}${BOLD_TEXT}Enter the filename for non-defective result:${RESET_FORMAT}"
 read FILE_2
 
+# Get project ID from user
+echo "${YELLOW_TEXT}${BOLD_TEXT}Enter your Google Cloud Project ID:${RESET_FORMAT}"
+read INPUT_PROJECT_ID
+
 # Display the entered values
 echo "${GREEN_TEXT}Using container name: ${BOLD_TEXT}$CONTAINER${RESET_FORMAT}"
 echo "${GREEN_TEXT}Using defective result filename: ${BOLD_TEXT}$FILE_1${RESET_FORMAT}"
 echo "${GREEN_TEXT}Using non-defective result filename: ${BOLD_TEXT}$FILE_2${RESET_FORMAT}"
+echo "${GREEN_TEXT}Using Project ID: ${BOLD_TEXT}$INPUT_PROJECT_ID${RESET_FORMAT}"
 echo
 
-ZONE="$(gcloud compute instances list --project=$DEVSHELL_PROJECT_ID --format='value(ZONE)' | head -n 1)"
+ZONE="$(gcloud compute instances list --project=$INPUT_PROJECT_ID --format='value(ZONE)' | head -n 1)"
 
 echo "${MAGENTA_TEXT}${BOLD_TEXT}Saving environment variables...${RESET_FORMAT}"
 
@@ -111,17 +116,17 @@ echo "${GREEN_TEXT}${BOLD_TEXT}prepare_disk.sh script generated successfully!${R
 echo "${MAGENTA_TEXT}${BOLD_TEXT}Copying scripts to the VM...${RESET_FORMAT}"
 
 # Copy the environment variables script to the VM
-gcloud compute scp env_vars.sh lab-vm:/tmp --project=$DEVSHELL_PROJECT_ID --zone=$ZONE --quiet
+gcloud compute scp env_vars.sh lab-vm:/tmp --project=$INPUT_PROJECT_ID --zone=$ZONE --quiet
 
 # Copy the prepare_disk.sh script to the VM
-gcloud compute scp prepare_disk.sh lab-vm:/tmp --project=$DEVSHELL_PROJECT_ID --zone=$ZONE --quiet
+gcloud compute scp prepare_disk.sh lab-vm:/tmp --project=$INPUT_PROJECT_ID --zone=$ZONE --quiet
 
 echo "${GREEN_TEXT}${BOLD_TEXT}Scripts copied successfully!${RESET_FORMAT}"
 
 echo "${MAGENTA_TEXT}${BOLD_TEXT}Executing script on VM...${RESET_FORMAT}"
 
 # SSH into the VM and execute the script
-gcloud compute ssh lab-vm --project=$DEVSHELL_PROJECT_ID --zone=$ZONE --quiet --command="bash /tmp/prepare_disk.sh"
+gcloud compute ssh lab-vm --project=$INPUT_PROJECT_ID --zone=$ZONE --quiet --command="bash /tmp/prepare_disk.sh"
 
 echo
 echo "${GREEN_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
