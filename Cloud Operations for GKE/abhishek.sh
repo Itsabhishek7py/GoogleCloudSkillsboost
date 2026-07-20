@@ -62,7 +62,7 @@ echo "${GREEN_TEXT}${BOLD_TEXT}Downloading GKE monitoring tutorial...${RESET_FOR
 gsutil cp gs://spls/gsp497/gke-monitoring-tutorial.zip .
 unzip gke-monitoring-tutorial.zip
 
-cd gke-monitoring-tutorial
+cd gke-monitoring-tutorial-master
 
 echo
 echo "${GREEN_TEXT}${BOLD_TEXT}Creating GKE cluster and resources...${RESET_FORMAT}"
