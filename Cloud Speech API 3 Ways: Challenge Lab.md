@@ -145,7 +145,7 @@ response=$(curl -s -X POST \
 echo "$response" > "$task_4_file"
 
 # URL-decode the sentence
-decoded_sentence=$(python -c "import urllib.parse; print(urllib.parse.unquote('$task_5_sentence'))")
+decoded_sentence=$(python3 -c "import urllib.parse; print(urllib.parse.unquote('$task_5_sentence'))")
 
 # Make the Language Detection API request using curl
 curl -s -X POST \
