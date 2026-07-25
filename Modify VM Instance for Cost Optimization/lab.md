@@ -48,16 +48,16 @@ We gratefully acknowledge Google's learning resources that make cloud education 
 ```
 export VM_NAME="lab-vm"
 export ZONE="us-east4-c"  # Replace with your actual zone
+```
+```
 
-gcloud compute instances stop lab-vm --zone [YOUR_ZONE]
-# Example:
-# gcloud compute instances stop lab-vm --zone us-east4-c
+gcloud compute instances stop lab-vm --zone $ZONE
 
 gcloud compute instances set-machine-type $VM_NAME \
   --machine-type e2-medium \
   --zone $ZONE
 
-gcloud compute instances start lab-vm --zone us-east4-c
+gcloud compute instances start lab-vm --zone $ZONE
 
 ```
 #### If you get error run 
