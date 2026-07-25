@@ -46,7 +46,7 @@ def generate_image(project_id: str, location: str, output_file: str, prompt: str
    
     # Generate the image using the correct Imagen model
     result = client.models.generate_images(
-        model='imagen-3.0-generate-002',
+        model='gemini-2.5-flash-image',
         prompt=prompt,
     )
    
