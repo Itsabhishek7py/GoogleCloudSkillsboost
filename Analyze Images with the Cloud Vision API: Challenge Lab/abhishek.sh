@@ -20,7 +20,7 @@ BG_GREEN=$'\033[42m'
 BG_YELLOW=$'\033[43m'
 
 # ======================
-#  SCRIPT HEADER
+#  agua chor chori krne
 # ======================
 clear
 echo "${BLUE}${BOLD}============================================${RESET}"
