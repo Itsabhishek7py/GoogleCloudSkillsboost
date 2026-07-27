@@ -14,7 +14,7 @@
 
 1. Export the **ZONE** Name correctly in **both Cloud Terminal**
 ```
-export ZONE=
+export ZONE=$(gcloud compute instances list --filter="name=alloydb-client" --format='csv[no-heading](zone)')
 ```
 
 2. Run the below commands in your **First Cloud Terminal**
