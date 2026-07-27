@@ -85,6 +85,15 @@ echo "${GREEN_TEXT}✓ Response saved to speech_response.json${RESET_FORMAT}"
 # Sentiment Analysis
 echo
 echo "${YELLOW_TEXT}${BOLD_TEXT}Setting up Sentiment Analysis...${RESET_FORMAT}"
+
+# --- ADDED INSTALLATION COMMANDS ---
+echo "${YELLOW_TEXT}${BOLD_TEXT}Installing Python 3, pip, and Google Cloud Language library...${RESET_FORMAT}"
+sudo apt-get update
+sudo apt-get install python3 python3-pip -y
+pip3 install google-cloud-language
+echo "${GREEN_TEXT}✓ Dependencies installed successfully${RESET_FORMAT}"
+# -----------------------------------
+
 cat > sentiment_analysis.py <<EOF
 import argparse
 from google.cloud import language_v1
